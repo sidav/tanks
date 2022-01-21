@@ -1,9 +1,12 @@
 package main
 
+import "fmt"
+
 type battlefield struct {
 	tiles [][]tile
 	playerTank *tank
 	enemies []*tank
+	projectiles []*tank
 }
 
 func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
@@ -12,6 +15,31 @@ func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
 
 func (b *battlefield) trueCoordsToTileCoords(tx, ty int) (int, int) {
 	return tx / TILE_SIZE_TRUE, ty / TILE_SIZE_TRUE
+}
+
+func (b *battlefield) shootAsTank(t *tank) {
+	newProjectile := &tank{
+		centerX:            t.centerX + t.faceX*(t.radius+1),
+		centerY:            t.centerY + t.faceY*(t.radius+1),
+		faceX:              t.faceX,
+		faceY:              t.faceY,
+		radius:             4,
+		sprites:            projectileAtlaces["BULLET"],
+		currentFrameNumber: 0,
+	}
+	b.projectiles = append(b.projectiles, newProjectile)
+}
+
+func (b *battlefield) actForProjectiles() {
+	for i := len(b.projectiles)-1; i >= 0; i-- {
+		proj := b.projectiles[i]
+		proj.centerX += proj.faceX
+		proj.centerY += proj.faceY
+		if b.isAnotherTankPresentAtTrueCoords(nil, proj.centerX, proj.centerY) {
+			fmt.Println("BABACH!!1")
+			b.projectiles = b.projectiles[:len(b.projectiles)-1]
+		}
+	}
 }
 
 func (b *battlefield) isAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int) bool {

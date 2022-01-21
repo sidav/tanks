@@ -17,6 +17,7 @@ func renderBattlefield(b *battlefield) {
 	for i := range b.enemies {
 		renderTank(b.enemies[i])
 	}
+	renderProjectiles(b)
 
 	rl.EndDrawing()
 }
@@ -33,6 +34,12 @@ func renderTank(t *tank) {
 		},
 		TINT,
 	)
+}
+
+func renderProjectiles(b *battlefield) {
+	for _, p := range b.projectiles {
+		renderTank(p)
+	}
 }
 
 func renderTiles(b *battlefield) {

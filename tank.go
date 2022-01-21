@@ -35,6 +35,6 @@ func (t *tank) getCurrentSpriteRect() rl.Rectangle {
 	if t.faceY == 1 {
 		spriteGroup = 2
 	}
-	spriteNumber := int(spriteGroup*2 + (t.currentFrameNumber % 2))
+	spriteNumber := int(spriteGroup*t.sprites.totalFrames + (t.currentFrameNumber % 2))
 	return t.sprites.getRectForSpriteFromAtlas(spriteNumber)
 }
