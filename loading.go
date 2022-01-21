@@ -11,12 +11,14 @@ var (
 	tileAtlaces = map[string]*horizSpriteAtlas{}
 )
 
-const resizeCoeff = 2.0
+const resizeCoeff = 3
 
 func loadImageResources() {
-	tankAtlaces["YELLOW_DEFAULT_TANK"] = CreateHorizAtlasFromFile("sprites.png", 0, 0, 16, 8, 2)
+	tankAtlaces["YELLOW_T1_TANK"] = CreateHorizAtlasFromFile("sprites.png", 0, 0, 16, 8, 2)
+	tankAtlaces["RED_T1_TANK"] = CreateHorizAtlasFromFile("sprites.png", 16*8, 12*8, 16, 8, 2)
 
-	tileAtlaces["GRASS"] = CreateHorizAtlasFromFile("sprites.png", 17*16, 32, 16, 1, 1)
+	tileAtlaces["GRASS"] = CreateHorizAtlasFromFile("sprites.png", 17*16, 16*2, 16, 1, 1)
+	tileAtlaces["WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*1, 16, 1, 1)
 }
 
 func unloadResources() {
@@ -54,5 +56,6 @@ func CreateHorizAtlasFromFile(filename string, topleftx, toplefty, spriteSize, t
 	s.atlas = rl.LoadTextureFromImage(spritesImg)
 	s.totalFrames = totalFrames
 	s.totalSprites = int32(totalSprites)
+	s.spriteSize = int(spriteSize*resizeCoeff)
 	return &s
 }
