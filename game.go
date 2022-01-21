@@ -2,7 +2,7 @@ package main
 
 import rl "github.com/gen2brain/raylib-go/raylib"
 
-func runGame(gameMap *battlefield) {
+func runGame() {
 	if rl.IsKeyDown(rl.KeyRight) {
 		gameMap.playerTank.moveByVector(1, 0)
 	}

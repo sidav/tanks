@@ -10,9 +10,15 @@ type tank struct {
 	currentFrameNumber uint8
 }
 
+func (t *tank) getCenterCoords() (int, int) {
+	return t.centerX, t.centerY
+}
+
 func (t *tank) moveByVector(x, y int) {
-	t.centerX += x
-	t.centerY += y
+	if gameMap.canTankMoveByVector(t, x, y) {
+		t.centerX += x
+		t.centerY += y
+	}
 	t.faceX = x
 	t.faceY = y
 	t.currentFrameNumber = (t.currentFrameNumber + 1) % t.sprites.totalFrames
