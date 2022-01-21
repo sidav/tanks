@@ -18,21 +18,17 @@ func (t *tank) moveByVector(x, y int) {
 	t.currentFrameNumber = (t.currentFrameNumber + 1) % t.sprites.totalFrames
 }
 
-func (t *tank) getTopLeftCoordForDraw() (float32, float32) {
-	return float32(t.centerX - t.sprites.spriteSize/2), float32(t.centerY - t.sprites.spriteSize/2)
-}
-
-func (a *tank) getCurrentSpriteRect() rl.Rectangle {
+func (t *tank) getCurrentSpriteRect() rl.Rectangle {
 	var spriteGroup uint8 = 0
-	if a.faceX == 1 {
+	if t.faceX == 1 {
 		spriteGroup = 3
 	}
-	if a.faceX == -1 {
+	if t.faceX == -1 {
 		spriteGroup = 1
 	}
-	if a.faceY == 1 {
+	if t.faceY == 1 {
 		spriteGroup = 2
 	}
-	spriteNumber := int(spriteGroup*2 + (a.currentFrameNumber % 2))
-	return a.sprites.getRectForSpriteFromAtlas(spriteNumber)
+	spriteNumber := int(spriteGroup*2 + (t.currentFrameNumber % 2))
+	return t.sprites.getRectForSpriteFromAtlas(spriteNumber)
 }

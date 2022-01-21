@@ -22,7 +22,8 @@ func renderBattlefield(b *battlefield) {
 }
 
 func renderTank(t *tank) {
-	x, y := t.getTopLeftCoordForDraw()
+	cx, cy := ingameCoordsToOnScreenCoords(t.centerX, t.centerY)
+	x, y := float32(cx - t.sprites.spriteSize/2), float32(cy - t.sprites.spriteSize/2)
 	rl.DrawTextureRec(
 		t.sprites.atlas,
 		t.getCurrentSpriteRect(),
@@ -42,4 +43,8 @@ func renderTiles(b *battlefield) {
 			}
 		}
 	}
+}
+
+func ingameCoordsToOnScreenCoords(igx, igy int) (int, int) {
+	return igx*PIXEL_TO_GAMECOORD_RATIO, igy*PIXEL_TO_GAMECOORD_RATIO
 }

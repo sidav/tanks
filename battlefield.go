@@ -2,8 +2,6 @@ package main
 
 import "gorltemplate/fibrandom"
 
-const MAPSIZE = 13
-
 type battlefield struct {
 	tiles [][]tile
 	playerTank *tank
@@ -12,9 +10,9 @@ type battlefield struct {
 
 func (b *battlefield) init() {
 	// todo: REWRITE, add better generator
-	b.tiles = make([][]tile, MAPSIZE)
+	b.tiles = make([][]tile, MAP_SIZE)
 	for i := range b.tiles {
-		b.tiles[i] = make([]tile, MAPSIZE)
+		b.tiles[i] = make([]tile, MAP_SIZE)
 	}
 
 	rnd := fibrandom.FibRandom{}
@@ -27,8 +25,8 @@ func (b *battlefield) init() {
 	}
 
 	b.playerTank = &tank{
-		centerX:            32,
-		centerY:            32,
+		centerX:            TILE_SIZE_TRUE /2,
+		centerY:            TILE_SIZE_TRUE /2,
 		radius:             8,
 		sprites:            tankAtlaces["YELLOW_T1_TANK"],
 		currentFrameNumber: 0,
@@ -40,8 +38,8 @@ func (b *battlefield) init() {
 			x, y = rnd.RandInRange(6, 12), rnd.RandInRange(0,12)
 		}
 		b.enemies = append(b.enemies, &tank{
-			centerX:            x*48+24,
-			centerY:            y*48+24,
+			centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
+			centerY:            y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 			radius:             8,
 			sprites:            tankAtlaces["RED_T1_TANK"],
 			currentFrameNumber: 0,
