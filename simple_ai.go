@@ -3,14 +3,16 @@ package main
 import "fmt"
 
 type tankAi struct {
-	chanceToRotateOneFrom           int
+	chanceToRotateAnywhere          int
+	chanceToRotateAtTilePerfectSpot int
 	chanceToShootOnTarget           int
 	chanceToShootOnDestructibleTile int
 }
 
 func initSimpleTankAi() *tankAi {
 	return &tankAi{
-		chanceToRotateOneFrom: 35,
+		chanceToRotateAnywhere: 100,
+		chanceToRotateAtTilePerfectSpot: 35,
 		chanceToShootOnTarget: 15,
 		chanceToShootOnDestructibleTile: 50,
 	}
@@ -61,7 +63,11 @@ func (b *battlefield) actAiForTank(t *tank) {
 	fmt.Printf("check player; ")
 	enemyInFront := b.wantsToShoot(t)
 	fmt.Printf("rotate; ")
-	if t.canMoveNow() && !enemyInFront && rnd.OneChanceFrom(t.ai.chanceToRotateOneFrom) || b.isTileInFrontOfTankImpassable(t) {
+	wantsToRotate := rnd.OneChanceFrom(t.ai.chanceToRotateAnywhere)
+	if (t.centerX % TILE_SIZE_TRUE == TILE_SIZE_TRUE/2+1) || (t.centerY % TILE_SIZE_TRUE == TILE_SIZE_TRUE / 2+1) {
+		wantsToRotate = wantsToRotate || rnd.OneChanceFrom(t.ai.chanceToRotateAtTilePerfectSpot)
+	}
+	if t.canMoveNow() && !enemyInFront && (wantsToRotate || b.isTileInFrontOfTankImpassable(t)) {
 		for {
 			t.faceX, t.faceY = rnd.RandomUnitVectorInt()
 			if t.faceX == 0 || t.faceY == 0 {
