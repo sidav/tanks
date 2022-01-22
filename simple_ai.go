@@ -3,14 +3,16 @@ package main
 import "fmt"
 
 type tankAi struct {
-	chanceToRotateOneFrom int
-	chanceToShootOneFrom  int
+	chanceToRotateOneFrom           int
+	chanceToShootOnTarget           int
+	chanceToShootOnDestructibleTile int
 }
 
 func initSimpleTankAi() *tankAi {
 	return &tankAi{
 		chanceToRotateOneFrom: 35,
-		chanceToShootOneFrom:  1,
+		chanceToShootOnTarget: 15,
+		chanceToShootOnDestructibleTile: 50,
 	}
 }
 
@@ -22,7 +24,7 @@ func (b *battlefield) isTileInFrontOfTankImpassable(t *tank) bool {
 	return b.tiles[tilex][tiley].isImpassable()
 }
 
-func (b *battlefield) isThereEnemyInFront(t *tank) bool {
+func (b *battlefield) wantsToShoot(t *tank) bool {
 	tilex, tiley := b.trueCoordsToTileCoords(t.centerX, t.centerY)
 
 	for i := range b.tanks {
@@ -36,9 +38,13 @@ func (b *battlefield) isThereEnemyInFront(t *tank) bool {
 		}
 		for b.areTileCoordsValid(tilex, tiley) {
 			if ex == tilex && ey == tiley {
-				return true
+				return rnd.OneChanceFrom(t.ai.chanceToShootOnTarget) // enemy seen
 			}
+
 			if b.tiles[tilex][tiley].isImpassable() {
+				if b.tiles[tilex][tiley].isDestructible() {
+					return rnd.OneChanceFrom(t.ai.chanceToShootOnDestructibleTile) // destructible tile seen
+				}
 				return false
 			}
 			tilex += t.faceX
@@ -53,9 +59,9 @@ func (b *battlefield) actAiForTank(t *tank) {
 		t.faceX = -1
 	}
 	fmt.Printf("check player; ")
-	enemyInFront := b.isThereEnemyInFront(t)
+	enemyInFront := b.wantsToShoot(t)
 	fmt.Printf("rotate; ")
-	if t.canMoveNow() && !enemyInFront && rnd.OneChanceFrom(t.ai.chanceToRotateOneFrom) || b.isTileInFrontOfTankImpassable(t){
+	if t.canMoveNow() && !enemyInFront && rnd.OneChanceFrom(t.ai.chanceToRotateOneFrom) || b.isTileInFrontOfTankImpassable(t) {
 		for {
 			t.faceX, t.faceY = rnd.RandomUnitVectorInt()
 			if t.faceX == 0 || t.faceY == 0 {
@@ -65,7 +71,7 @@ func (b *battlefield) actAiForTank(t *tank) {
 		return
 	}
 	fmt.Printf("shoot; ")
-	if t.canShootNow() && enemyInFront && rnd.OneChanceFrom(t.ai.chanceToShootOneFrom) {
+	if t.canShootNow() && enemyInFront {
 		b.shootAsTank(t)
 	}
 	fmt.Printf("move; ")

@@ -1,8 +1,8 @@
 package main
 
 const (
-	DESIRED_WALLS         = 50
-	DESIRED_ARMORED_WALLS = 15
+	DESIRED_WALLS         = 100
+	DESIRED_ARMORED_WALLS = 40
 	DESIRED_WOODS         = 10
 )
 
