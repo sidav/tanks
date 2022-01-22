@@ -18,7 +18,7 @@ func main() {
 	gameMap = &battlefield{
 		initialEnemiesCount:               0,
 		MaxTanksOnMap:                     10,
-		totalTanksRemainingToSpawn:        1,
+		totalTanksRemainingToSpawn:        30,
 		chanceToSpawnEnemyEachTickOneFrom: 150,
 	}
 	gameMap.init()
