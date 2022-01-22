@@ -51,7 +51,7 @@ func (b *battlefield) init() {
 		centerX:            MAP_W/2*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		centerY:            (MAP_H-3)*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		faceX:              0,
-		faceY:              1,
+		faceY:              -1,
 		radius:             TILE_SIZE_TRUE / 2,
 		sprites:            tankAtlaces["YELLOW_T1_TANK"],
 		stats:              tankStatsList["PLAYER_TANK"],

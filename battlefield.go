@@ -40,21 +40,21 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 		}
 	}
 	tankFaction := rnd.RandInRange(1, NUM_FACTIONS-1)
-	atlasName := ""
+	tankCode := ""
 	switch tankFaction {
 	case 1:
-		atlasName = "GRAY_T1_TANK"
+		tankCode = "GRAY_T1_TANK"
 	case 2:
-		atlasName = "GREEN_T1_TANK"
+		tankCode = "GREEN_T1_TANK"
 	case 3:
-		atlasName = "RED_T1_TANK"
+		tankCode = "RED_T1_TANK"
 	}
 	b.tanks = append(b.tanks, &tank{
 		centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		centerY:            y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		radius:             TILE_SIZE_TRUE / 2 - 1,
-		sprites:            tankAtlaces[atlasName],
-		stats:              tankStatsList["ENEMY_TANK"],
+		sprites:            tankAtlaces[tankCode],
+		stats:              tankStatsList[tankCode],
 		ai:                 initSimpleTankAi(),
 		faction:            tankFaction,
 		currentFrameNumber: 0,
@@ -151,7 +151,7 @@ func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int
 
 func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
 	var tx1, ty1, tx2, ty2 int
-	diagRadius := t.radius * 6 / 10
+	diagRadius := t.radius * 65 / 100
 	// we need to check "left corner" and "right corner" regarding to the tank
 	if vx == 0 {
 		tx1, ty1 = b.trueCoordsToTileCoords(t.centerX-diagRadius, t.centerY+vy*t.radius)
@@ -161,7 +161,8 @@ func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
 		tx2, ty2 = b.trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY+diagRadius)
 	}
 
-	return b.areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].isImpassable() &&
+	return (t.centerX+vx >= t.radius) && (t.centerY + vy >= t.radius) &&
+		b.areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].isImpassable() &&
 		b.areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].isImpassable() &&
 		b.getAnotherTankPresentAtTrueCoords(t, t.centerX+vx*t.radius, t.centerY+vy*t.radius) == nil
 }

@@ -17,8 +17,16 @@ var tankStatsList = map[string]*tankStats {
 		moveDelay:  2,
 		shootDelay: 25,
 	},
-	"ENEMY_TANK": {
-		moveDelay:  5,
+	"GRAY_T1_TANK": {
+		moveDelay:  6,
+		shootDelay: 40,
+	},
+	"GREEN_T1_TANK": {
+		moveDelay:  8,
 		shootDelay: 50,
+	},
+	"RED_T1_TANK": {
+		moveDelay:  3,
+		shootDelay: 60,
 	},
 }
