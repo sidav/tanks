@@ -9,6 +9,9 @@ var tankStatsList = map[string]*tankStats {
 	"EXPLOSION": {
 		moveDelay: 3,
 	},
+	"SPAWN": {
+		moveDelay: 4,
+	},
 	"PLAYER_TANK": {
 		moveDelay:  2,
 		shootDelay: 15,

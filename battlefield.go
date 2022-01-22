@@ -22,12 +22,12 @@ func (b *battlefield) trueCoordsToTileCoords(tx, ty int) (int, int) {
 	return tx / TILE_SIZE_TRUE, ty / TILE_SIZE_TRUE
 }
 
-func (b *battlefield) spawnExplosion(cx, cy int) {
+func (b *battlefield) spawnEffect(code string, cx, cy int) {
 	b.effects = append(b.effects, &tank{
 		centerX:            cx,
 		centerY:            cy,
-		sprites:            effectAtlaces["EXPLOSION"],
-		nextTickToMove:     gameTick+tankStatsList["EXPLOSION"].moveDelay,
+		sprites:            effectAtlaces[code],
+		nextTickToMove:     gameTick+tankStatsList[code].moveDelay,
 	})
 }
 
@@ -45,6 +45,7 @@ func (b *battlefield) spawnEnemyTank() {
 		ai:                 initSimpleTankAi(),
 		currentFrameNumber: 0,
 	})
+	b.spawnEffect("SPAWN", x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2, y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2)
 }
 
 func (b *battlefield) removeEnemyTank(t *tank) {
@@ -79,20 +80,19 @@ func (b *battlefield) actForProjectiles() {
 		projTx, projTy := b.trueCoordsToTileCoords(proj.centerX, proj.centerY)
 		if !b.areTileCoordsValid(projTx, projTy) {
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
-			b.spawnExplosion(proj.centerX, proj.centerY)
 			continue
 		}
 		if b.tiles[projTx][projTy].impassable {
 			b.tiles[projTx][projTy].impassable = false
 			b.tiles[projTx][projTy].sprite = nil
-			b.spawnExplosion(proj.centerX, proj.centerY)
+			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue
 		}
 		hitTank := b.getAnotherTankPresentAtTrueCoords(proj.owner, proj.centerX, proj.centerY)
 		if hitTank != nil {
 			b.removeEnemyTank(hitTank)
-			b.spawnExplosion(proj.centerX, proj.centerY)
+			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue
 		}
