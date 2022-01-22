@@ -13,6 +13,7 @@ type tank struct {
 
 	owner          *tank
 	markedToRemove bool
+	code           string
 
 	nextTickToMove, nextTickToShoot int
 

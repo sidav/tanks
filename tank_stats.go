@@ -10,7 +10,7 @@ var tankStatsList = map[string]*tankStats {
 		moveDelay: 3,
 	},
 	"SPAWN": {
-		moveDelay: 4,
+		moveDelay: 7,
 	},
 
 	"PLAYER_TANK": {

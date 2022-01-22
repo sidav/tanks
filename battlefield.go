@@ -21,7 +21,23 @@ func (b *battlefield) spawnEffect(code string, cx, cy int, owner *tank) {
 		sprites:        effectAtlaces[code],
 		nextTickToMove: gameTick + tankStatsList[code].moveDelay,
 		owner:          owner,
+		code:           code,
 	})
+}
+
+func (b *battlefield) actForEffects() {
+	for i := len(b.effects) - 1; i >= 0; i-- {
+		if b.effects[i].canMoveNow() {
+			b.effects[i].currentFrameNumber++
+			b.effects[i].nextTickToMove = gameTick + tankStatsList[b.effects[i].code].moveDelay
+		}
+		if b.effects[i].currentFrameNumber >= b.effects[i].sprites.totalFrames {
+			if b.effects[i].code == "SPAWN" {
+				b.tanks = append(b.tanks, b.effects[i].owner)
+			}
+			b.effects = append(b.effects[:i], b.effects[i+1:]...)
+		}
+	}
 }
 
 func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
@@ -88,7 +104,7 @@ func (b *battlefield) actForProjectiles() {
 		proj.centerY += proj.faceY
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
 		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) ||
-			proj.centerX + proj.faceX <= 0 || proj.centerY + proj.faceY <= 0 {
+			proj.centerX+proj.faceX <= 0 || proj.centerY+proj.faceY <= 0 {
 
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY, nil)
@@ -119,18 +135,6 @@ func (b *battlefield) actForProjectiles() {
 			b.removeTank(hitTank)
 			proj.markedToRemove = true
 			continue
-		}
-	}
-}
-
-func (b *battlefield) actForEffects() {
-	for i := len(b.effects) - 1; i >= 0; i-- {
-		if b.effects[i].canMoveNow() {
-			b.effects[i].currentFrameNumber++
-			b.effects[i].nextTickToMove = gameTick + tankStatsList["EXPLOSION"].moveDelay
-		}
-		if b.effects[i].currentFrameNumber >= b.effects[i].sprites.totalFrames {
-			b.effects = append(b.effects[:i], b.effects[i+1:]...)
 		}
 	}
 }
