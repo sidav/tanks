@@ -14,12 +14,13 @@ type battlefield struct {
 	effects     []*tank // haha, effecrs are too. TODO: refactor
 }
 
-func (b *battlefield) spawnEffect(code string, cx, cy int) {
+func (b *battlefield) spawnEffect(code string, cx, cy int, owner *tank) {
 	b.effects = append(b.effects, &tank{
 		centerX:        cx,
 		centerY:        cy,
 		sprites:        effectAtlaces[code],
 		nextTickToMove: gameTick + tankStatsList[code].moveDelay,
+		owner:          owner,
 	})
 }
 
@@ -41,24 +42,24 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 	case 3:
 		tankCode = "RED_T1_TANK"
 	}
-	b.tanks = append(b.tanks, &tank{
+	owner := &tank{
 		centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		centerY:            y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
-		radius:             TILE_SIZE_TRUE / 2 - 1,
+		radius:             TILE_SIZE_TRUE/2 - 1,
 		sprites:            tankAtlaces[tankCode],
 		stats:              tankStatsList[tankCode],
 		ai:                 initSimpleTankAi(),
 		faction:            tankFaction,
 		currentFrameNumber: 0,
-	})
-	b.spawnEffect("SPAWN", x*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2, y*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2)
+	}
+	b.spawnEffect("SPAWN", x*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2, y*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2, owner)
 }
 
 func (b *battlefield) removeTank(t *tank) {
 	for i := range b.tanks {
 		if b.tanks[i] == t {
 			cx, cy := b.tanks[i].getCenterCoords()
-			b.spawnEffect("EXPLOSION", cx, cy)
+			b.spawnEffect("EXPLOSION", cx, cy, nil)
 			b.tanks = append(b.tanks[:i], b.tanks[i+1:]...)
 			break
 		}
@@ -86,9 +87,11 @@ func (b *battlefield) actForProjectiles() {
 		proj.centerX += proj.faceX
 		proj.centerY += proj.faceY
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
-		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) {
+		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) ||
+			proj.centerX + proj.faceX <= 0 || proj.centerY + proj.faceY <= 0 {
+
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
-			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
+			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY, nil)
 			continue
 		}
 
@@ -167,7 +170,7 @@ func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
 		tx2, ty2 = trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY+diagRadius)
 	}
 
-	return (t.centerX+vx >= t.radius) && (t.centerY + vy >= t.radius) &&
+	return (t.centerX+vx >= t.radius) && (t.centerY+vy >= t.radius) &&
 		areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].isImpassable() &&
 		areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].isImpassable() &&
 		b.getAnotherTankPresentAtTrueCoords(t, t.centerX+vx*t.radius, t.centerY+vy*t.radius) == nil
