@@ -6,6 +6,9 @@ type tankStats struct {
 }
 
 var tankStatsList = map[string]*tankStats {
+	"EXPLOSION": {
+		moveDelay: 3,
+	},
 	"PLAYER_TANK": {
 		moveDelay:  2,
 		shootDelay: 15,

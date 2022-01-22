@@ -10,6 +10,7 @@ var (
 	tankAtlaces = map[string]*horizSpriteAtlas{}
 	tileAtlaces = map[string]*horizSpriteAtlas{}
 	projectileAtlaces = map[string]*horizSpriteAtlas{}
+	effectAtlaces = map[string]*horizSpriteAtlas{}
 )
 
 func loadImageResources() {
@@ -20,6 +21,8 @@ func loadImageResources() {
 	tileAtlaces["WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*0, 16, 1, 1)
 
 	projectileAtlaces["BULLET"] = CreateHorizAtlasFromFile("sprites.png", 321, 100, 8, 4, 1)
+
+	effectAtlaces["EXPLOSION"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*8, 16, 3, 7)
 }
 
 func unloadResources() {

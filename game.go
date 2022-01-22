@@ -33,14 +33,20 @@ func runGame() {
 
 	fmt.Printf("PROJS ")
 	gameMap.actForProjectiles()
+
+	fmt.Printf("EFFECTS ")
+	gameMap.actForEffects()
+
 	fmt.Printf("AI {")
 	for i := range gameMap.enemies {
 		gameMap.actAiForTank(gameMap.enemies[i])
 	}
 	fmt.Printf("} ")
+
 	fmt.Printf("RENDER ")
 	renderBattlefield(gameMap)
 
+	fmt.Printf("SPAWN ")
 	if len(gameMap.enemies) < gameMap.desiredEnemiesCount && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) {
 		gameMap.spawnEnemyTank()
 	}

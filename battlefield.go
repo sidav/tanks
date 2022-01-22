@@ -11,6 +11,7 @@ type battlefield struct {
 	enemies                           []*tank
 
 	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
+	effects []*tank // haha, effecrs are too. TODO: refactor
 }
 
 func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
@@ -19,6 +20,15 @@ func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
 
 func (b *battlefield) trueCoordsToTileCoords(tx, ty int) (int, int) {
 	return tx / TILE_SIZE_TRUE, ty / TILE_SIZE_TRUE
+}
+
+func (b *battlefield) spawnExplosion(cx, cy int) {
+	b.effects = append(b.effects, &tank{
+		centerX:            cx,
+		centerY:            cy,
+		sprites:            effectAtlaces["EXPLOSION"],
+		nextTickToMove:     gameTick+tankStatsList["EXPLOSION"].moveDelay,
+	})
 }
 
 func (b *battlefield) spawnEnemyTank() {
@@ -69,19 +79,34 @@ func (b *battlefield) actForProjectiles() {
 		projTx, projTy := b.trueCoordsToTileCoords(proj.centerX, proj.centerY)
 		if !b.areTileCoordsValid(projTx, projTy) {
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
+			b.spawnExplosion(proj.centerX, proj.centerY)
 			continue
 		}
 		if b.tiles[projTx][projTy].impassable {
 			b.tiles[projTx][projTy].impassable = false
 			b.tiles[projTx][projTy].sprite = nil
+			b.spawnExplosion(proj.centerX, proj.centerY)
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue
 		}
 		hitTank := b.getAnotherTankPresentAtTrueCoords(proj.owner, proj.centerX, proj.centerY)
 		if hitTank != nil {
 			b.removeEnemyTank(hitTank)
+			b.spawnExplosion(proj.centerX, proj.centerY)
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue
+		}
+	}
+}
+
+func (b *battlefield) actForEffects() {
+	for i := len(b.effects) - 1; i >= 0; i-- {
+		if b.effects[i].canMoveNow() {
+			b.effects[i].currentFrameNumber++
+			b.effects[i].nextTickToMove = gameTick+tankStatsList["EXPLOSION"].moveDelay
+		}
+		if b.effects[i].currentFrameNumber >= b.effects[i].sprites.totalFrames {
+			b.effects = append(b.effects[:i], b.effects[i+1:]...)
 		}
 	}
 }
