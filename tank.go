@@ -8,13 +8,27 @@ type tank struct {
 	radius             int
 	sprites            *horizSpriteAtlas
 	currentFrameNumber uint8
+	stats              *tankStats
+
+	nextTickToMove, nextTickToShoot int
+
+	ai *tankAi
 }
 
 func (t *tank) getCenterCoords() (int, int) {
 	return t.centerX, t.centerY
 }
 
+func (t *tank) canMoveNow() bool {
+	return gameTick >= t.nextTickToMove
+}
+
+func (t *tank) canShootNow() bool {
+	return gameTick >= t.nextTickToShoot
+}
+
 func (t *tank) moveByVector(x, y int) {
+	t.nextTickToMove = gameTick + t.stats.moveDelay
 	if gameMap.canTankMoveByVector(t, x, y) {
 		t.centerX += x
 		t.centerY += y

@@ -35,6 +35,7 @@ func (b *battlefield) shootAsTank(t *tank) {
 		currentFrameNumber: 0,
 	}
 	b.projectiles = append(b.projectiles, newProjectile)
+	t.nextTickToShoot = gameTick + t.stats.shootDelay
 }
 
 func (b *battlefield) actForProjectiles() {
