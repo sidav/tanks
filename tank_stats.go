@@ -43,7 +43,12 @@ var tankStatsList = map[string]*tankStats{
 	},
 	"T4_TANK": {
 		radius: TILE_PHYSICAL_SIZE/2-2,
-		moveDelay:  3,
+		moveDelay:  10,
+		shootDelay: 20,
+	},
+	"T5_TANK": {
+		radius: TILE_PHYSICAL_SIZE/2-2,
+		moveDelay:  2,
 		shootDelay: 60,
 	},
 }
