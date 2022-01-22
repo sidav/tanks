@@ -68,9 +68,9 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 		tankCode = "RED_T1_TANK"
 	}
 	owner := &tank{
+		code:               tankCode,
 		centerX:            x*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
 		centerY:            y*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
-		radius:             TILE_PHYSICAL_SIZE/2 - 1,
 		sprites:            tankAtlaces[tankCode],
 		stats:              tankStatsList[tankCode],
 		ai:                 initSimpleTankAi(),
@@ -96,11 +96,11 @@ func (b *battlefield) removeTank(t *tank) {
 
 func (b *battlefield) shootAsTank(t *tank) {
 	newProjectile := &tank{
-		centerX:            t.centerX + t.faceX*(t.radius+1),
-		centerY:            t.centerY + t.faceY*(t.radius+1),
+		code:               "BULLET",
+		centerX:            t.centerX + t.faceX*(t.getRadius()+1),
+		centerY:            t.centerY + t.faceY*(t.getRadius()+1),
 		faceX:              t.faceX,
 		faceY:              t.faceY,
-		radius:             2,
 		sprites:            projectileAtlaces["BULLET"],
 		owner:              t,
 		currentFrameNumber: 0,
@@ -128,7 +128,7 @@ func (b *battlefield) actForProjectiles() {
 			if p == proj {
 				continue
 			}
-			if circlesOverlap(proj.centerX, proj.centerY, proj.radius, p.centerX, p.centerY, p.radius) {
+			if circlesOverlap(proj.centerX, proj.centerY, proj.getRadius(), p.centerX, p.centerY, p.getRadius()) {
 				proj.markedToRemove = true
 				p.markedToRemove = true
 				continue
@@ -154,7 +154,7 @@ func (b *battlefield) actForProjectiles() {
 func (b *battlefield) getEffectPresentInRadiusFromTrueCoords(x, y, r int) *tank {
 	for _, t := range b.effects {
 		tx, ty := t.getCenterCoords()
-		if circlesOverlap(x, y, r, tx, ty, t.radius) {
+		if circlesOverlap(x, y, r, tx, ty, t.getRadius()) {
 			return t
 		}
 	}
@@ -164,14 +164,14 @@ func (b *battlefield) getEffectPresentInRadiusFromTrueCoords(x, y, r int) *tank 
 func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int) *tank {
 	r := 0
 	if thisTank != nil {
-		r = thisTank.radius
+		r = thisTank.getRadius()
 	}
 	for _, t := range b.tanks {
 		if thisTank == t {
 			continue
 		}
 		tx, ty := t.getCenterCoords()
-		if circlesOverlap(x, y, r, tx, ty, t.radius) {
+		if circlesOverlap(x, y, r, tx, ty, t.getRadius()) {
 			return t
 		}
 	}
@@ -180,18 +180,18 @@ func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int
 
 func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
 	var tx1, ty1, tx2, ty2 int
-	diagRadius := t.radius * 65 / 100
+	diagRadius := t.getRadius() * 65 / 100
 	// we need to check "left corner" and "right corner" regarding to the tank
 	if vx == 0 {
-		tx1, ty1 = trueCoordsToTileCoords(t.centerX-diagRadius, t.centerY+vy*t.radius)
-		tx2, ty2 = trueCoordsToTileCoords(t.centerX+diagRadius, t.centerY+vy*t.radius)
+		tx1, ty1 = trueCoordsToTileCoords(t.centerX-diagRadius, t.centerY+vy*t.getRadius())
+		tx2, ty2 = trueCoordsToTileCoords(t.centerX+diagRadius, t.centerY+vy*t.getRadius())
 	} else if vy == 0 {
-		tx1, ty1 = trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY-diagRadius)
-		tx2, ty2 = trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY+diagRadius)
+		tx1, ty1 = trueCoordsToTileCoords(t.centerX+vx*t.getRadius(), t.centerY-diagRadius)
+		tx2, ty2 = trueCoordsToTileCoords(t.centerX+vx*t.getRadius(), t.centerY+diagRadius)
 	}
 
-	return (t.centerX+vx >= t.radius) && (t.centerY+vy >= t.radius) &&
+	return (t.centerX+vx >= t.getRadius()) && (t.centerY+vy >= t.getRadius()) &&
 		areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].isImpassable() &&
 		areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].isImpassable() &&
-		b.getAnotherTankPresentAtTrueCoords(t, t.centerX+vx*t.radius, t.centerY+vy*t.radius) == nil
+		b.getAnotherTankPresentAtTrueCoords(t, t.centerX+vx*t.getRadius(), t.centerY+vy*t.getRadius()) == nil
 }

@@ -1,11 +1,12 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 type tank struct {
 	centerX, centerY   int
 	faceX, faceY       int
-	radius             int
 	sprites            *horizSpriteAtlas
 	currentFrameNumber uint8
 	stats              *tankStats
@@ -22,6 +23,10 @@ type tank struct {
 
 func (t *tank) getCenterCoords() (int, int) {
 	return t.centerX, t.centerY
+}
+
+func (t *tank) getRadius() int {
+	return tankStatsList[t.code].radius
 }
 
 func (t *tank) canMoveNow() bool {
