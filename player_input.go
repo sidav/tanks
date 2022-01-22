@@ -13,16 +13,14 @@ func listenPlayerInput() {
 	if gameMap.playerTank.canMoveNow() {
 		if rl.IsKeyDown(rl.KeyRight) {
 			gameMap.playerTank.moveByVector(1, 0)
-		}
-		if rl.IsKeyDown(rl.KeyLeft) {
+		} else if rl.IsKeyDown(rl.KeyLeft) {
 			gameMap.playerTank.moveByVector(-1, 0)
-		}
-		if rl.IsKeyDown(rl.KeyUp) {
+		} else if rl.IsKeyDown(rl.KeyUp) {
 			gameMap.playerTank.moveByVector(0, -1)
-		}
-		if rl.IsKeyDown(rl.KeyDown) {
+		} else if rl.IsKeyDown(rl.KeyDown) {
 			gameMap.playerTank.moveByVector(0, 1)
 		}
+
 		if rl.IsKeyDown(rl.KeyEscape) {
 			gameIsRunning = false
 		}
