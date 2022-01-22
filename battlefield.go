@@ -31,7 +31,7 @@ func (b *battlefield) spawnEffect(code string, cx, cy int) {
 	})
 }
 
-func (b *battlefield) spawnEnemyTank(fromx, tox, fromy, toy int) {
+func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 	var x, y int
 	for {
 		x, y = rnd.RandInRange(fromx, tox), rnd.RandInRange(fromy, toy)
@@ -42,9 +42,12 @@ func (b *battlefield) spawnEnemyTank(fromx, tox, fromy, toy int) {
 	tankFaction := rnd.RandInRange(1, NUM_FACTIONS-1)
 	atlasName := ""
 	switch tankFaction {
-	case 1: atlasName = "GRAY_T1_TANK"
-	case 2: atlasName = "GREEN_T1_TANK"
-	case 3: atlasName = "RED_T1_TANK"
+	case 1:
+		atlasName = "GRAY_T1_TANK"
+	case 2:
+		atlasName = "GREEN_T1_TANK"
+	case 3:
+		atlasName = "RED_T1_TANK"
 	}
 	b.tanks = append(b.tanks, &tank{
 		centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
@@ -59,7 +62,7 @@ func (b *battlefield) spawnEnemyTank(fromx, tox, fromy, toy int) {
 	b.spawnEffect("SPAWN", x*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2, y*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2)
 }
 
-func (b *battlefield) removeEnemyTank(t *tank) {
+func (b *battlefield) removeTank(t *tank) {
 	for i := range b.tanks {
 		if b.tanks[i] == t {
 			b.tanks = append(b.tanks[:i], b.tanks[i+1:]...)
@@ -103,7 +106,7 @@ func (b *battlefield) actForProjectiles() {
 		}
 		hitTank := b.getAnotherTankPresentAtTrueCoords(proj.owner, proj.centerX, proj.centerY)
 		if hitTank != nil {
-			b.removeEnemyTank(hitTank)
+			b.removeTank(hitTank)
 			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue

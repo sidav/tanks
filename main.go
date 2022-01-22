@@ -16,9 +16,9 @@ func main() {
 	rnd.InitDefault()
 
 	gameMap = &battlefield{
-		initialEnemiesCount: 1,
-		desiredEnemiesCount: 10,
-		chanceToSpawnEnemyEachTickOneFrom: 150,
+		initialEnemiesCount: 5,
+		desiredEnemiesCount: 100,
+		chanceToSpawnEnemyEachTickOneFrom: 5,
 	}
 	gameMap.init()
 

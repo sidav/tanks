@@ -10,7 +10,7 @@ type tankAi struct {
 func initSimpleTankAi() *tankAi {
 	return &tankAi{
 		chanceToRotateOneFrom: 35,
-		chanceToShootOneFrom:  15,
+		chanceToShootOneFrom:  1,
 	}
 }
 
@@ -24,20 +24,26 @@ func (b *battlefield) isTileInFrontOfTankImpassable(t *tank) bool {
 
 func (b *battlefield) isThereEnemyInFront(t *tank) bool {
 	tilex, tiley := b.trueCoordsToTileCoords(t.centerX, t.centerY)
-	px, py := b.playerTank.getCenterCoords()
-	px, py = b.trueCoordsToTileCoords(px, py)
-	if px != tilex && py != tiley {
-		return false
-	}
-	for b.areTileCoordsValid(tilex, tiley) {
-		if px == tilex && py == tiley {
-			return true
+
+	for i := range b.tanks {
+		if b.tanks[i].faction == t.faction {
+			continue
 		}
-		if b.tiles[tilex][tiley].isImpassable() {
-			return false
+		ex, ey := b.tanks[i].getCenterCoords()
+		ex, ey = b.trueCoordsToTileCoords(ex, ey)
+		if ex != tilex && ey != tiley {
+			continue
 		}
-		tilex += t.faceX
-		tiley += t.faceY
+		for b.areTileCoordsValid(tilex, tiley) {
+			if ex == tilex && ey == tiley {
+				return true
+			}
+			if b.tiles[tilex][tiley].isImpassable() {
+				return false
+			}
+			tilex += t.faceX
+			tiley += t.faceY
+		}
 	}
 	return false
 }
