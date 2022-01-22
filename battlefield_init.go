@@ -4,6 +4,7 @@ const (
 	DESIRED_WALLS         = 75
 	DESIRED_ARMORED_WALLS = 40
 	DESIRED_WOODS         = 10
+	DESIRED_WATER         = 10
 )
 
 func (b *battlefield) getRandomEmptyTileCoords(fx, tx, fy, ty int) (int, int) {
@@ -38,6 +39,12 @@ func (b *battlefield) init() {
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WOOD
 		b.tiles[MAP_W-x-1][y].code = TILE_WOOD
+	}
+
+	for i := 0; i < DESIRED_WATER/2; i++ {
+		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
+		b.tiles[x][y].code = TILE_WATER
+		b.tiles[MAP_W-x-1][y].code = TILE_WATER
 	}
 
 	for x := MAP_W/2 - 1; x <= MAP_W/2+1; x++ {

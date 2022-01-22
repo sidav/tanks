@@ -15,13 +15,13 @@ func renderBattlefield(b *battlefield) {
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.Black)
 
-	// rl.DrawText(fmt.Sprintf("%d, %d", b.playerTank.centerX, b.playerTank.centerY),0,0, 32, color.RGBA{255, 255, 255, 255})
+	renderTiles(b)
 	for i := range b.tanks {
 		renderTank(b.tanks[i])
 	}
 	renderProjectiles(b)
-	renderTiles(b)
 	renderEffects(b)
+	renderWood(b)
 
 	if b.playerTank == nil {
 		rl.DrawText("GAME OVER.", WINDOW_W/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
@@ -88,6 +88,17 @@ func renderTiles(b *battlefield) {
 		for y, t := range b.tiles[x] {
 			spr := t.getSpritesAtlas()
 			if spr != nil {
+				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), TINT)
+			}
+		}
+	}
+}
+
+func renderWood(b *battlefield) {
+	for x := range b.tiles {
+		for y, t := range b.tiles[x] {
+			spr := t.getSpritesAtlas()
+			if t.code == TILE_WOOD {
 				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), TINT)
 			}
 		}

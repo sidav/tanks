@@ -5,6 +5,7 @@ const (
 	TILE_WALL
 	TILE_ARMORED
 	TILE_WOOD
+	TILE_WATER
 	TILE_HQ
 )
 
@@ -59,6 +60,13 @@ func initTileDictionary() {
 		{
 			sprite:
 			tileAtlaces["WOOD"],
+			impassable:   false,
+			destructible: false,
+		},
+		TILE_WATER:
+		{
+			sprite:
+			tileAtlaces["WATER"],
 			impassable:   false,
 			destructible: false,
 		},

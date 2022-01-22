@@ -34,6 +34,10 @@ func (t *tank) canShootNow() bool {
 
 func (t *tank) moveByVector(x, y int) {
 	t.nextTickToMove = gameTick + t.stats.moveDelay
+	tx, ty := trueCoordsToTileCoords(t.centerX, t.centerY)
+	if gameMap.tiles[tx][ty].code == TILE_WATER {
+		t.nextTickToMove += t.stats.moveDelay
+	}
 	if gameMap.canTankMoveByVector(t, x, y) {
 		t.centerX += x
 		t.centerY += y
