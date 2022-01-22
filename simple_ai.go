@@ -10,7 +10,7 @@ type tankAi struct {
 func initSimpleTankAi() *tankAi {
 	return &tankAi{
 		chanceToRotateOneFrom: 35,
-		chanceToShootOneFrom:  5,
+		chanceToShootOneFrom:  15,
 	}
 }
 
@@ -43,8 +43,12 @@ func (b *battlefield) isTherePlayerInFrontOfTank(t *tank) bool {
 }
 
 func (b *battlefield) actAiForTank(t *tank) {
-	fmt.Printf("%d: AI\n", gameTick)
+	if t.faceX == 0 && t.faceY == 0 {
+		t.faceX = -1
+	}
+	fmt.Printf("check player; ")
 	playerInFront := b.isTherePlayerInFrontOfTank(t)
+	fmt.Printf("rotate; ")
 	if t.canMoveNow() && !playerInFront && rnd.OneChanceFrom(t.ai.chanceToRotateOneFrom) || b.isTileInFrontOfTankImpassable(t){
 		for {
 			t.faceX, t.faceY = rnd.RandomUnitVectorInt()
@@ -54,9 +58,11 @@ func (b *battlefield) actAiForTank(t *tank) {
 		}
 		return
 	}
+	fmt.Printf("shoot; ")
 	if t.canShootNow() && playerInFront && rnd.OneChanceFrom(t.ai.chanceToShootOneFrom) {
 		b.shootAsTank(t)
 	}
+	fmt.Printf("move; ")
 	if t.canMoveNow() && b.canTankMoveByVector(t, t.faceX, t.faceY) {
 		t.moveByVector(t.faceX, t.faceY)
 	}

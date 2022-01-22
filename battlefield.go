@@ -1,9 +1,15 @@
 package main
 
 type battlefield struct {
-	tiles       [][]tile
-	playerTank  *tank
-	enemies     []*tank
+	tiles [][]tile
+
+	playerTank *tank
+
+	desiredEnemiesCount               int
+	initialEnemiesCount               int
+	chanceToSpawnEnemyEachTickOneFrom int
+	enemies                           []*tank
+
 	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
 }
 
@@ -13,6 +19,22 @@ func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
 
 func (b *battlefield) trueCoordsToTileCoords(tx, ty int) (int, int) {
 	return tx / TILE_SIZE_TRUE, ty / TILE_SIZE_TRUE
+}
+
+func (b *battlefield) spawnEnemyTank() {
+	x, y := rnd.RandInRange(3, 12), rnd.RandInRange(0, 12)
+	for b.tiles[x][y].impassable || b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_SIZE_TRUE, y*TILE_SIZE_TRUE) != nil {
+		x, y = rnd.RandInRange(3, 12), rnd.RandInRange(0, 12)
+	}
+	b.enemies = append(b.enemies, &tank{
+		centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
+		centerY:            y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
+		radius:             TILE_SIZE_TRUE / 2,
+		sprites:            tankAtlaces["RED_T1_TANK"],
+		stats:              tankStatsList["ENEMY_TANK"],
+		ai:                 initSimpleTankAi(),
+		currentFrameNumber: 0,
+	})
 }
 
 func (b *battlefield) removeEnemyTank(t *tank) {

@@ -12,9 +12,15 @@ func main() {
 	loadImageResources()
 	// defer unloadResources()
 
-	gameMap = &battlefield{}
-	gameMap.init()
 	rnd.InitDefault()
+
+	gameMap = &battlefield{
+		initialEnemiesCount: 1,
+		desiredEnemiesCount: 5,
+		chanceToSpawnEnemyEachTickOneFrom: 250,
+	}
+	gameMap.init()
+
 	for !rl.WindowShouldClose() {
 		runGame()
 	}

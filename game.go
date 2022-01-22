@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/sidav/golibrl/random/additive_random"
 )
@@ -9,6 +10,7 @@ var gameTick = 0
 var rnd additive_random.FibRandom
 
 func runGame() {
+	fmt.Printf("%d: START ", gameTick)
 	if gameMap.playerTank.canMoveNow() {
 		if rl.IsKeyDown(rl.KeyRight) {
 			gameMap.playerTank.moveByVector(1, 0)
@@ -29,10 +31,20 @@ func runGame() {
 		}
 	}
 
+	fmt.Printf("PROJS ")
 	gameMap.actForProjectiles()
+	fmt.Printf("AI {")
 	for i := range gameMap.enemies {
 		gameMap.actAiForTank(gameMap.enemies[i])
 	}
+	fmt.Printf("} ")
+	fmt.Printf("RENDER ")
 	renderBattlefield(gameMap)
+
+	if len(gameMap.enemies) < gameMap.desiredEnemiesCount && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) {
+		gameMap.spawnEnemyTank()
+	}
+
+	fmt.Printf("TURN FINISHED. \n")
 	gameTick++
 }
