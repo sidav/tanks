@@ -24,8 +24,8 @@ func renderBattlefield(b *battlefield) {
 	renderWood(b)
 
 	if gameOver {
-		rl.DrawText("GAME OVER.", WINDOW_W/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
-		rl.DrawText("Press ESC for menu", WINDOW_W/4, gameOverLineH+TILE_SIZE_IN_PIXELS+4, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		rl.DrawText("GAME OVER.", int32(WINDOW_W)/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		rl.DrawText("Press ESC for menu", int32(WINDOW_W)/4, gameOverLineH+TILE_SIZE_IN_PIXELS+4, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
 		gameOverLineH++
 		gameOverRgb.A = 255
 		gameOverRgb.R += uint8(rnd.Rand(2))
@@ -37,7 +37,7 @@ func renderBattlefield(b *battlefield) {
 	}
 
 	if gameWon {
-		rl.DrawText("YOU WON!", WINDOW_W/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		rl.DrawText("YOU WON!", int32(WINDOW_W)/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
 		gameOverLineH++
 		gameOverRgb.A = 255
 		gameOverRgb.R += uint8(rnd.Rand(2))
@@ -60,10 +60,10 @@ func renderBattlefield(b *battlefield) {
 
 func renderTank(t *tank, useFactionTint bool) {
 	cx, cy := ingameCoordsToOnScreenCoords(t.centerX, t.centerY)
-	x, y := float32(cx - t.sprites.spriteSize/2), float32(cy - t.sprites.spriteSize/2)
+	x, y := float32(cx - t.getSpritesAtlas().spriteSize/2), float32(cy - t.getSpritesAtlas().spriteSize/2)
 	if useFactionTint {
 		rl.DrawTextureRec(
-			t.sprites.atlas,
+			t.getSpritesAtlas().atlas,
 			t.getCurrentSpriteRect(),
 			rl.Vector2{
 				X: x,
@@ -73,7 +73,7 @@ func renderTank(t *tank, useFactionTint bool) {
 		)
 	} else {
 		rl.DrawTextureRec(
-			t.sprites.atlas,
+			t.getSpritesAtlas().atlas,
 			t.getCurrentSpriteRect(),
 			rl.Vector2{
 				X: x,

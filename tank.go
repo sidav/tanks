@@ -7,14 +7,12 @@ import (
 type tank struct {
 	centerX, centerY   int
 	faceX, faceY       int
-	sprites            *horizSpriteAtlas
 	currentFrameNumber uint8
-	stats              *tankStats
 	faction            int
 
 	owner          *tank
 	markedToRemove bool
-	code           string
+	code           int
 
 	nextTickToMove, nextTickToShoot int
 
@@ -37,11 +35,20 @@ func (t *tank) canShootNow() bool {
 	return gameTick >= t.nextTickToShoot
 }
 
+func (t *tank) getStats() *tankStats {
+	return tankStatsList[t.code]
+}
+
+func (t *tank) getSpritesAtlas() *horizSpriteAtlas {
+	debugWritef("ATLAS{%v}", t.code)
+	return t.getStats().sprites
+}
+
 func (t *tank) moveByVector(x, y int) {
-	t.nextTickToMove = gameTick + t.stats.moveDelay
+	t.nextTickToMove = gameTick + t.getStats().moveDelay
 	tx, ty := trueCoordsToTileCoords(t.centerX, t.centerY)
 	if gameMap.tiles[tx][ty].code == TILE_WATER {
-		t.nextTickToMove += t.stats.moveDelay
+		t.nextTickToMove += t.getStats().moveDelay
 	}
 	if gameMap.canTankMoveByVector(t, x, y) {
 		t.centerX += x
@@ -49,7 +56,7 @@ func (t *tank) moveByVector(x, y int) {
 	}
 	t.faceX = x
 	t.faceY = y
-	t.currentFrameNumber = (t.currentFrameNumber + 1) % t.sprites.totalFrames
+	t.currentFrameNumber = (t.currentFrameNumber + 1) % t.getSpritesAtlas().totalFrames
 }
 
 func (t *tank) getCurrentSpriteRect() rl.Rectangle {
@@ -63,6 +70,6 @@ func (t *tank) getCurrentSpriteRect() rl.Rectangle {
 	if t.faceY == 1 {
 		spriteGroup = 2
 	}
-	spriteNumber := int(spriteGroup*t.sprites.totalFrames + (t.currentFrameNumber % t.sprites.totalFrames))
-	return t.sprites.getRectForSpriteFromAtlas(spriteNumber)
+	spriteNumber := int(spriteGroup*t.getSpritesAtlas().totalFrames + (t.currentFrameNumber % t.getSpritesAtlas().totalFrames))
+	return t.getSpritesAtlas().getRectForSpriteFromAtlas(spriteNumber)
 }

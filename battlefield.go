@@ -16,11 +16,10 @@ type battlefield struct {
 	effects     []*tank // haha, effecrs are too. TODO: refactor
 }
 
-func (b *battlefield) spawnEffect(code string, cx, cy int, owner *tank) {
+func (b *battlefield) spawnEffect(code int, cx, cy int, owner *tank) {
 	b.effects = append(b.effects, &tank{
 		centerX:        cx,
 		centerY:        cy,
-		sprites:        effectAtlaces[code],
 		nextTickToMove: gameTick + tankStatsList[code].moveDelay,
 		owner:          owner,
 		code:           code,
@@ -33,8 +32,8 @@ func (b *battlefield) actForEffects() {
 			b.effects[i].currentFrameNumber++
 			b.effects[i].nextTickToMove = gameTick + tankStatsList[b.effects[i].code].moveDelay
 		}
-		if b.effects[i].currentFrameNumber >= b.effects[i].sprites.totalFrames {
-			if b.effects[i].code == "SPAWN" {
+		if b.effects[i].currentFrameNumber >= b.effects[i].getSpritesAtlas().totalFrames {
+			if b.effects[i].code == EFFECT_SPAWN {
 				b.tanks = append(b.tanks, b.effects[i].owner)
 			}
 			b.effects = append(b.effects[:i], b.effects[i+1:]...)
@@ -58,28 +57,26 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 	}
 	b.totalTanksRemainingToSpawn--
 	tankFaction := rnd.RandInRange(1, b.numFactions-1)
-	tankCode := ""
+	tankCode := -1
 	switch tankFaction {
 	case 1:
-		tankCode = "T2_TANK"
+		tankCode = TANK_T2
 	case 2:
-		tankCode = "T3_TANK"
+		tankCode = TANK_T3
 	case 3:
-		tankCode = "T4_TANK"
+		tankCode = TANK_T4
 	default:
-		tankCode = "T5_TANK"
+		tankCode = TANK_T5
 	}
 	owner := &tank{
 		code:               tankCode,
 		centerX:            x*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
 		centerY:            y*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
-		sprites:            tankAtlaces[tankCode],
-		stats:              tankStatsList[tankCode],
 		ai:                 initSimpleTankAi(),
 		faction:            tankFaction,
 		currentFrameNumber: 0,
 	}
-	b.spawnEffect("SPAWN", x*TILE_PHYSICAL_SIZE+TILE_PHYSICAL_SIZE/2, y*TILE_PHYSICAL_SIZE+TILE_PHYSICAL_SIZE/2, owner)
+	b.spawnEffect(EFFECT_SPAWN, x*TILE_PHYSICAL_SIZE+TILE_PHYSICAL_SIZE/2, y*TILE_PHYSICAL_SIZE+TILE_PHYSICAL_SIZE/2, owner)
 }
 
 func (b *battlefield) removeTank(t *tank) {
@@ -89,7 +86,7 @@ func (b *battlefield) removeTank(t *tank) {
 				b.playerTank = nil
 			}
 			cx, cy := b.tanks[i].getCenterCoords()
-			b.spawnEffect("EXPLOSION", cx, cy, nil)
+			b.spawnEffect(EFFECT_EXPLOSION, cx, cy, nil)
 			b.tanks = append(b.tanks[:i], b.tanks[i+1:]...)
 			break
 		}
@@ -98,17 +95,16 @@ func (b *battlefield) removeTank(t *tank) {
 
 func (b *battlefield) shootAsTank(t *tank) {
 	newProjectile := &tank{
-		code:               "BULLET",
+		code:               PROJ_BULLET,
 		centerX:            t.centerX + t.faceX*(t.getRadius()+1),
 		centerY:            t.centerY + t.faceY*(t.getRadius()+1),
 		faceX:              t.faceX,
 		faceY:              t.faceY,
-		sprites:            projectileAtlaces["BULLET"],
 		owner:              t,
 		currentFrameNumber: 0,
 	}
 	b.projectiles = append(b.projectiles, newProjectile)
-	t.nextTickToShoot = gameTick + t.stats.shootDelay
+	t.nextTickToShoot = gameTick + t.getStats().shootDelay
 }
 
 func (b *battlefield) actForProjectiles() {
@@ -121,7 +117,7 @@ func (b *battlefield) actForProjectiles() {
 			proj.centerX+proj.faceX <= 0 || proj.centerY+proj.faceY <= 0 {
 
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
-			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY, nil)
+			b.spawnEffect(EFFECT_EXPLOSION, proj.centerX, proj.centerY, nil)
 			continue
 		}
 

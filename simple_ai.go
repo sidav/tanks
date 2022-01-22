@@ -67,7 +67,7 @@ func (b *battlefield) actAiForTank(t *tank) {
 	}
 	if t.canMoveNow() && !enemyInFront && (wantsToRotate || b.isTileInFrontOfTankImpassable(t)) {
 		t.faceX, t.faceY = randomUnitVector()
-		t.nextTickToMove = gameTick + t.stats.moveDelay
+		t.nextTickToMove = gameTick + t.getStats().moveDelay
 		return
 	}
 	debugWrite("shoot; ")

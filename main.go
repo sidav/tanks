@@ -13,6 +13,7 @@ func main() {
 	rl.SetExitKey(rl.KeyF12)
 
 	loadImageResources()
+	initTankStatsList()
 	initTileDictionary()
 	// defer unloadResources()
 

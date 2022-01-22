@@ -8,7 +8,7 @@ const (
 	TILE_PHYSICAL_SIZE      = 16
 	PIXEL_TO_PHYSICAL_RATIO = TILE_SIZE_IN_PIXELS/ TILE_PHYSICAL_SIZE
 
-	MAP_W = 21
+	MAP_W = 25
 	MAP_H = 15
 
 	WINDOW_W = MAP_W*TILE_SIZE_IN_PIXELS
@@ -16,7 +16,7 @@ const (
 	TEXT_SIZE = TILE_SIZE_IN_PIXELS/2
 	TEXT_MARGIN = TEXT_SIZE/4
 
-	DEBUG_OUTPUT = false
+	DEBUG_OUTPUT = true
 )
 
 func areTileCoordsValid(tx, ty int) bool {

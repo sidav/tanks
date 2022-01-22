@@ -1,25 +1,24 @@
 package main
 
 import (
-	"fmt"
-	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/gen2brain/raylib-go/raylib"
 	"image/color"
 )
 
 var (
-	tankAtlaces = map[string]*horizSpriteAtlas{}
+	tankAtlaces = map[int]*horizSpriteAtlas{}
 	tileAtlaces = map[string]*horizSpriteAtlas{}
-	projectileAtlaces = map[string]*horizSpriteAtlas{}
-	effectAtlaces = map[string]*horizSpriteAtlas{}
+	projectileAtlaces = map[int]*horizSpriteAtlas{}
+	effectAtlaces = map[int]*horizSpriteAtlas{}
 )
 
 func loadImageResources() {
 	var leftXForTank float32 = 128 // 0
-	tankAtlaces["T1_TANK"] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*0, 16, 8, 2)
-	tankAtlaces["T2_TANK"] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*1, 16, 8, 2)
-	tankAtlaces["T3_TANK"] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*2, 16, 8, 2)
-	tankAtlaces["T4_TANK"] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*3, 16, 8, 2)
-	tankAtlaces["T5_TANK"] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*4, 16, 8, 2)
+	tankAtlaces[TANK_T1] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*0, 16, 8, 2)
+	tankAtlaces[TANK_T2] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*1, 16, 8, 2)
+	tankAtlaces[TANK_T3] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*2, 16, 8, 2)
+	tankAtlaces[TANK_T4] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*3, 16, 8, 2)
+	tankAtlaces[TANK_T5] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*4, 16, 8, 2)
 
 	tileAtlaces["WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*0, 16, 1, 1)
 	tileAtlaces["ARMORED_WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*1, 16, 1, 1)
@@ -27,16 +26,16 @@ func loadImageResources() {
 	tileAtlaces["WATER"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*3, 16, 1, 1)
 	tileAtlaces["HQ"] = CreateHorizAtlasFromFile("sprites.png", 16*19, 16*2, 16, 1, 1)
 
-	projectileAtlaces["BULLET"] = CreateHorizAtlasFromFile("sprites.png", 321, 100, 8, 4, 1)
+	projectileAtlaces[PROJ_BULLET] = CreateHorizAtlasFromFile("sprites.png", 321, 100, 8, 4, 1)
 
-	effectAtlaces["EXPLOSION"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*8, 16, 3, 7)
-	effectAtlaces["SPAWN"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*6, 16, 4, 8)
+	effectAtlaces[EFFECT_EXPLOSION] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*8, 16, 3, 7)
+	effectAtlaces[EFFECT_SPAWN] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*6, 16, 4, 8)
 	// effectAtlaces["SPAWN"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*9, 16, 2, 7)
 }
 
 func unloadResources() {
 	for k, v := range tankAtlaces {
-		fmt.Println("Unload: " + k)
+		debugWritef("Unload: ", k)
 		rl.UnloadTexture(v.atlas)
 	}
 }

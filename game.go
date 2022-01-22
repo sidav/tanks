@@ -46,7 +46,7 @@ func runGame() {
 	gameWon = gameWon || gameMap.totalTanksRemainingToSpawn <= 0 && len(gameMap.tanks) == 1 && len(gameMap.effects) == 0
 	if gameWon {
 		for i := 0; i < 5; i++ {
-			gameMap.spawnEffect("EXPLOSION", rnd.Rand(WINDOW_W), rnd.Rand(WINDOW_H), nil)
+			gameMap.spawnEffect(EFFECT_EXPLOSION, rnd.Rand(WINDOW_W), rnd.Rand(WINDOW_H), nil)
 		}
 	}
 
