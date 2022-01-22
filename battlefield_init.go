@@ -1,9 +1,9 @@
 package main
 
 const (
-	DESIRED_WALLS = 40
+	DESIRED_WALLS         = 50
 	DESIRED_ARMORED_WALLS = 15
-	DESIRED_WOODS = 10
+	DESIRED_WOODS         = 10
 )
 
 func (b *battlefield) init() {
@@ -13,31 +13,36 @@ func (b *battlefield) init() {
 		b.tiles[i] = make([]tile, MAP_H)
 	}
 
-	for i := 0; i < DESIRED_WALLS; i++ {
-		x, y := rnd.RandInRange(0, MAP_W-1), rnd.RandInRange(0, MAP_H-1)
+	for i := 0; i < DESIRED_WALLS/2; i++ {
+		x, y := rnd.RandInRange(0, MAP_W/2), rnd.RandInRange(0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WALL
+		b.tiles[MAP_W-x-1][y].code = TILE_WALL
 	}
 
-	for i := 0; i < DESIRED_ARMORED_WALLS; i++ {
-		x, y := rnd.RandInRange(0, MAP_W-1), rnd.RandInRange(0, MAP_H-1)
+	for i := 0; i < DESIRED_ARMORED_WALLS/2; i++ {
+		x, y := rnd.RandInRange(0, MAP_W/2), rnd.RandInRange(0, MAP_H-1)
 		b.tiles[x][y].code = TILE_ARMORED
+		b.tiles[MAP_W-x-1][y].code = TILE_ARMORED
 	}
 
-	for i := 0; i < DESIRED_WOODS; i++ {
-		x, y := rnd.RandInRange(0, MAP_W-1), rnd.RandInRange(0, MAP_H-1)
+	for i := 0; i < DESIRED_WOODS/2; i++ {
+		x, y := rnd.RandInRange(0, MAP_W/2), rnd.RandInRange(0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WOOD
+		b.tiles[MAP_W-x-1][y].code = TILE_WOOD
 	}
 
-	for x := MAP_W/2-1; x <= MAP_W/2+1; x++ {
-		for y := MAP_H-2; y <= MAP_H-1; y++ {
+	for x := MAP_W/2 - 1; x <= MAP_W/2+1; x++ {
+		for y := MAP_H - 2; y <= MAP_H-1; y++ {
 			b.tiles[x][y].code = TILE_ARMORED
 		}
 	}
 	b.tiles[MAP_W/2][MAP_H-1].code = TILE_HQ
 
 	b.playerTank = &tank{
-		centerX:            MAP_W/2*TILE_SIZE_TRUE + TILE_SIZE_TRUE / 2,
-		centerY:            (MAP_H-3)*TILE_SIZE_TRUE + TILE_SIZE_TRUE / 2,
+		centerX:            MAP_W/2*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
+		centerY:            (MAP_H-3)*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
+		faceX:              0,
+		faceY:              1,
 		radius:             TILE_SIZE_TRUE / 2,
 		sprites:            tankAtlaces["YELLOW_T1_TANK"],
 		stats:              tankStatsList["PLAYER_TANK"],
