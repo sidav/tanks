@@ -48,11 +48,11 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 	for {
 		x, y = rnd.RandInRange(fromx, tox), rnd.RandInRange(fromy, toy)
 		trueX, trueY := tileCoordsToPhysicalCoords(x, y)
-		if b.getEffectPresentAtTrueCoords(trueX, trueY) != nil {
+		if b.getEffectPresentInRadiusFromTrueCoords(trueX, trueY, TILE_PHYSICAL_SIZE/2+1) != nil {
 			continue
 		}
 		if !b.tiles[x][y].isImpassable() &&
-			b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_PHYSICAL_SIZE, y*TILE_PHYSICAL_SIZE) == nil {
+			b.getAnotherTankPresentAtTrueCoords(nil, trueX, trueY) == nil {
 
 			break
 		}
@@ -151,10 +151,10 @@ func (b *battlefield) actForProjectiles() {
 	}
 }
 
-func (b *battlefield) getEffectPresentAtTrueCoords(x, y int) *tank {
+func (b *battlefield) getEffectPresentInRadiusFromTrueCoords(x, y, r int) *tank {
 	for _, t := range b.effects {
 		tx, ty := t.getCenterCoords()
-		if circlesOverlap(x, y, 0, tx, ty, t.radius) {
+		if circlesOverlap(x, y, r, tx, ty, t.radius) {
 			return t
 		}
 	}
