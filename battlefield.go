@@ -57,6 +57,8 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 func (b *battlefield) removeTank(t *tank) {
 	for i := range b.tanks {
 		if b.tanks[i] == t {
+			cx, cy := b.tanks[i].getCenterCoords()
+			b.spawnEffect("EXPLOSION", cx, cy)
 			b.tanks = append(b.tanks[:i], b.tanks[i+1:]...)
 			break
 		}
@@ -84,23 +86,35 @@ func (b *battlefield) actForProjectiles() {
 		proj.centerX += proj.faceX
 		proj.centerY += proj.faceY
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
-		if !areTileCoordsValid(projTx, projTy) {
+		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) {
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
+			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
 			continue
 		}
+
+		// check if we hit another projectile
+		for _, p := range b.projectiles {
+			if p == proj {
+				continue
+			}
+			if circlesOverlap(proj.centerX, proj.centerY, proj.radius, p.centerX, p.centerY, p.radius) {
+				proj.markedToRemove = true
+				p.markedToRemove = true
+				continue
+			}
+		}
+
 		if b.tiles[projTx][projTy].isImpassable() {
 			if b.tiles[projTx][projTy].isDestructible() {
 				b.tiles[projTx][projTy].code = TILE_EMPTY
 			}
-			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
-			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
+			proj.markedToRemove = true
 			continue
 		}
 		hitTank := b.getAnotherTankPresentAtTrueCoords(proj.owner, proj.centerX, proj.centerY)
 		if hitTank != nil {
 			b.removeTank(hitTank)
-			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
-			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
+			proj.markedToRemove = true
 			continue
 		}
 	}

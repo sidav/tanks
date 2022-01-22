@@ -23,7 +23,7 @@ func circlesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
 	tx := x2-x1
 	ty := y2-y1
 	r := r1+r2
-	
+
 	if tx*tx+ty*ty < r*r {
 		return true
 	}
