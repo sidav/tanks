@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 const (
 	SPRITE_SCALE_FACTOR     = 4.0
 	TILE_SIZE_IN_PIXELS     = 16*SPRITE_SCALE_FACTOR
@@ -13,6 +15,8 @@ const (
 	WINDOW_H = (MAP_H+1)*(TILE_SIZE_IN_PIXELS)
 	TEXT_SIZE = TILE_SIZE_IN_PIXELS/2
 	TEXT_MARGIN = TEXT_SIZE/4
+
+	DEBUG_OUTPUT = false
 )
 
 func areTileCoordsValid(tx, ty int) bool {
@@ -36,4 +40,27 @@ func circlesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
 		return true
 	}
 	return false
+}
+
+func randomUnitVector() (int, int) {
+	x, y := 0, 0
+	for {
+		x, y = rnd.RandomUnitVectorInt()
+		if x == 0 || y == 0 {
+			break
+		}
+	}
+	return x, y
+}
+
+func debugWrite(msg string) {
+	if DEBUG_OUTPUT {
+		fmt.Println(msg)
+	}
+}
+
+func debugWritef(msg string, args interface{}) {
+	if DEBUG_OUTPUT {
+		fmt.Printf(msg, args)
+	}
 }

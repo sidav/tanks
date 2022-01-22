@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/sidav/golibrl/random/additive_random"
 )
 
@@ -11,28 +10,28 @@ var gameOver = false
 var rnd additive_random.FibRandom
 
 func runGame() {
-	fmt.Printf("%d: START ", gameTick)
+	debugWritef("%d: START ", gameTick)
 	listenPlayerInput()
 
-	fmt.Printf("PROJS ")
+	debugWrite("PROJS ")
 	gameMap.actForProjectiles()
 
-	fmt.Printf("EFFECTS ")
+	debugWrite("EFFECTS ")
 	gameMap.actForEffects()
 
-	fmt.Printf("AI {")
+	debugWrite("AI {")
 	for i := range gameMap.tanks {
 		if gameMap.tanks[i] == gameMap.playerTank {
 			continue
 		}
 		gameMap.actAiForTank(gameMap.tanks[i])
 	}
-	fmt.Printf("} ")
+	debugWrite("} ")
 
-	fmt.Printf("RENDER ")
+	debugWrite("RENDER ")
 	renderBattlefield(gameMap)
 
-	fmt.Printf("SPAWN ")
+	debugWrite("SPAWN ")
 	if len(gameMap.tanks) < gameMap.maxTanksOnMap && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) && gameMap.totalTanksRemainingToSpawn > 0 {
 		gameMap.spawnTank(0, MAP_W-1, 0, MAP_H-MAP_H/3)
 	}
@@ -51,6 +50,6 @@ func runGame() {
 		}
 	}
 
-	fmt.Printf("TURN FINISHED. \n")
+	debugWrite("TURN FINISHED. \n")
 	gameTick++
 }

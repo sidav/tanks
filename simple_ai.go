@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type tankAi struct {
 	chanceToRotateAnywhere          int
 	chanceToRotateAtTilePerfectSpot int
@@ -58,29 +56,24 @@ func (b *battlefield) wantsToShoot(t *tank) bool {
 
 func (b *battlefield) actAiForTank(t *tank) {
 	if t.faceX == 0 && t.faceY == 0 {
-		t.faceX = -1
+		t.faceX, t.faceY = randomUnitVector()
 	}
-	fmt.Printf("check player; ")
+	debugWrite("check player; ")
 	enemyInFront := b.wantsToShoot(t)
-	fmt.Printf("rotate; ")
+	debugWrite("rotate; ")
 	wantsToRotate := rnd.OneChanceFrom(t.ai.chanceToRotateAnywhere)
 	if (t.centerX %TILE_PHYSICAL_SIZE == TILE_PHYSICAL_SIZE/2+1) || (t.centerY %TILE_PHYSICAL_SIZE == TILE_PHYSICAL_SIZE/ 2+1) {
 		wantsToRotate = wantsToRotate || rnd.OneChanceFrom(t.ai.chanceToRotateAtTilePerfectSpot)
 	}
 	if t.canMoveNow() && !enemyInFront && (wantsToRotate || b.isTileInFrontOfTankImpassable(t)) {
-		for {
-			t.faceX, t.faceY = rnd.RandomUnitVectorInt()
-			if t.faceX == 0 || t.faceY == 0 {
-				break
-			}
-		}
+		t.faceX, t.faceY = randomUnitVector()
 		return
 	}
-	fmt.Printf("shoot; ")
+	debugWrite("shoot; ")
 	if t.canShootNow() && enemyInFront {
 		b.shootAsTank(t)
 	}
-	fmt.Printf("move; ")
+	debugWrite("move; ")
 	if t.canMoveNow() && b.canTankMoveByVector(t, t.faceX, t.faceY) {
 		t.moveByVector(t.faceX, t.faceY)
 	}
