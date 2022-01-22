@@ -15,7 +15,7 @@ type battlefield struct {
 }
 
 func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
-	return tx >= 0 && tx < MAP_SIZE && ty >= 0 && ty < MAP_SIZE
+	return tx >= 0 && tx < MAP_W && ty >= 0 && ty < MAP_H
 }
 
 func (b *battlefield) trueCoordsToTileCoords(tx, ty int) (int, int) {

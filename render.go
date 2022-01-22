@@ -10,14 +10,13 @@ func renderBattlefield(b *battlefield) {
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.Black)
 
-	renderTiles(b)
-
 	renderTank(b.playerTank)
 	// rl.DrawText(fmt.Sprintf("%d, %d", b.playerTank.centerX, b.playerTank.centerY),0,0, 32, color.RGBA{255, 255, 255, 255})
 	for i := range b.enemies {
 		renderTank(b.enemies[i])
 	}
 	renderProjectiles(b)
+	renderTiles(b)
 	renderEffects(b)
 
 	rl.EndDrawing()
