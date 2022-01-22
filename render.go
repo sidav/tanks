@@ -51,8 +51,9 @@ func renderEffects(b *battlefield) {
 func renderTiles(b *battlefield) {
 	for x := range b.tiles {
 		for y, t := range b.tiles[x] {
-			if t.sprite != nil {
-				rl.DrawTexture(t.sprite.atlas, int32(x*t.sprite.spriteSize), int32(y*t.sprite.spriteSize), TINT)
+			spr := t.getSpritesAtlas()
+			if spr != nil {
+				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), TINT)
 			}
 		}
 	}

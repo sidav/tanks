@@ -33,7 +33,7 @@ func (b *battlefield) spawnEffect(code string, cx, cy int) {
 
 func (b *battlefield) spawnEnemyTank() {
 	x, y := rnd.RandInRange(3, 12), rnd.RandInRange(0, 12)
-	for b.tiles[x][y].impassable || b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_SIZE_TRUE, y*TILE_SIZE_TRUE) != nil {
+	for b.tiles[x][y].isImpassable() || b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_SIZE_TRUE, y*TILE_SIZE_TRUE) != nil {
 		x, y = rnd.RandInRange(3, 12), rnd.RandInRange(0, 12)
 	}
 	b.enemies = append(b.enemies, &tank{
@@ -82,10 +82,9 @@ func (b *battlefield) actForProjectiles() {
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue
 		}
-		if b.tiles[projTx][projTy].impassable {
-			if b.tiles[projTx][projTy].destructible {
-				b.tiles[projTx][projTy].impassable = false
-				b.tiles[projTx][projTy].sprite = nil
+		if b.tiles[projTx][projTy].isImpassable() {
+			if b.tiles[projTx][projTy].isDestructible() {
+				b.tiles[projTx][projTy].code = TILE_EMPTY
 			}
 			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
@@ -148,7 +147,7 @@ func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
 		tx2, ty2 = b.trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY+diagRadius)
 	}
 
-	return b.areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].impassable &&
-		b.areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].impassable &&
+	return b.areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].isImpassable() &&
+		b.areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].isImpassable() &&
 		b.getAnotherTankPresentAtTrueCoords(t, t.centerX+vx*t.radius, t.centerY+vy*t.radius) == nil
 }

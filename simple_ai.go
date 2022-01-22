@@ -19,7 +19,7 @@ func (b *battlefield) isTileInFrontOfTankImpassable(t *tank) bool {
 	if !b.areTileCoordsValid(tilex, tiley) {
 		return true
 	}
-	return b.tiles[tilex][tiley].impassable
+	return b.tiles[tilex][tiley].isImpassable()
 }
 
 func (b *battlefield) isTherePlayerInFrontOfTank(t *tank) bool {
@@ -33,7 +33,7 @@ func (b *battlefield) isTherePlayerInFrontOfTank(t *tank) bool {
 		if px == tilex && py == tiley {
 			return true
 		}
-		if b.tiles[tilex][tiley].impassable {
+		if b.tiles[tilex][tiley].isImpassable() {
 			return false
 		}
 		tilex += t.faceX

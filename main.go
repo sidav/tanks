@@ -10,6 +10,7 @@ func main() {
 	rl.InitWindow(MAP_W*TILE_SIZE_IN_PIXELS, MAP_H*TILE_SIZE_IN_PIXELS, "TANKS!")
 	rl.SetTargetFPS(60)
 	loadImageResources()
+	initTileDictionary()
 	// defer unloadResources()
 
 	rnd.InitDefault()
