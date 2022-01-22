@@ -133,7 +133,7 @@ func (b *battlefield) actForProjectiles() {
 			}
 		}
 
-		if b.tiles[projTx][projTy].isImpassable() {
+		if b.tiles[projTx][projTy].stopsProjectiles() {
 			if b.tiles[projTx][projTy].isDestructible() {
 				b.tiles[projTx][projTy].code = TILE_EMPTY
 			}

@@ -47,7 +47,7 @@ func (t *tank) getSpritesAtlas() *horizSpriteAtlas {
 func (t *tank) moveByVector(x, y int) {
 	t.nextTickToMove = gameTick + t.getStats().moveDelay
 	tx, ty := trueCoordsToTileCoords(t.centerX, t.centerY)
-	if gameMap.tiles[tx][ty].code == TILE_WATER {
+	if gameMap.tiles[tx][ty].isSlowing() {
 		t.nextTickToMove += t.getStats().moveDelay
 	}
 	if gameMap.canTankMoveByVector(t, x, y) {

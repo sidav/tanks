@@ -9,7 +9,7 @@ func (b *battlefield) getRandomEmptyTileCoords(fx, tx, fy, ty int) (int, int) {
 	}
 }
 
-func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desiredWater int) {
+func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desiredWater, desiredIce int) {
 	// todo: REWRITE, add better generator
 	b.tiles = make([][]tile, MAP_W)
 	for i := range b.tiles {
@@ -38,6 +38,12 @@ func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desi
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WATER
 		b.tiles[MAP_W-x-1][y].code = TILE_WATER
+	}
+
+	for i := 0; i < desiredIce; i++ {
+		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
+		b.tiles[x][y].code = TILE_ICE
+		b.tiles[MAP_W-x-1][y].code = TILE_ICE
 	}
 
 	for x := MAP_W/2 - 1; x <= MAP_W/2+1; x++ {

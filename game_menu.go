@@ -17,10 +17,11 @@ var (
 		{30, 5, 1000, 5},
 		{150, 5, 1000, 5},
 		{4, 2, len(factionTints), 1},
-		{MAP_H*MAP_W/4, 0, MAP_H*MAP_W, 4},
-		{MAP_H*MAP_W/6, 0, MAP_H*MAP_W, 4},
-		{MAP_H*MAP_W/10, 0, MAP_H*MAP_W, 4},
-		{MAP_H*MAP_W/10, 0, MAP_H*MAP_W, 4},
+		{MAP_H*MAP_W/3, 0, MAP_H*MAP_W, 4},
+		{MAP_H*MAP_W/8, 0, MAP_H*MAP_W, 4},
+		{MAP_H*MAP_W/12, 0, MAP_H*MAP_W, 4},
+		{MAP_H*MAP_W/12, 0, MAP_H*MAP_W, 4},
+		{MAP_H*MAP_W/20, 0, MAP_H*MAP_W, 4},
 	}
 
 	menuEntries = []string{
@@ -33,6 +34,7 @@ var (
 		"DESIRED ARMORED_WALLS <%d>",
 		"DESIRED WOODS         <%d>",
 		"DESIRED WATER         <%d>",
+		"DESIRED ICE           <%d>",
 	}
 	colorText = color.RGBA{
 		R: 255,
@@ -111,5 +113,5 @@ func showGameMenu() {
 		chanceToSpawnEnemyEachTickOneFrom: menuValuesData[3][0],
 		numFactions:                       menuValuesData[4][0],
 	}
-	gameMap.init(menuValuesData[5][0], menuValuesData[6][0], menuValuesData[7][0], menuValuesData[8][0])
+	gameMap.init(menuValuesData[5][0], menuValuesData[6][0], menuValuesData[7][0], menuValuesData[8][0], menuValuesData[9][0])
 }
