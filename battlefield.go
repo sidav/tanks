@@ -47,7 +47,13 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 	var x, y int
 	for {
 		x, y = rnd.RandInRange(fromx, tox), rnd.RandInRange(fromy, toy)
-		if !b.tiles[x][y].isImpassable() && b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_SIZE_TRUE, y*TILE_SIZE_TRUE) == nil {
+		trueX, trueY := tileCoordsToPhysicalCoords(x, y)
+		if b.getEffectPresentAtTrueCoords(trueX, trueY) != nil {
+			continue
+		}
+		if !b.tiles[x][y].isImpassable() &&
+			b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_PHYSICAL_SIZE, y*TILE_PHYSICAL_SIZE) == nil {
+
 			break
 		}
 	}
@@ -62,16 +68,16 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 		tankCode = "RED_T1_TANK"
 	}
 	owner := &tank{
-		centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
-		centerY:            y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
-		radius:             TILE_SIZE_TRUE/2 - 1,
+		centerX:            x*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+		centerY:            y*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+		radius:             TILE_PHYSICAL_SIZE/2 - 1,
 		sprites:            tankAtlaces[tankCode],
 		stats:              tankStatsList[tankCode],
 		ai:                 initSimpleTankAi(),
 		faction:            tankFaction,
 		currentFrameNumber: 0,
 	}
-	b.spawnEffect("SPAWN", x*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2, y*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2, owner)
+	b.spawnEffect("SPAWN", x*TILE_PHYSICAL_SIZE+TILE_PHYSICAL_SIZE/2, y*TILE_PHYSICAL_SIZE+TILE_PHYSICAL_SIZE/2, owner)
 }
 
 func (b *battlefield) removeTank(t *tank) {
@@ -94,7 +100,7 @@ func (b *battlefield) shootAsTank(t *tank) {
 		centerY:            t.centerY + t.faceY*(t.radius+1),
 		faceX:              t.faceX,
 		faceY:              t.faceY,
-		radius:             3,
+		radius:             2,
 		sprites:            projectileAtlaces["BULLET"],
 		owner:              t,
 		currentFrameNumber: 0,
@@ -143,6 +149,16 @@ func (b *battlefield) actForProjectiles() {
 			continue
 		}
 	}
+}
+
+func (b *battlefield) getEffectPresentAtTrueCoords(x, y int) *tank {
+	for _, t := range b.effects {
+		tx, ty := t.getCenterCoords()
+		if circlesOverlap(x, y, 0, tx, ty, t.radius) {
+			return t
+		}
+	}
+	return nil
 }
 
 func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int) *tank {

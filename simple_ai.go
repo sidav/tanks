@@ -19,7 +19,7 @@ func initSimpleTankAi() *tankAi {
 }
 
 func (b *battlefield) isTileInFrontOfTankImpassable(t *tank) bool {
-	tilex, tiley := t.centerX/TILE_SIZE_TRUE+t.faceX, t.centerY/TILE_SIZE_TRUE+t.faceY
+	tilex, tiley := t.centerX/TILE_PHYSICAL_SIZE+t.faceX, t.centerY/TILE_PHYSICAL_SIZE+t.faceY
 	if !areTileCoordsValid(tilex, tiley) {
 		return true
 	}
@@ -64,7 +64,7 @@ func (b *battlefield) actAiForTank(t *tank) {
 	enemyInFront := b.wantsToShoot(t)
 	fmt.Printf("rotate; ")
 	wantsToRotate := rnd.OneChanceFrom(t.ai.chanceToRotateAnywhere)
-	if (t.centerX % TILE_SIZE_TRUE == TILE_SIZE_TRUE/2+1) || (t.centerY % TILE_SIZE_TRUE == TILE_SIZE_TRUE / 2+1) {
+	if (t.centerX %TILE_PHYSICAL_SIZE == TILE_PHYSICAL_SIZE/2+1) || (t.centerY %TILE_PHYSICAL_SIZE == TILE_PHYSICAL_SIZE/ 2+1) {
 		wantsToRotate = wantsToRotate || rnd.OneChanceFrom(t.ai.chanceToRotateAtTilePerfectSpot)
 	}
 	if t.canMoveNow() && !enemyInFront && (wantsToRotate || b.isTileInFrontOfTankImpassable(t)) {

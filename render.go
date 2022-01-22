@@ -106,5 +106,5 @@ func renderWood(b *battlefield) {
 }
 
 func ingameCoordsToOnScreenCoords(igx, igy int) (int, int) {
-	return int(float32(igx)*PIXEL_TO_GAMECOORD_RATIO), int(float32(igy)*PIXEL_TO_GAMECOORD_RATIO)
+	return int(float32(igx)* PIXEL_TO_PHYSICAL_RATIO), int(float32(igy)* PIXEL_TO_PHYSICAL_RATIO)
 }

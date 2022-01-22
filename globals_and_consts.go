@@ -1,16 +1,16 @@
 package main
 
 const (
-	SPRITE_SCALE_FACTOR      = 4.0
-	TILE_SIZE_IN_PIXELS      = 16*SPRITE_SCALE_FACTOR
-	TILE_SIZE_TRUE           = 16
-	PIXEL_TO_GAMECOORD_RATIO = TILE_SIZE_IN_PIXELS/TILE_SIZE_TRUE
+	SPRITE_SCALE_FACTOR     = 4.0
+	TILE_SIZE_IN_PIXELS     = 16*SPRITE_SCALE_FACTOR
+	TILE_PHYSICAL_SIZE      = 16
+	PIXEL_TO_PHYSICAL_RATIO = TILE_SIZE_IN_PIXELS/ TILE_PHYSICAL_SIZE
 
 	MAP_W = 21
 	MAP_H = 15
 
 	WINDOW_W = MAP_W*TILE_SIZE_IN_PIXELS
-	WINDOW_H = MAP_H*TILE_SIZE_IN_PIXELS+TILE_SIZE_IN_PIXELS
+	WINDOW_H = MAP_H*(TILE_SIZE_IN_PIXELS+1)
 	TEXT_SIZE = TILE_SIZE_IN_PIXELS/2
 	TEXT_MARGIN = TEXT_SIZE/4
 )
@@ -20,7 +20,11 @@ func areTileCoordsValid(tx, ty int) bool {
 }
 
 func trueCoordsToTileCoords(tx, ty int) (int, int) {
-	return tx / TILE_SIZE_TRUE, ty / TILE_SIZE_TRUE
+	return tx / TILE_PHYSICAL_SIZE, ty / TILE_PHYSICAL_SIZE
+}
+
+func tileCoordsToPhysicalCoords(tx, ty int) (int, int) {
+	return tx * TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2, ty * TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2
 }
 
 func circlesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
