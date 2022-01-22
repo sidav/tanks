@@ -31,8 +31,14 @@ func runGame() {
 	renderBattlefield(gameMap)
 
 	fmt.Printf("SPAWN ")
-	if len(gameMap.tanks) < gameMap.desiredEnemiesCount && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) {
+	if len(gameMap.tanks) < gameMap.MaxTanksOnMap && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) && gameMap.totalTanksRemainingToSpawn > 0 {
 		gameMap.spawnTank(0, MAP_W-1, 0, MAP_H-MAP_H/3)
+	}
+
+	if gameMap.totalTanksRemainingToSpawn <= 0 && len(gameMap.tanks) == 1 {
+		for i := 0; i < 5; i++ {
+			gameMap.spawnEffect("EXPLOSION", rnd.Rand(WINDOW_W), rnd.Rand(WINDOW_H), nil)
+		}
 	}
 
 	fmt.Printf("TURN FINISHED. \n")

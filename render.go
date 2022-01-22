@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"image/color"
 )
@@ -33,6 +34,25 @@ func renderBattlefield(b *battlefield) {
 			gameOverLineH = -TILE_SIZE_IN_PIXELS
 		}
 	}
+
+	if b.totalTanksRemainingToSpawn == 0 && len(b.tanks) == 1 {
+		rl.DrawText("YOU WON!", WINDOW_W/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		gameOverLineH++
+		gameOverRgb.A = 255
+		gameOverRgb.R += uint8(rnd.Rand(2))
+		gameOverRgb.G += uint8(rnd.Rand(2))
+		gameOverRgb.B += uint8(rnd.Rand(2))
+		if gameOverLineH > WINDOW_H {
+			gameOverLineH = -TILE_SIZE_IN_PIXELS
+		}
+	}
+
+	rl.DrawText(fmt.Sprintf("Remaining tanks %d", b.totalTanksRemainingToSpawn), 0, TILE_SIZE_IN_PIXELS*MAP_H, TEXT_SIZE, color.RGBA{
+		R: 255,
+		G: 255,
+		B: 255,
+		A: 255,
+	})
 
 	rl.EndDrawing()
 }
