@@ -1,12 +1,10 @@
 package main
 
-import "fmt"
-
 type battlefield struct {
 	tiles [][]tile
 	playerTank *tank
 	enemies []*tank
-	projectiles []*tank
+	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
 }
 
 func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
@@ -15,6 +13,15 @@ func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
 
 func (b *battlefield) trueCoordsToTileCoords(tx, ty int) (int, int) {
 	return tx / TILE_SIZE_TRUE, ty / TILE_SIZE_TRUE
+}
+
+func (b *battlefield) removeEnemyTank(t *tank) {
+	for i := range b.enemies {
+		if b.enemies[i] == t {
+			b.enemies = append(b.enemies[:i], b.enemies[i+1:]...)
+			break
+		}
+	}
 }
 
 func (b *battlefield) shootAsTank(t *tank) {
@@ -35,14 +42,27 @@ func (b *battlefield) actForProjectiles() {
 		proj := b.projectiles[i]
 		proj.centerX += proj.faceX
 		proj.centerY += proj.faceY
-		if b.isAnotherTankPresentAtTrueCoords(nil, proj.centerX, proj.centerY) {
-			fmt.Println("BABACH!!1")
-			b.projectiles = b.projectiles[:len(b.projectiles)-1]
+		projTx, projTy := b.trueCoordsToTileCoords(proj.centerX, proj.centerY)
+		if !b.areTileCoordsValid(projTx, projTy) {
+			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
+			continue
+		}
+		if b.tiles[projTx][projTy].impassable {
+			b.tiles[projTx][projTy].impassable = false
+			b.tiles[projTx][projTy].sprite = nil
+			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
+			continue
+		}
+		hitTank := b.getAnotherTankPresentAtTrueCoords(nil, proj.centerX, proj.centerY)
+		if hitTank != nil {
+			b.removeEnemyTank(hitTank)
+			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
+			continue
 		}
 	}
 }
 
-func (b *battlefield) isAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int) bool {
+func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int) *tank {
 	for _, t := range b.enemies {
 		if thisTank == t {
 			continue
@@ -51,7 +71,7 @@ func (b *battlefield) isAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int)
 		tx -= x
 		ty -= y
 		if tx*tx + ty*ty < t.radius * t.radius {
-			return true
+			return t
 		}
 	}
 	if thisTank != b.playerTank {
@@ -59,10 +79,10 @@ func (b *battlefield) isAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int)
 		tx -= x
 		ty -= y
 		if tx*tx + ty*ty < b.playerTank.radius * b.playerTank.radius {
-			return true
+			return b.playerTank
 		}
 	}
-	return false
+	return nil
 }
 
 func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
@@ -79,5 +99,5 @@ func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
 
 	return b.areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].impassable &&
 		b.areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].impassable &&
-		!b.isAnotherTankPresentAtTrueCoords(t, t.centerX + vx*t.radius, t.centerY + vy*t.radius)
+		b.getAnotherTankPresentAtTrueCoords(t, t.centerX + vx*t.radius, t.centerY + vy*t.radius) == nil
 }

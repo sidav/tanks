@@ -21,7 +21,7 @@ func runGame() {
 		gameMap.shootAsTank(gameMap.playerTank)
 	}
 
-	renderBattlefield(gameMap)
 	gameMap.actForProjectiles()
+	renderBattlefield(gameMap)
 	gameTick++
 }
