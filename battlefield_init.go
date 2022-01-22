@@ -43,6 +43,7 @@ func (b *battlefield) init() {
 		stats:              tankStatsList["PLAYER_TANK"],
 		currentFrameNumber: 0,
 	}
+	b.tanks = append(b.tanks, b.playerTank)
 
 	for i := 0; i < b.initialEnemiesCount; i++ {
 		b.spawnEnemyTank(0, MAP_W, 0, MAP_H)

@@ -22,7 +22,7 @@ func (b *battlefield) isTileInFrontOfTankImpassable(t *tank) bool {
 	return b.tiles[tilex][tiley].isImpassable()
 }
 
-func (b *battlefield) isTherePlayerInFrontOfTank(t *tank) bool {
+func (b *battlefield) isThereEnemyInFront(t *tank) bool {
 	tilex, tiley := b.trueCoordsToTileCoords(t.centerX, t.centerY)
 	px, py := b.playerTank.getCenterCoords()
 	px, py = b.trueCoordsToTileCoords(px, py)
@@ -47,9 +47,9 @@ func (b *battlefield) actAiForTank(t *tank) {
 		t.faceX = -1
 	}
 	fmt.Printf("check player; ")
-	playerInFront := b.isTherePlayerInFrontOfTank(t)
+	enemyInFront := b.isThereEnemyInFront(t)
 	fmt.Printf("rotate; ")
-	if t.canMoveNow() && !playerInFront && rnd.OneChanceFrom(t.ai.chanceToRotateOneFrom) || b.isTileInFrontOfTankImpassable(t){
+	if t.canMoveNow() && !enemyInFront && rnd.OneChanceFrom(t.ai.chanceToRotateOneFrom) || b.isTileInFrontOfTankImpassable(t){
 		for {
 			t.faceX, t.faceY = rnd.RandomUnitVectorInt()
 			if t.faceX == 0 || t.faceY == 0 {
@@ -59,7 +59,7 @@ func (b *battlefield) actAiForTank(t *tank) {
 		return
 	}
 	fmt.Printf("shoot; ")
-	if t.canShootNow() && playerInFront && rnd.OneChanceFrom(t.ai.chanceToShootOneFrom) {
+	if t.canShootNow() && enemyInFront && rnd.OneChanceFrom(t.ai.chanceToShootOneFrom) {
 		b.shootAsTank(t)
 	}
 	fmt.Printf("move; ")

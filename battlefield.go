@@ -8,7 +8,7 @@ type battlefield struct {
 	desiredEnemiesCount               int
 	initialEnemiesCount               int
 	chanceToSpawnEnemyEachTickOneFrom int
-	enemies                           []*tank
+	tanks                             []*tank
 
 	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
 	effects     []*tank // haha, effecrs are too. TODO: refactor
@@ -46,7 +46,7 @@ func (b *battlefield) spawnEnemyTank(fromx, tox, fromy, toy int) {
 	case 2: atlasName = "GREEN_T1_TANK"
 	case 3: atlasName = "RED_T1_TANK"
 	}
-	b.enemies = append(b.enemies, &tank{
+	b.tanks = append(b.tanks, &tank{
 		centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		centerY:            y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		radius:             TILE_SIZE_TRUE / 2,
@@ -60,9 +60,9 @@ func (b *battlefield) spawnEnemyTank(fromx, tox, fromy, toy int) {
 }
 
 func (b *battlefield) removeEnemyTank(t *tank) {
-	for i := range b.enemies {
-		if b.enemies[i] == t {
-			b.enemies = append(b.enemies[:i], b.enemies[i+1:]...)
+	for i := range b.tanks {
+		if b.tanks[i] == t {
+			b.tanks = append(b.tanks[:i], b.tanks[i+1:]...)
 			break
 		}
 	}
@@ -124,7 +124,7 @@ func (b *battlefield) actForEffects() {
 }
 
 func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int) *tank {
-	for _, t := range b.enemies {
+	for _, t := range b.tanks {
 		if thisTank == t {
 			continue
 		}

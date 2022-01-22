@@ -38,8 +38,11 @@ func runGame() {
 	gameMap.actForEffects()
 
 	fmt.Printf("AI {")
-	for i := range gameMap.enemies {
-		gameMap.actAiForTank(gameMap.enemies[i])
+	for i := range gameMap.tanks {
+		if gameMap.tanks[i] == gameMap.playerTank {
+			continue
+		}
+		gameMap.actAiForTank(gameMap.tanks[i])
 	}
 	fmt.Printf("} ")
 
@@ -47,8 +50,8 @@ func runGame() {
 	renderBattlefield(gameMap)
 
 	fmt.Printf("SPAWN ")
-	if len(gameMap.enemies) < gameMap.desiredEnemiesCount && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) {
-		gameMap.spawnEnemyTank(0, MAP_W, 0, MAP_H)
+	if len(gameMap.tanks) < gameMap.desiredEnemiesCount && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) {
+		gameMap.spawnEnemyTank(0, MAP_W-1, 0, MAP_H-1)
 	}
 
 	fmt.Printf("TURN FINISHED. \n")
