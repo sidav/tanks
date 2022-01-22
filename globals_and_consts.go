@@ -16,7 +16,7 @@ const (
 	TEXT_SIZE = TILE_SIZE_IN_PIXELS/2
 	TEXT_MARGIN = TEXT_SIZE/4
 
-	DEBUG_OUTPUT = true
+	DEBUG_OUTPUT = false
 )
 
 func areTileCoordsValid(tx, ty int) bool {
