@@ -23,8 +23,9 @@ func renderBattlefield(b *battlefield) {
 	renderEffects(b)
 	renderWood(b)
 
-	if b.playerTank == nil {
+	if gameOver {
 		rl.DrawText("GAME OVER.", WINDOW_W/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		rl.DrawText("Press ESC for menu", WINDOW_W/4, gameOverLineH+TILE_SIZE_IN_PIXELS+4, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
 		gameOverLineH++
 		gameOverRgb.A = 255
 		gameOverRgb.R += uint8(rnd.Rand(2))
@@ -35,7 +36,7 @@ func renderBattlefield(b *battlefield) {
 		}
 	}
 
-	if b.totalTanksRemainingToSpawn == 0 && len(b.tanks) == 1 {
+	if gameWon {
 		rl.DrawText("YOU WON!", WINDOW_W/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
 		gameOverLineH++
 		gameOverRgb.A = 255

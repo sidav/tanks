@@ -5,7 +5,7 @@ type battlefield struct {
 
 	playerTank *tank
 
-	MaxTanksOnMap                     int
+	maxTanksOnMap                     int
 	initialEnemiesCount               int
 	totalTanksRemainingToSpawn        int
 	chanceToSpawnEnemyEachTickOneFrom int
@@ -36,7 +36,6 @@ func (b *battlefield) actForEffects() {
 		if b.effects[i].currentFrameNumber >= b.effects[i].sprites.totalFrames {
 			if b.effects[i].code == "SPAWN" {
 				b.tanks = append(b.tanks, b.effects[i].owner)
-				b.totalTanksRemainingToSpawn--
 			}
 			b.effects = append(b.effects[:i], b.effects[i+1:]...)
 		}
@@ -57,6 +56,7 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 			break
 		}
 	}
+	b.totalTanksRemainingToSpawn--
 	tankFaction := rnd.RandInRange(1, b.numFactions-1)
 	tankCode := ""
 	switch tankFaction {

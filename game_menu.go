@@ -11,16 +11,16 @@ var (
 	menuPressDelay time.Duration = 100
 
 	menuValuesData = [][]int{
-		// {value, min, max, step}
+		// {(default) value, min, max, step}
 		{0, 0, 25, 1},
 		{10, 2, 100, 1},
 		{30, 5, 1000, 5},
 		{150, 5, 1000, 5},
 		{4, 2, 4, 1},
-		{50, 0, MAP_H*MAP_W, 2},
-		{40, 0, MAP_H*MAP_W, 2},
-		{10, 0, MAP_H*MAP_W, 2},
-		{10, 0, MAP_H*MAP_W, 2},
+		{MAP_H*MAP_W/4, 0, MAP_H*MAP_W, 4},
+		{MAP_H*MAP_W/6, 0, MAP_H*MAP_W, 4},
+		{MAP_H*MAP_W/10, 0, MAP_H*MAP_W, 4},
+		{MAP_H*MAP_W/10, 0, MAP_H*MAP_W, 4},
 	}
 
 	menuEntries = []string{
@@ -93,6 +93,8 @@ func showGameMenu() {
 		}
 		if rl.IsKeyPressed(rl.KeyEnter) {
 			gameIsRunning = true
+			gameWon = false
+			gameOver = false
 			break
 		}
 		if rl.IsKeyPressed(rl.KeyEscape) {
@@ -104,7 +106,7 @@ func showGameMenu() {
 	}
 	gameMap = &battlefield{
 		initialEnemiesCount:               menuValuesData[0][0],
-		MaxTanksOnMap:                     menuValuesData[1][0],
+		maxTanksOnMap:                     menuValuesData[1][0],
 		totalTanksRemainingToSpawn:        menuValuesData[2][0],
 		chanceToSpawnEnemyEachTickOneFrom: menuValuesData[3][0],
 		numFactions:                       menuValuesData[4][0],

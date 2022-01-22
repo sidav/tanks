@@ -3,7 +3,7 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 func listenPlayerInput() {
-	if gameMap.playerTank == nil {
+	if gameOver {
 		if rl.IsKeyDown(rl.KeyEscape) {
 			gameIsRunning = false
 		}
