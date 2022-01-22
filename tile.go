@@ -1,5 +1,7 @@
 package main
 
+import "github.com/gen2brain/raylib-go/raylib"
+
 const (
 	TILE_EMPTY = iota
 	TILE_WALL
@@ -19,6 +21,10 @@ func (t *tile) isImpassable() bool {
 	return tilesDictionary[t.code].impassable
 }
 
+func (t *tile) getMaxDamageTaken() int {
+	return tilesDictionary[t.code].maxDamage
+}
+
 func (t *tile) stopsProjectiles() bool {
 	return tilesDictionary[t.code].stopsBullets
 }
@@ -33,6 +39,15 @@ func (t *tile) isDestructible() bool {
 
 func (t *tile) getSpritesAtlas() *horizSpriteAtlas {
 	return tilesDictionary[t.code].sprite
+}
+
+func (t *tile) getSpriteRect() rl.Rectangle {
+	// number = t.getMaxDamageTaken()*int(t.getSpritesAtlas().totalSprites)/t.damageTaken
+	number := t.damageTaken
+	if t.getSpritesAtlas().totalFrames > 1 {
+		number = (gameTick / 50) % int(t.getSpritesAtlas().totalFrames)
+	}
+	return t.getSpritesAtlas().getRectForSpriteFromAtlas(number)
 }
 
 type tileStats struct {
@@ -56,6 +71,7 @@ func initTileDictionary() {
 		},
 		TILE_WALL:
 		{
+			maxDamage: 4,
 			sprite: tileAtlaces["WALL"],
 			impassable:   true,
 			stopsBullets: true,
@@ -63,6 +79,7 @@ func initTileDictionary() {
 		},
 		TILE_ARMORED:
 		{
+			maxDamage: 12,
 			sprite: tileAtlaces["ARMORED_WALL"],
 			impassable:   true,
 			stopsBullets: true,

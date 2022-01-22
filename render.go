@@ -101,7 +101,15 @@ func renderTiles(b *battlefield) {
 		for y, t := range b.tiles[x] {
 			spr := t.getSpritesAtlas()
 			if spr != nil {
-				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), DEFAULT_TINT)
+				rl.DrawTextureRec(
+					t.getSpritesAtlas().atlas,
+					t.getSpriteRect(),
+					rl.Vector2{
+						X: float32(x*spr.spriteSize),
+						Y: float32(y*spr.spriteSize),
+					},
+					DEFAULT_TINT,
+				)
 			}
 		}
 	}
