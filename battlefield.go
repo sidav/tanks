@@ -14,14 +14,6 @@ type battlefield struct {
 	effects     []*tank // haha, effecrs are too. TODO: refactor
 }
 
-func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
-	return tx >= 0 && tx < MAP_W && ty >= 0 && ty < MAP_H
-}
-
-func (b *battlefield) trueCoordsToTileCoords(tx, ty int) (int, int) {
-	return tx / TILE_SIZE_TRUE, ty / TILE_SIZE_TRUE
-}
-
 func (b *battlefield) spawnEffect(code string, cx, cy int) {
 	b.effects = append(b.effects, &tank{
 		centerX:        cx,
@@ -91,8 +83,8 @@ func (b *battlefield) actForProjectiles() {
 		proj := b.projectiles[i]
 		proj.centerX += proj.faceX
 		proj.centerY += proj.faceY
-		projTx, projTy := b.trueCoordsToTileCoords(proj.centerX, proj.centerY)
-		if !b.areTileCoordsValid(projTx, projTy) {
+		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
+		if !areTileCoordsValid(projTx, projTy) {
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue
 		}
@@ -127,22 +119,22 @@ func (b *battlefield) actForEffects() {
 }
 
 func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int) *tank {
+	r := 0
+	if thisTank != nil {
+		r = thisTank.radius
+	}
 	for _, t := range b.tanks {
 		if thisTank == t {
 			continue
 		}
 		tx, ty := t.getCenterCoords()
-		tx -= x
-		ty -= y
-		if tx*tx+ty*ty < t.radius*t.radius {
+		if circlesOverlap(x, y, r, tx, ty, t.radius) {
 			return t
 		}
 	}
 	if thisTank != b.playerTank {
 		tx, ty := b.playerTank.getCenterCoords()
-		tx -= x
-		ty -= y
-		if tx*tx+ty*ty < b.playerTank.radius*b.playerTank.radius {
+		if circlesOverlap(x, y, r, tx, ty, b.playerTank.radius) {
 			return b.playerTank
 		}
 	}
@@ -154,15 +146,15 @@ func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
 	diagRadius := t.radius * 65 / 100
 	// we need to check "left corner" and "right corner" regarding to the tank
 	if vx == 0 {
-		tx1, ty1 = b.trueCoordsToTileCoords(t.centerX-diagRadius, t.centerY+vy*t.radius)
-		tx2, ty2 = b.trueCoordsToTileCoords(t.centerX+diagRadius, t.centerY+vy*t.radius)
+		tx1, ty1 = trueCoordsToTileCoords(t.centerX-diagRadius, t.centerY+vy*t.radius)
+		tx2, ty2 = trueCoordsToTileCoords(t.centerX+diagRadius, t.centerY+vy*t.radius)
 	} else if vy == 0 {
-		tx1, ty1 = b.trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY-diagRadius)
-		tx2, ty2 = b.trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY+diagRadius)
+		tx1, ty1 = trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY-diagRadius)
+		tx2, ty2 = trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY+diagRadius)
 	}
 
 	return (t.centerX+vx >= t.radius) && (t.centerY + vy >= t.radius) &&
-		b.areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].isImpassable() &&
-		b.areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].isImpassable() &&
+		areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].isImpassable() &&
+		areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].isImpassable() &&
 		b.getAnotherTankPresentAtTrueCoords(t, t.centerX+vx*t.radius, t.centerY+vy*t.radius) == nil
 }

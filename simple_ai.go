@@ -20,25 +20,25 @@ func initSimpleTankAi() *tankAi {
 
 func (b *battlefield) isTileInFrontOfTankImpassable(t *tank) bool {
 	tilex, tiley := t.centerX/TILE_SIZE_TRUE+t.faceX, t.centerY/TILE_SIZE_TRUE+t.faceY
-	if !b.areTileCoordsValid(tilex, tiley) {
+	if !areTileCoordsValid(tilex, tiley) {
 		return true
 	}
 	return b.tiles[tilex][tiley].isImpassable()
 }
 
 func (b *battlefield) wantsToShoot(t *tank) bool {
-	tilex, tiley := b.trueCoordsToTileCoords(t.centerX, t.centerY)
+	tilex, tiley := trueCoordsToTileCoords(t.centerX, t.centerY)
 
 	for i := range b.tanks {
 		if b.tanks[i].faction == t.faction {
 			continue
 		}
 		ex, ey := b.tanks[i].getCenterCoords()
-		ex, ey = b.trueCoordsToTileCoords(ex, ey)
+		ex, ey = trueCoordsToTileCoords(ex, ey)
 		if ex != tilex && ey != tiley {
 			continue
 		}
-		for b.areTileCoordsValid(tilex, tiley) {
+		for areTileCoordsValid(tilex, tiley) {
 			if ex == tilex && ey == tiley {
 				return rnd.OneChanceFrom(t.ai.chanceToShootOnTarget) // enemy seen
 			}
