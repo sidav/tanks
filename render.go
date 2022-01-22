@@ -59,5 +59,5 @@ func renderTiles(b *battlefield) {
 }
 
 func ingameCoordsToOnScreenCoords(igx, igy int) (int, int) {
-	return igx*PIXEL_TO_GAMECOORD_RATIO, igy*PIXEL_TO_GAMECOORD_RATIO
+	return int(float32(igx)*PIXEL_TO_GAMECOORD_RATIO), int(float32(igy)*PIXEL_TO_GAMECOORD_RATIO)
 }
