@@ -9,6 +9,9 @@ const (
 	MAP_W = 21
 	MAP_H = 15
 	NUM_FACTIONS = 4
+
+	WINDOW_W = MAP_W*TILE_SIZE_IN_PIXELS
+	WINDOW_H = MAP_H*TILE_SIZE_IN_PIXELS
 )
 
 func areTileCoordsValid(tx, ty int) bool {

@@ -7,7 +7,7 @@ import (
 var gameMap *battlefield
 
 func main() {
-	rl.InitWindow(MAP_W*TILE_SIZE_IN_PIXELS, MAP_H*TILE_SIZE_IN_PIXELS, "TANKS!")
+	rl.InitWindow(WINDOW_W, WINDOW_H, "TANKS!")
 	rl.SetTargetFPS(60)
 	loadImageResources()
 	initTileDictionary()

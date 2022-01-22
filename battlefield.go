@@ -74,6 +74,9 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 func (b *battlefield) removeTank(t *tank) {
 	for i := range b.tanks {
 		if b.tanks[i] == t {
+			if b.tanks[i] == b.playerTank {
+				b.playerTank = nil
+			}
 			cx, cy := b.tanks[i].getCenterCoords()
 			b.spawnEffect("EXPLOSION", cx, cy, nil)
 			b.tanks = append(b.tanks[:i], b.tanks[i+1:]...)
@@ -151,12 +154,6 @@ func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int
 		tx, ty := t.getCenterCoords()
 		if circlesOverlap(x, y, r, tx, ty, t.radius) {
 			return t
-		}
-	}
-	if thisTank != b.playerTank {
-		tx, ty := b.playerTank.getCenterCoords()
-		if circlesOverlap(x, y, r, tx, ty, b.playerTank.radius) {
-			return b.playerTank
 		}
 	}
 	return nil

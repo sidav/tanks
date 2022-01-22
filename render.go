@@ -2,9 +2,13 @@ package main
 
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"image/color"
 )
 
 var TINT = rl.RayWhite
+
+var gameOverLineH int32 = -TILE_SIZE_IN_PIXELS
+var gameOverRgb color.RGBA
 
 func renderBattlefield(b *battlefield) {
 	rl.BeginDrawing()
@@ -17,6 +21,18 @@ func renderBattlefield(b *battlefield) {
 	renderProjectiles(b)
 	renderTiles(b)
 	renderEffects(b)
+
+	if b.playerTank == nil {
+		rl.DrawText("GAME OVER.", WINDOW_W/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		gameOverLineH++
+		gameOverRgb.A = 255
+		gameOverRgb.R += uint8(rnd.Rand(2))
+		gameOverRgb.G += uint8(rnd.Rand(2))
+		gameOverRgb.B += uint8(rnd.Rand(2))
+		if gameOverLineH > WINDOW_H {
+			gameOverLineH = -TILE_SIZE_IN_PIXELS
+		}
+	}
 
 	rl.EndDrawing()
 }
