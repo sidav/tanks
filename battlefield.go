@@ -1,9 +1,9 @@
 package main
 
 type battlefield struct {
-	tiles [][]tile
-	playerTank *tank
-	enemies []*tank
+	tiles       [][]tile
+	playerTank  *tank
+	enemies     []*tank
 	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
 }
 
@@ -32,6 +32,7 @@ func (b *battlefield) shootAsTank(t *tank) {
 		faceY:              t.faceY,
 		radius:             4,
 		sprites:            projectileAtlaces["BULLET"],
+		owner:              t,
 		currentFrameNumber: 0,
 	}
 	b.projectiles = append(b.projectiles, newProjectile)
@@ -39,7 +40,7 @@ func (b *battlefield) shootAsTank(t *tank) {
 }
 
 func (b *battlefield) actForProjectiles() {
-	for i := len(b.projectiles)-1; i >= 0; i-- {
+	for i := len(b.projectiles) - 1; i >= 0; i-- {
 		proj := b.projectiles[i]
 		proj.centerX += proj.faceX
 		proj.centerY += proj.faceY
@@ -54,7 +55,7 @@ func (b *battlefield) actForProjectiles() {
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue
 		}
-		hitTank := b.getAnotherTankPresentAtTrueCoords(nil, proj.centerX, proj.centerY)
+		hitTank := b.getAnotherTankPresentAtTrueCoords(proj.owner, proj.centerX, proj.centerY)
 		if hitTank != nil {
 			b.removeEnemyTank(hitTank)
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
@@ -71,7 +72,7 @@ func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int
 		tx, ty := t.getCenterCoords()
 		tx -= x
 		ty -= y
-		if tx*tx + ty*ty < t.radius * t.radius {
+		if tx*tx+ty*ty < t.radius*t.radius {
 			return t
 		}
 	}
@@ -79,7 +80,7 @@ func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int
 		tx, ty := b.playerTank.getCenterCoords()
 		tx -= x
 		ty -= y
-		if tx*tx + ty*ty < b.playerTank.radius * b.playerTank.radius {
+		if tx*tx+ty*ty < b.playerTank.radius*b.playerTank.radius {
 			return b.playerTank
 		}
 	}
@@ -88,17 +89,17 @@ func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int
 
 func (b *battlefield) canTankMoveByVector(t *tank, vx, vy int) bool {
 	var tx1, ty1, tx2, ty2 int
-	diagRadius := t.radius*6/10
+	diagRadius := t.radius * 6 / 10
 	// we need to check "left corner" and "right corner" regarding to the tank
 	if vx == 0 {
-		tx1, ty1 = b.trueCoordsToTileCoords(t.centerX - diagRadius, t.centerY + vy*t.radius)
-		tx2, ty2 = b.trueCoordsToTileCoords(t.centerX + diagRadius, t.centerY + vy*t.radius)
+		tx1, ty1 = b.trueCoordsToTileCoords(t.centerX-diagRadius, t.centerY+vy*t.radius)
+		tx2, ty2 = b.trueCoordsToTileCoords(t.centerX+diagRadius, t.centerY+vy*t.radius)
 	} else if vy == 0 {
-		tx1, ty1 = b.trueCoordsToTileCoords(t.centerX + vx*t.radius, t.centerY - diagRadius)
-		tx2, ty2 = b.trueCoordsToTileCoords(t.centerX + vx*t.radius, t.centerY + diagRadius)
+		tx1, ty1 = b.trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY-diagRadius)
+		tx2, ty2 = b.trueCoordsToTileCoords(t.centerX+vx*t.radius, t.centerY+diagRadius)
 	}
 
 	return b.areTileCoordsValid(tx1, ty1) && !b.tiles[tx1][ty1].impassable &&
 		b.areTileCoordsValid(tx2, ty2) && !b.tiles[tx2][ty2].impassable &&
-		b.getAnotherTankPresentAtTrueCoords(t, t.centerX + vx*t.radius, t.centerY + vy*t.radius) == nil
+		b.getAnotherTankPresentAtTrueCoords(t, t.centerX+vx*t.radius, t.centerY+vy*t.radius) == nil
 }

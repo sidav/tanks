@@ -1,8 +1,12 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/sidav/golibrl/random/additive_random"
+)
 
 var gameTick = 0
+var rnd additive_random.FibRandom
 
 func runGame() {
 	if gameMap.playerTank.canMoveNow() {
@@ -26,6 +30,9 @@ func runGame() {
 	}
 
 	gameMap.actForProjectiles()
+	for i := range gameMap.enemies {
+		gameMap.actAiForTank(gameMap.enemies[i])
+	}
 	renderBattlefield(gameMap)
 	gameTick++
 }

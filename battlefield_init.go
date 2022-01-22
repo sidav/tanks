@@ -29,7 +29,7 @@ func (b *battlefield) init() {
 
 	for i := 0; i < 3; i++ {
 		x, y := rnd.RandInRange(6, 12), rnd.RandInRange(0, 12)
-		for b.tiles[x][y].impassable {
+		for b.tiles[x][y].impassable || b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_SIZE_TRUE, y*TILE_SIZE_TRUE) != nil {
 			x, y = rnd.RandInRange(6, 12), rnd.RandInRange(0, 12)
 		}
 		b.enemies = append(b.enemies, &tank{
@@ -38,6 +38,7 @@ func (b *battlefield) init() {
 			radius:             TILE_SIZE_TRUE / 2,
 			sprites:            tankAtlaces["RED_T1_TANK"],
 			stats:              tankStatsList["ENEMY_TANK"],
+			ai:                 initSimpleTankAi(),
 			currentFrameNumber: 0,
 		})
 	}

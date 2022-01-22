@@ -14,6 +14,7 @@ func main() {
 
 	gameMap = &battlefield{}
 	gameMap.init()
+	rnd.InitDefault()
 	for !rl.WindowShouldClose() {
 		runGame()
 	}

@@ -8,6 +8,7 @@ type tank struct {
 	radius             int
 	sprites            *horizSpriteAtlas
 	currentFrameNumber uint8
+	owner              *tank
 	stats              *tankStats
 
 	nextTickToMove, nextTickToShoot int
