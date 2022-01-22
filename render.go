@@ -6,7 +6,7 @@ import (
 	"image/color"
 )
 
-var TINT = rl.RayWhite
+var DEFAULT_TINT = rl.RayWhite
 
 var gameOverLineH int32 = -TILE_SIZE_IN_PIXELS
 var gameOverRgb color.RGBA
@@ -17,7 +17,7 @@ func renderBattlefield(b *battlefield) {
 
 	renderTiles(b)
 	for i := range b.tanks {
-		renderTank(b.tanks[i])
+		renderTank(b.tanks[i], true)
 	}
 	renderProjectiles(b)
 	renderEffects(b)
@@ -58,29 +58,41 @@ func renderBattlefield(b *battlefield) {
 	rl.EndDrawing()
 }
 
-func renderTank(t *tank) {
+func renderTank(t *tank, useFactionTint bool) {
 	cx, cy := ingameCoordsToOnScreenCoords(t.centerX, t.centerY)
 	x, y := float32(cx - t.sprites.spriteSize/2), float32(cy - t.sprites.spriteSize/2)
-	rl.DrawTextureRec(
-		t.sprites.atlas,
-		t.getCurrentSpriteRect(),
-		rl.Vector2{
-			X: x,
-			Y: y,
-		},
-		TINT,
-	)
+	if useFactionTint {
+		rl.DrawTextureRec(
+			t.sprites.atlas,
+			t.getCurrentSpriteRect(),
+			rl.Vector2{
+				X: x,
+				Y: y,
+			},
+			factionTints[t.faction],
+		)
+	} else {
+		rl.DrawTextureRec(
+			t.sprites.atlas,
+			t.getCurrentSpriteRect(),
+			rl.Vector2{
+				X: x,
+				Y: y,
+			},
+			DEFAULT_TINT,
+		)
+	}
 }
 
 func renderProjectiles(b *battlefield) {
 	for _, p := range b.projectiles {
-		renderTank(p)
+		renderTank(p, false)
 	}
 }
 
 func renderEffects(b *battlefield) {
 	for _, p := range b.effects {
-		renderTank(p)
+		renderTank(p, false)
 	}
 }
 
@@ -89,7 +101,7 @@ func renderTiles(b *battlefield) {
 		for y, t := range b.tiles[x] {
 			spr := t.getSpritesAtlas()
 			if spr != nil {
-				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), TINT)
+				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), DEFAULT_TINT)
 			}
 		}
 	}
@@ -100,7 +112,7 @@ func renderWood(b *battlefield) {
 		for y, t := range b.tiles[x] {
 			spr := t.getSpritesAtlas()
 			if t.code == TILE_WOOD {
-				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), TINT)
+				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), DEFAULT_TINT)
 			}
 		}
 	}

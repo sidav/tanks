@@ -53,7 +53,7 @@ func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desi
 		centerY:            (MAP_H-3)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
 		faceX:              0,
 		faceY:              -1,
-		sprites:            tankAtlaces["YELLOW_T1_TANK"],
+		sprites:            tankAtlaces["T1_TANK"],
 		stats:              tankStatsList["PLAYER_TANK"],
 		currentFrameNumber: 0,
 	}

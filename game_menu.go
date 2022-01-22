@@ -16,7 +16,7 @@ var (
 		{10, 2, 100, 1},
 		{30, 5, 1000, 5},
 		{150, 5, 1000, 5},
-		{4, 2, 4, 1},
+		{4, 2, len(factionTints), 1},
 		{MAP_H*MAP_W/4, 0, MAP_H*MAP_W, 4},
 		{MAP_H*MAP_W/6, 0, MAP_H*MAP_W, 4},
 		{MAP_H*MAP_W/10, 0, MAP_H*MAP_W, 4},

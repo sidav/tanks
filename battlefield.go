@@ -61,11 +61,13 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 	tankCode := ""
 	switch tankFaction {
 	case 1:
-		tankCode = "GRAY_T1_TANK"
+		tankCode = "T1_TANK"
 	case 2:
-		tankCode = "GREEN_T1_TANK"
+		tankCode = "T2_TANK"
 	case 3:
-		tankCode = "RED_T1_TANK"
+		tankCode = "T3_TANK"
+	default:
+		tankCode = "T4_TANK"
 	}
 	owner := &tank{
 		code:               tankCode,
