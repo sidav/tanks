@@ -9,6 +9,7 @@ type battlefield struct {
 	initialEnemiesCount               int
 	totalTanksRemainingToSpawn        int
 	chanceToSpawnEnemyEachTickOneFrom int
+	numFactions                       int
 	tanks                             []*tank
 
 	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
@@ -50,7 +51,7 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 			break
 		}
 	}
-	tankFaction := rnd.RandInRange(1, NUM_FACTIONS-1)
+	tankFaction := rnd.RandInRange(1, b.numFactions-1)
 	tankCode := ""
 	switch tankFaction {
 	case 1:
@@ -93,7 +94,7 @@ func (b *battlefield) shootAsTank(t *tank) {
 		centerY:            t.centerY + t.faceY*(t.radius+1),
 		faceX:              t.faceX,
 		faceY:              t.faceY,
-		radius:             4,
+		radius:             3,
 		sprites:            projectileAtlaces["BULLET"],
 		owner:              t,
 		currentFrameNumber: 0,

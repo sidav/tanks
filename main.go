@@ -5,26 +5,29 @@ import (
 )
 
 var gameMap *battlefield
+var gameIsRunning, playerPressedExit bool
 
 func main() {
 	rl.InitWindow(WINDOW_W, WINDOW_H, "TANKS!")
 	rl.SetTargetFPS(60)
+	rl.SetExitKey(rl.KeyF12)
+
 	loadImageResources()
 	initTileDictionary()
 	// defer unloadResources()
 
 	rnd.InitDefault()
 
-	gameMap = &battlefield{
-		initialEnemiesCount:               0,
-		MaxTanksOnMap:                     10,
-		totalTanksRemainingToSpawn:        30,
-		chanceToSpawnEnemyEachTickOneFrom: 150,
-	}
-	gameMap.init()
+	gameIsRunning = true
 
 	for !rl.WindowShouldClose() {
-		runGame()
+		showGameMenu()
+		if playerPressedExit {
+			break
+		}
+		for gameIsRunning {
+			runGame()
+		}
 	}
 
 	rl.CloseWindow()

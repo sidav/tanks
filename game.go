@@ -10,7 +10,7 @@ var rnd additive_random.FibRandom
 
 func runGame() {
 	fmt.Printf("%d: START ", gameTick)
-	listenPlayerControls()
+	listenPlayerInput()
 
 	fmt.Printf("PROJS ")
 	gameMap.actForProjectiles()

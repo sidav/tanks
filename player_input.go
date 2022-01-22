@@ -2,7 +2,7 @@ package main
 
 import rl "github.com/gen2brain/raylib-go/raylib"
 
-func listenPlayerControls() {
+func listenPlayerInput() {
 	if gameMap.playerTank == nil {
 		return
 	}
@@ -19,6 +19,9 @@ func listenPlayerControls() {
 		}
 		if rl.IsKeyDown(rl.KeyDown) {
 			gameMap.playerTank.moveByVector(0, 1)
+		}
+		if rl.IsKeyDown(rl.KeyEscape) {
+			gameIsRunning = false
 		}
 	}
 	if gameMap.playerTank.canShootNow() {
