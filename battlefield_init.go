@@ -11,6 +11,13 @@ func (b *battlefield) init() {
 		x, y := rnd.RandInRange(1, 12), rnd.RandInRange(1, 12)
 		b.tiles[x][y].impassable = true
 		b.tiles[x][y].sprite = tileAtlaces["WALL"]
+		b.tiles[x][y].destructible = true
+	}
+
+	for i := 0; i < 7; i++ {
+		x, y := rnd.RandInRange(1, 12), rnd.RandInRange(1, 12)
+		b.tiles[x][y].impassable = true
+		b.tiles[x][y].sprite = tileAtlaces["ARMORED_WALL"]
 	}
 
 	b.playerTank = &tank{

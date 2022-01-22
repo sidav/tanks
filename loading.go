@@ -19,6 +19,7 @@ func loadImageResources() {
 
 	tileAtlaces["GRASS"] = CreateHorizAtlasFromFile("sprites.png", 17*16, 16*2, 16, 1, 1)
 	tileAtlaces["WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*0, 16, 1, 1)
+	tileAtlaces["ARMORED_WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*1, 16, 1, 1)
 
 	projectileAtlaces["BULLET"] = CreateHorizAtlasFromFile("sprites.png", 321, 100, 8, 4, 1)
 

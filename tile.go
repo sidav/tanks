@@ -1,6 +1,7 @@
 package main
 
 type tile struct {
-	sprite     *horizSpriteAtlas
-	impassable bool
+	sprite       *horizSpriteAtlas
+	impassable   bool
+	destructible bool
 }

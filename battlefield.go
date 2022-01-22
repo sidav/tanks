@@ -83,8 +83,10 @@ func (b *battlefield) actForProjectiles() {
 			continue
 		}
 		if b.tiles[projTx][projTy].impassable {
-			b.tiles[projTx][projTy].impassable = false
-			b.tiles[projTx][projTy].sprite = nil
+			if b.tiles[projTx][projTy].destructible {
+				b.tiles[projTx][projTy].impassable = false
+				b.tiles[projTx][projTy].sprite = nil
+			}
 			b.spawnEffect("EXPLOSION", proj.centerX, proj.centerY)
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
 			continue
