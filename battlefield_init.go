@@ -1,10 +1,19 @@
 package main
 
 const (
-	DESIRED_WALLS         = 100
+	DESIRED_WALLS         = 75
 	DESIRED_ARMORED_WALLS = 40
 	DESIRED_WOODS         = 10
 )
+
+func (b *battlefield) getRandomEmptyTileCoords(fx, tx, fy, ty int) (int, int) {
+	for {
+		x, y := rnd.RandInRange(fx, tx), rnd.RandInRange(fy, ty)
+		if b.tiles[x][y].code == TILE_EMPTY {
+			return x, y
+		}
+	}
+}
 
 func (b *battlefield) init() {
 	// todo: REWRITE, add better generator
@@ -14,19 +23,19 @@ func (b *battlefield) init() {
 	}
 
 	for i := 0; i < DESIRED_WALLS/2; i++ {
-		x, y := rnd.RandInRange(0, MAP_W/2), rnd.RandInRange(0, MAP_H-1)
+		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WALL
 		b.tiles[MAP_W-x-1][y].code = TILE_WALL
 	}
 
 	for i := 0; i < DESIRED_ARMORED_WALLS/2; i++ {
-		x, y := rnd.RandInRange(0, MAP_W/2), rnd.RandInRange(0, MAP_H-1)
+		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_ARMORED
 		b.tiles[MAP_W-x-1][y].code = TILE_ARMORED
 	}
 
 	for i := 0; i < DESIRED_WOODS/2; i++ {
-		x, y := rnd.RandInRange(0, MAP_W/2), rnd.RandInRange(0, MAP_H-1)
+		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WOOD
 		b.tiles[MAP_W-x-1][y].code = TILE_WOOD
 	}
@@ -49,6 +58,7 @@ func (b *battlefield) init() {
 		currentFrameNumber: 0,
 	}
 	b.tanks = append(b.tanks, b.playerTank)
+	b.tiles[MAP_W/2][MAP_H-3].code = TILE_EMPTY
 
 	for i := 0; i < b.initialEnemiesCount; i++ {
 		b.spawnTank(0, MAP_W-1, 0, MAP_H-1)

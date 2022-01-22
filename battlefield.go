@@ -52,7 +52,7 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 	b.tanks = append(b.tanks, &tank{
 		centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		centerY:            y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
-		radius:             TILE_SIZE_TRUE / 2,
+		radius:             TILE_SIZE_TRUE / 2 - 1,
 		sprites:            tankAtlaces[atlasName],
 		stats:              tankStatsList["ENEMY_TANK"],
 		ai:                 initSimpleTankAi(),
