@@ -16,13 +16,22 @@ func showGameMenu() {
 		{30, 5, 1000, 5},
 		{150, 5, 1000, 5},
 		{4, 2, 4, 1},
+		{50, 0, MAP_H*MAP_W, 2},
+		{40, 0, MAP_H*MAP_W, 2},
+		{10, 0, MAP_H*MAP_W, 2},
+		{10, 0, MAP_H*MAP_W, 2},
 	}
+
 	entries := []string{
-		"INITIAL ENEMIES      <%d>",
-		"MAX TANKS ON MAP     <%d>",
-		"TOTAL TANKS PER GAME <%d>",
-		"HOW RARE ARE SPAWNS  <%d>",
-		"FACTIONS             <%d>",
+		"INITIAL ENEMIES       <%d>",
+		"MAX TANKS ON MAP      <%d>",
+		"TOTAL TANKS PER GAME  <%d>",
+		"HOW RARE ARE SPAWNS   <%d>",
+		"FACTIONS              <%d>",
+		"DESIRED WALLS         <%d>",
+		"DESIRED ARMORED_WALLS <%d>",
+		"DESIRED WOODS         <%d>",
+		"DESIRED WATER         <%d>",
 	}
 	colorText := color.RGBA{
 		R: 255,
@@ -94,5 +103,5 @@ func showGameMenu() {
 		chanceToSpawnEnemyEachTickOneFrom: valuesData[3][0],
 		numFactions:                       valuesData[4][0],
 	}
-	gameMap.init()
+	gameMap.init(valuesData[5][0], valuesData[6][0], valuesData[7][0], valuesData[8][0])
 }

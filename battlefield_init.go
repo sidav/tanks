@@ -1,12 +1,5 @@
 package main
 
-const (
-	DESIRED_WALLS         = 75
-	DESIRED_ARMORED_WALLS = 40
-	DESIRED_WOODS         = 10
-	DESIRED_WATER         = 10
-)
-
 func (b *battlefield) getRandomEmptyTileCoords(fx, tx, fy, ty int) (int, int) {
 	for {
 		x, y := rnd.RandInRange(fx, tx), rnd.RandInRange(fy, ty)
@@ -16,32 +9,32 @@ func (b *battlefield) getRandomEmptyTileCoords(fx, tx, fy, ty int) (int, int) {
 	}
 }
 
-func (b *battlefield) init() {
+func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desiredWater int) {
 	// todo: REWRITE, add better generator
 	b.tiles = make([][]tile, MAP_W)
 	for i := range b.tiles {
 		b.tiles[i] = make([]tile, MAP_H)
 	}
 
-	for i := 0; i < DESIRED_WALLS/2; i++ {
+	for i := 0; i < desiredWalls/2; i++ {
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WALL
 		b.tiles[MAP_W-x-1][y].code = TILE_WALL
 	}
 
-	for i := 0; i < DESIRED_ARMORED_WALLS/2; i++ {
+	for i := 0; i < desiredArmoredWalls/2; i++ {
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_ARMORED
 		b.tiles[MAP_W-x-1][y].code = TILE_ARMORED
 	}
 
-	for i := 0; i < DESIRED_WOODS/2; i++ {
+	for i := 0; i < desiredWoods/2; i++ {
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WOOD
 		b.tiles[MAP_W-x-1][y].code = TILE_WOOD
 	}
 
-	for i := 0; i < DESIRED_WATER/2; i++ {
+	for i := 0; i < desiredWater/2; i++ {
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = TILE_WATER
 		b.tiles[MAP_W-x-1][y].code = TILE_WATER
