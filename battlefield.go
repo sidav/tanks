@@ -11,7 +11,7 @@ type battlefield struct {
 	enemies                           []*tank
 
 	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
-	effects []*tank // haha, effecrs are too. TODO: refactor
+	effects     []*tank // haha, effecrs are too. TODO: refactor
 }
 
 func (b *battlefield) areTileCoordsValid(tx, ty int) bool {
@@ -24,28 +24,39 @@ func (b *battlefield) trueCoordsToTileCoords(tx, ty int) (int, int) {
 
 func (b *battlefield) spawnEffect(code string, cx, cy int) {
 	b.effects = append(b.effects, &tank{
-		centerX:            cx,
-		centerY:            cy,
-		sprites:            effectAtlaces[code],
-		nextTickToMove:     gameTick+tankStatsList[code].moveDelay,
+		centerX:        cx,
+		centerY:        cy,
+		sprites:        effectAtlaces[code],
+		nextTickToMove: gameTick + tankStatsList[code].moveDelay,
 	})
 }
 
-func (b *battlefield) spawnEnemyTank() {
-	x, y := rnd.RandInRange(3, 12), rnd.RandInRange(0, 12)
-	for b.tiles[x][y].isImpassable() || b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_SIZE_TRUE, y*TILE_SIZE_TRUE) != nil {
-		x, y = rnd.RandInRange(3, 12), rnd.RandInRange(0, 12)
+func (b *battlefield) spawnEnemyTank(fromx, tox, fromy, toy int) {
+	var x, y int
+	for {
+		x, y = rnd.RandInRange(fromx, tox), rnd.RandInRange(fromy, toy)
+		if !b.tiles[x][y].isImpassable() && b.getAnotherTankPresentAtTrueCoords(nil, x*TILE_SIZE_TRUE, y*TILE_SIZE_TRUE) == nil {
+			break
+		}
+	}
+	tankFaction := rnd.RandInRange(1, NUM_FACTIONS-1)
+	atlasName := ""
+	switch tankFaction {
+	case 1: atlasName = "GRAY_T1_TANK"
+	case 2: atlasName = "GREEN_T1_TANK"
+	case 3: atlasName = "RED_T1_TANK"
 	}
 	b.enemies = append(b.enemies, &tank{
 		centerX:            x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		centerY:            y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2,
 		radius:             TILE_SIZE_TRUE / 2,
-		sprites:            tankAtlaces["RED_T1_TANK"],
+		sprites:            tankAtlaces[atlasName],
 		stats:              tankStatsList["ENEMY_TANK"],
 		ai:                 initSimpleTankAi(),
+		faction:            tankFaction,
 		currentFrameNumber: 0,
 	})
-	b.spawnEffect("SPAWN", x*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2, y*TILE_SIZE_TRUE + TILE_SIZE_TRUE/2)
+	b.spawnEffect("SPAWN", x*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2, y*TILE_SIZE_TRUE+TILE_SIZE_TRUE/2)
 }
 
 func (b *battlefield) removeEnemyTank(t *tank) {
@@ -104,7 +115,7 @@ func (b *battlefield) actForEffects() {
 	for i := len(b.effects) - 1; i >= 0; i-- {
 		if b.effects[i].canMoveNow() {
 			b.effects[i].currentFrameNumber++
-			b.effects[i].nextTickToMove = gameTick+tankStatsList["EXPLOSION"].moveDelay
+			b.effects[i].nextTickToMove = gameTick + tankStatsList["EXPLOSION"].moveDelay
 		}
 		if b.effects[i].currentFrameNumber >= b.effects[i].sprites.totalFrames {
 			b.effects = append(b.effects[:i], b.effects[i+1:]...)

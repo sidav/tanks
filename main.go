@@ -17,8 +17,8 @@ func main() {
 
 	gameMap = &battlefield{
 		initialEnemiesCount: 1,
-		desiredEnemiesCount: 5,
-		chanceToSpawnEnemyEachTickOneFrom: 250,
+		desiredEnemiesCount: 10,
+		chanceToSpawnEnemyEachTickOneFrom: 150,
 	}
 	gameMap.init()
 

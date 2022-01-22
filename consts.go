@@ -8,4 +8,5 @@ const (
 
 	MAP_W = 20
 	MAP_H = 15
+	NUM_FACTIONS = 4
 )

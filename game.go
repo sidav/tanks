@@ -48,7 +48,7 @@ func runGame() {
 
 	fmt.Printf("SPAWN ")
 	if len(gameMap.enemies) < gameMap.desiredEnemiesCount && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) {
-		gameMap.spawnEnemyTank()
+		gameMap.spawnEnemyTank(0, MAP_W, 0, MAP_H)
 	}
 
 	fmt.Printf("TURN FINISHED. \n")

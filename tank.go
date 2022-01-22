@@ -10,6 +10,7 @@ type tank struct {
 	currentFrameNumber uint8
 	owner              *tank
 	stats              *tankStats
+	faction            int
 
 	nextTickToMove, nextTickToShoot int
 

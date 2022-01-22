@@ -45,6 +45,6 @@ func (b *battlefield) init() {
 	}
 
 	for i := 0; i < b.initialEnemiesCount; i++ {
-		b.spawnEnemyTank()
+		b.spawnEnemyTank(0, MAP_W, 0, MAP_H)
 	}
 }
