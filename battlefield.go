@@ -13,7 +13,7 @@ type battlefield struct {
 	tanks                             []*tank
 
 	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
-	effects     []*tank // haha, effecrs are too. TODO: refactor
+	effects     []*tank // haha, effects are too. TODO: refactor
 }
 
 func (b *battlefield) spawnEffect(code int, cx, cy int, owner *tank) {
@@ -41,9 +41,14 @@ func (b *battlefield) actForEffects() {
 	}
 }
 
-func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
+func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
 	var x, y int
-	for {
+	placeTries := (tox-fromx)*(toy-fromy) + 1
+	for try := 0; ; try++ {
+		if try == placeTries {
+			debugWrite("SPAWNING FAILED")
+			return // failure
+		}
 		x, y = rnd.RandInRange(fromx, tox), rnd.RandInRange(fromy, toy)
 		trueX, trueY := tileCoordsToPhysicalCoords(x, y)
 		if b.getEffectPresentInRadiusFromTrueCoords(trueX, trueY, TILE_PHYSICAL_SIZE/2+1) != nil {
@@ -55,6 +60,7 @@ func (b *battlefield) spawnTank(fromx, tox, fromy, toy int) {
 			break
 		}
 	}
+
 	b.totalTanksRemainingToSpawn--
 	tankFaction := rnd.RandInRange(1, b.numFactions-1)
 	tankCode := -1

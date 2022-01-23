@@ -8,6 +8,8 @@ var (
 )
 
 const (
+	DEBUG_OUTPUT = false 
+
 	SPRITE_SCALE_FACTOR     = 4.0
 	TILE_SIZE_IN_PIXELS     = 16*SPRITE_SCALE_FACTOR
 	TILE_PHYSICAL_SIZE      = 16
@@ -17,8 +19,6 @@ const (
 	WINDOW_H = 15 * TILE_SIZE_IN_PIXELS
 	TEXT_SIZE = TILE_SIZE_IN_PIXELS/2
 	TEXT_MARGIN = TEXT_SIZE/4
-
-	DEBUG_OUTPUT = false
 )
 
 func areTileCoordsValid(tx, ty int) bool {

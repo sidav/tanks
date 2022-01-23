@@ -34,7 +34,7 @@ func runGame() {
 
 	debugWrite("SPAWN ")
 	if len(gameMap.tanks) < gameMap.maxTanksOnMap && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) && gameMap.totalTanksRemainingToSpawn > 0 {
-		gameMap.spawnTank(0, MAP_W-1, 0, MAP_H-MAP_H/3)
+		gameMap.spawnRandomTankInRect(0, MAP_W-1, 0, MAP_H-MAP_H/5)
 	}
 
 
