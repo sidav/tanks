@@ -97,7 +97,7 @@ func initTankStatsList() {
 		{
 			sprites:    tankAtlaces[TANK_T2],
 
-			shootsProjectileOfCode: PROJ_ROCKET,
+			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
@@ -108,7 +108,7 @@ func initTankStatsList() {
 		{
 			sprites:    tankAtlaces[TANK_T3],
 
-			shootsProjectileOfCode: PROJ_ROCKET,
+			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
@@ -120,7 +120,7 @@ func initTankStatsList() {
 			sprites:    tankAtlaces[TANK_T4],
 
 			shootsProjectileOfCode: PROJ_ROCKET,
-			effectOnDestroy:        EFFECT_EXPLOSION,
+			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  10,
@@ -130,7 +130,7 @@ func initTankStatsList() {
 		{
 			sprites:    tankAtlaces[TANK_T5],
 
-			shootsProjectileOfCode: PROJ_ROCKET,
+			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
