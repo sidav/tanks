@@ -11,17 +11,27 @@ var DEFAULT_TINT = rl.RayWhite
 var gameOverLineH int32 = -TILE_SIZE_IN_PIXELS
 var gameOverRgb color.RGBA
 
-func renderBattlefield(b *battlefield) {
+type renderer struct {
+	cameraCenterX, cameraCenterY int
+}
+
+func (r *renderer) renderBattlefield(b *battlefield, centerTank *tank) {
+	if centerTank != nil {
+		r.cameraCenterX, r.cameraCenterY = centerTank.getCenterCoords()
+		r.cameraCenterX *= PIXEL_TO_PHYSICAL_RATIO
+		r.cameraCenterY *= PIXEL_TO_PHYSICAL_RATIO
+	}
+
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.Black)
 
-	renderTiles(b)
+	r.renderTiles(b)
 	for i := range b.tanks {
-		renderTank(b.tanks[i], true)
+		r.renderTank(b.tanks[i], true)
 	}
-	renderProjectiles(b)
-	renderEffects(b)
-	renderWood(b)
+	r.renderProjectiles(b)
+	r.renderEffects(b)
+	r.renderWood(b)
 
 	if gameOver {
 		rl.DrawText("GAME OVER.", int32(WINDOW_W)/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
@@ -48,18 +58,34 @@ func renderBattlefield(b *battlefield) {
 		}
 	}
 
-	rl.DrawText(fmt.Sprintf("Remaining tanks %d", b.totalTanksRemainingToSpawn), 0, TILE_SIZE_IN_PIXELS*MAP_H, TEXT_SIZE, color.RGBA{
-		R: 255,
-		G: 255,
-		B: 255,
-		A: 255,
+	rl.DrawRectangleGradientV(0, WINDOW_H - 2*TEXT_MARGIN - TEXT_SIZE, WINDOW_W, TEXT_MARGIN*2 + TEXT_SIZE,
+		color.RGBA{
+			R: 64,
+			G: 64,
+			B: 64,
+			A: 255,
+		},
+		color.RGBA{
+			R: 0,
+			G: 0,
+			B: 0,
+			A: 64,
+		},
+	)
+	rl.DrawText(fmt.Sprintf("Remaining tanks %d", b.totalTanksRemainingToSpawn), 0,
+		WINDOW_H - TEXT_MARGIN - TEXT_SIZE, TEXT_SIZE,
+		color.RGBA {
+			R: 255,
+			G: 255,
+			B: 255,
+			A: 255,
 	})
 
 	rl.EndDrawing()
 }
 
-func renderTank(t *tank, useFactionTint bool) {
-	cx, cy := ingameCoordsToOnScreenCoords(t.centerX, t.centerY)
+func (r *renderer) renderTank(t *tank, useFactionTint bool) {
+	cx, cy := r.physicalToOnScreenCoords(t.centerX, t.centerY)
 	x, y := float32(cx - t.getSpritesAtlas().spriteSize/2), float32(cy - t.getSpritesAtlas().spriteSize/2)
 	if useFactionTint {
 		rl.DrawTextureRec(
@@ -84,48 +110,65 @@ func renderTank(t *tank, useFactionTint bool) {
 	}
 }
 
-func renderProjectiles(b *battlefield) {
+func (r *renderer) renderProjectiles(b *battlefield) {
 	for _, p := range b.projectiles {
-		renderTank(p, false)
+		r.renderTank(p, false)
 	}
 }
 
-func renderEffects(b *battlefield) {
+func (r *renderer) renderEffects(b *battlefield) {
 	for _, p := range b.effects {
-		renderTank(p, false)
+		r.renderTank(p, false)
 	}
 }
 
-func renderTiles(b *battlefield) {
+func (r *renderer) renderTile(b *battlefield, x, y int) {
+	t := b.tiles[x][y]
+	spr := t.getSpritesAtlas()
+	if spr != nil {
+		osx, osy := r.physicalToOnScreenCoords(x*TILE_PHYSICAL_SIZE, y*TILE_PHYSICAL_SIZE)
+		rl.DrawTextureRec(
+			t.getSpritesAtlas().atlas,
+			t.getSpriteRect(),
+			rl.Vector2{
+				X: float32(osx),
+				Y: float32(osy),
+			},
+			DEFAULT_TINT,
+		)
+	}
+}
+
+func (r *renderer) renderTiles(b *battlefield) {
 	for x := range b.tiles {
-		for y, t := range b.tiles[x] {
-			spr := t.getSpritesAtlas()
-			if spr != nil {
-				rl.DrawTextureRec(
-					t.getSpritesAtlas().atlas,
-					t.getSpriteRect(),
-					rl.Vector2{
-						X: float32(x*spr.spriteSize),
-						Y: float32(y*spr.spriteSize),
-					},
-					DEFAULT_TINT,
-				)
-			}
+		for y := range b.tiles[x] {
+			r.renderTile(b, x, y)
 		}
 	}
 }
 
-func renderWood(b *battlefield) {
+func (r *renderer) renderWood(b *battlefield) {
 	for x := range b.tiles {
 		for y, t := range b.tiles[x] {
-			spr := t.getSpritesAtlas()
 			if t.code == TILE_WOOD {
-				rl.DrawTexture(spr.atlas, int32(x*spr.spriteSize), int32(y*spr.spriteSize), DEFAULT_TINT)
+				r.renderTile(b, x, y)
 			}
 		}
 	}
 }
 
-func ingameCoordsToOnScreenCoords(igx, igy int) (int, int) {
-	return int(float32(igx)* PIXEL_TO_PHYSICAL_RATIO), int(float32(igy)* PIXEL_TO_PHYSICAL_RATIO)
+func (r *renderer) physicalToOnScreenCoords(physX, physY int) (int, int) {
+	pixx, pixy := r.physicalToPixelCoords(physX, physY)
+	if r.doesLevelFitInScreen() {
+		return pixx, pixy
+	}
+	return pixx - r.cameraCenterX + WINDOW_W/2, pixy - r.cameraCenterY + WINDOW_H/2
+}
+
+func (r *renderer) physicalToPixelCoords(px, py int) (int, int) {
+	return int(float32(px)* PIXEL_TO_PHYSICAL_RATIO), int(float32(py)* PIXEL_TO_PHYSICAL_RATIO)
+}
+
+func (r *renderer) doesLevelFitInScreen() bool {
+	return MAP_W*TILE_SIZE_IN_PIXELS <= WINDOW_W && MAP_H*TILE_SIZE_IN_PIXELS <= WINDOW_H
 }

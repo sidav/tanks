@@ -8,6 +8,7 @@ var gameTick = 0
 var gameWon = false
 var gameOver = false
 var rnd additive_random.FibRandom
+var render renderer
 
 func runGame() {
 	debugWritef("%d: START ", gameTick)
@@ -29,7 +30,7 @@ func runGame() {
 	debugWrite("} ")
 
 	debugWrite("RENDER ")
-	renderBattlefield(gameMap)
+	render.renderBattlefield(gameMap, gameMap.playerTank)
 
 	debugWrite("SPAWN ")
 	if len(gameMap.tanks) < gameMap.maxTanksOnMap && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) && gameMap.totalTanksRemainingToSpawn > 0 {
