@@ -17,6 +17,9 @@ const (
 )
 
 type tankStats struct {
+	shootsProjectileOfCode int
+	effectOnDestroy        int
+
 	sprites *horizSpriteAtlas
 
 	radius int
@@ -29,19 +32,22 @@ var tankStatsList map[int]*tankStats
 
 func initTankStatsList() {
 	tankStatsList = map[int]*tankStats{
+
+/////// PROJECTILES
 		PROJ_BULLET:
 		{
-			sprites:
-			projectileAtlaces[PROJ_BULLET],
-			radius: 2,
+			sprites:         projectileAtlaces[PROJ_BULLET],
+			effectOnDestroy: EFFECT_EXPLOSION,
+			radius:          2,
 		},
 		PROJ_ROCKET:
 		{
-			sprites:
-			projectileAtlaces[PROJ_ROCKET],
-			radius: 2,
+			sprites:         projectileAtlaces[PROJ_ROCKET],
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          2,
 		},
 
+/////// EFFECTS
 		EFFECT_EXPLOSION:
 		{
 			sprites:   effectAtlaces[EFFECT_EXPLOSION],
@@ -52,7 +58,7 @@ func initTankStatsList() {
 		{
 			sprites:   effectAtlaces[EFFECT_BIG_EXPLOSION],
 			radius:    TILE_PHYSICAL_SIZE,
-			moveDelay: 3,
+			moveDelay: 5,
 		},
 		EFFECT_SPAWN:
 		{
@@ -61,9 +67,14 @@ func initTankStatsList() {
 			moveDelay: 7,
 		},
 
+/////// TANKS
 		TANK_PLAYER:
 		{
 			sprites:    tankAtlaces[TANK_T1],
+
+			shootsProjectileOfCode: PROJ_BULLET,
+			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
+
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  2,
 			shootDelay: 25,
@@ -71,6 +82,10 @@ func initTankStatsList() {
 		TANK_T1:
 		{
 			sprites:    tankAtlaces[TANK_T1],
+
+			shootsProjectileOfCode: PROJ_BULLET,
+			effectOnDestroy:        EFFECT_EXPLOSION,
+
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  6,
 			shootDelay: 40,
@@ -78,6 +93,10 @@ func initTankStatsList() {
 		TANK_T2:
 		{
 			sprites:    tankAtlaces[TANK_T2],
+
+			shootsProjectileOfCode: PROJ_ROCKET,
+			effectOnDestroy:        EFFECT_EXPLOSION,
+
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  8,
 			shootDelay: 50,
@@ -85,6 +104,10 @@ func initTankStatsList() {
 		TANK_T3:
 		{
 			sprites:    tankAtlaces[TANK_T3],
+
+			shootsProjectileOfCode: PROJ_ROCKET,
+			effectOnDestroy:        EFFECT_EXPLOSION,
+
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  3,
 			shootDelay: 60,
@@ -92,6 +115,10 @@ func initTankStatsList() {
 		TANK_T4:
 		{
 			sprites:    tankAtlaces[TANK_T4],
+
+			shootsProjectileOfCode: PROJ_ROCKET,
+			effectOnDestroy:        EFFECT_EXPLOSION,
+
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  10,
 			shootDelay: 20,
@@ -99,6 +126,10 @@ func initTankStatsList() {
 		TANK_T5:
 		{
 			sprites:    tankAtlaces[TANK_T5],
+
+			shootsProjectileOfCode: PROJ_ROCKET,
+			effectOnDestroy:        EFFECT_EXPLOSION,
+
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  2,
 			shootDelay: 60,

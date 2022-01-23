@@ -86,7 +86,7 @@ func (b *battlefield) removeTank(t *tank) {
 				b.playerTank = nil
 			}
 			cx, cy := b.tanks[i].getCenterCoords()
-			b.spawnEffect(EFFECT_EXPLOSION, cx, cy, nil)
+			b.spawnEffect(b.tanks[i].getStats().effectOnDestroy, cx, cy, nil)
 			b.tanks = append(b.tanks[:i], b.tanks[i+1:]...)
 			break
 		}
@@ -95,7 +95,7 @@ func (b *battlefield) removeTank(t *tank) {
 
 func (b *battlefield) shootAsTank(t *tank) {
 	newProjectile := &tank{
-		code:               PROJ_BULLET,
+		code:               t.getStats().shootsProjectileOfCode,
 		centerX:            t.centerX + t.faceX*(t.getRadius()+1),
 		centerY:            t.centerY + t.faceY*(t.getRadius()+1),
 		faceX:              t.faceX,
@@ -117,7 +117,7 @@ func (b *battlefield) actForProjectiles() {
 			proj.centerX+proj.faceX <= 0 || proj.centerY+proj.faceY <= 0 {
 
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
-			b.spawnEffect(EFFECT_EXPLOSION, proj.centerX, proj.centerY, nil)
+			b.spawnEffect(proj.getStats().effectOnDestroy, proj.centerX, proj.centerY, nil)
 			continue
 		}
 
