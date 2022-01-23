@@ -19,6 +19,7 @@ const (
 type tankStats struct {
 	shootsProjectileOfCode int
 	effectOnDestroy        int
+	projectileSpeed int
 
 	sprites *horizSpriteAtlas
 
@@ -37,12 +38,14 @@ func initTankStatsList() {
 		PROJ_BULLET:
 		{
 			sprites:         projectileAtlaces[PROJ_BULLET],
+			projectileSpeed: 2,
 			effectOnDestroy: EFFECT_EXPLOSION,
 			radius:          2,
 		},
 		PROJ_ROCKET:
 		{
 			sprites:         projectileAtlaces[PROJ_ROCKET],
+			projectileSpeed: 1,
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
 			radius:          2,
 		},

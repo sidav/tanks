@@ -110,8 +110,9 @@ func (b *battlefield) shootAsTank(t *tank) {
 func (b *battlefield) actForProjectiles() {
 	for i := len(b.projectiles) - 1; i >= 0; i-- {
 		proj := b.projectiles[i]
-		proj.centerX += proj.faceX
-		proj.centerY += proj.faceY
+		speed := proj.getStats().projectileSpeed
+		proj.centerX += proj.faceX*speed
+		proj.centerY += proj.faceY*speed
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
 		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) ||
 			proj.centerX+proj.faceX <= 0 || proj.centerY+proj.faceY <= 0 {
