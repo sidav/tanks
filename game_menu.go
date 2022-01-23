@@ -15,8 +15,11 @@ var (
 		{0, 0, 25, 1},
 		{10, 2, 100, 1},
 		{30, 5, 1000, 5},
-		{150, 5, 1000, 5},
+		{120, 5, 1000, 5},
 		{4, 2, len(factionTints), 1},
+
+		{25, 11, 1000, 2},
+		{14, 11, 1000, 2},
 		{MAP_H*MAP_W/3, 0, MAP_H*MAP_W, 4},
 		{MAP_H*MAP_W/8, 0, MAP_H*MAP_W, 4},
 		{MAP_H*MAP_W/12, 0, MAP_H*MAP_W, 4},
@@ -30,6 +33,9 @@ var (
 		"TOTAL TANKS PER GAME  <%d>",
 		"HOW RARE ARE SPAWNS   <%d>",
 		"FACTIONS              <%d>",
+
+		"MAP WIDTH             <%d>",
+		"MAP HEIGHT            <%d>",
 		"DESIRED WALLS         <%d>",
 		"DESIRED ARMORED_WALLS <%d>",
 		"DESIRED WOODS         <%d>",
@@ -113,5 +119,7 @@ func showGameMenu() {
 		chanceToSpawnEnemyEachTickOneFrom: menuValuesData[3][0],
 		numFactions:                       menuValuesData[4][0],
 	}
-	gameMap.init(menuValuesData[5][0], menuValuesData[6][0], menuValuesData[7][0], menuValuesData[8][0], menuValuesData[9][0])
+	MAP_W = menuValuesData[5][0]
+	MAP_H = menuValuesData[6][0]
+	gameMap.init(menuValuesData[7][0], menuValuesData[8][0], menuValuesData[9][0], menuValuesData[10][0], menuValuesData[11][0])
 }
