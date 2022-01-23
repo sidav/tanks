@@ -7,7 +7,10 @@ const (
 	TANK_T3
 	TANK_T4
 	TANK_T5
+
 	PROJ_BULLET
+	PROJ_ROCKET
+
 	EFFECT_EXPLOSION
 	EFFECT_BIG_EXPLOSION
 	EFFECT_SPAWN
@@ -30,6 +33,12 @@ func initTankStatsList() {
 		{
 			sprites:
 			projectileAtlaces[PROJ_BULLET],
+			radius: 2,
+		},
+		PROJ_ROCKET:
+		{
+			sprites:
+			projectileAtlaces[PROJ_ROCKET],
 			radius: 2,
 		},
 
