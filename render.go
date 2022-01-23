@@ -159,16 +159,23 @@ func (r *renderer) renderWood(b *battlefield) {
 
 func (r *renderer) physicalToOnScreenCoords(physX, physY int) (int, int) {
 	pixx, pixy := r.physicalToPixelCoords(physX, physY)
-	if r.doesLevelFitInScreen() {
-		return pixx, pixy
+	if !r.doesLevelFitInScreenHorizontally() {
+		pixx = pixx - r.cameraCenterX + WINDOW_W/2
 	}
-	return pixx - r.cameraCenterX + WINDOW_W/2, pixy - r.cameraCenterY + WINDOW_H/2
+	if !r.doesLevelFitInScreenVertically() {
+		pixy = pixy - r.cameraCenterY + WINDOW_H/2
+	}
+	return pixx, pixy
 }
 
 func (r *renderer) physicalToPixelCoords(px, py int) (int, int) {
 	return int(float32(px)* PIXEL_TO_PHYSICAL_RATIO), int(float32(py)* PIXEL_TO_PHYSICAL_RATIO)
 }
 
-func (r *renderer) doesLevelFitInScreen() bool {
-	return MAP_W*TILE_SIZE_IN_PIXELS <= WINDOW_W && MAP_H*TILE_SIZE_IN_PIXELS <= WINDOW_H
+func (r *renderer) doesLevelFitInScreenHorizontally() bool {
+	return MAP_W*TILE_SIZE_IN_PIXELS <= WINDOW_W
+}
+
+func (r *renderer) doesLevelFitInScreenVertically() bool {
+	return MAP_H*TILE_SIZE_IN_PIXELS <= WINDOW_H
 }
