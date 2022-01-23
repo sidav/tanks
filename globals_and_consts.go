@@ -8,7 +8,7 @@ var (
 )
 
 const (
-	DEBUG_OUTPUT = false 
+	DEBUG_OUTPUT = false
 
 	SPRITE_SCALE_FACTOR     = 4.0
 	TILE_SIZE_IN_PIXELS     = 16*SPRITE_SCALE_FACTOR

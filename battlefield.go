@@ -55,7 +55,7 @@ func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
 			continue
 		}
 		if !b.tiles[x][y].isImpassable() &&
-			b.getAnotherTankPresentAtTrueCoords(nil, trueX, trueY) == nil {
+			b.getTankPresentFromRadius(TILE_PHYSICAL_SIZE/2, trueX, trueY) == nil {
 
 			break
 		}
@@ -134,6 +134,16 @@ func (b *battlefield) getAnotherTankPresentAtTrueCoords(thisTank *tank, x, y int
 		}
 		tx, ty := t.getCenterCoords()
 		if circlesOverlap(x, y, r, tx, ty, t.getRadius()) {
+			return t
+		}
+	}
+	return nil
+}
+
+func (b *battlefield) getTankPresentFromRadius(radius, x, y int) *tank {
+	for _, t := range b.tanks {
+		tx, ty := t.getCenterCoords()
+		if circlesOverlap(x, y, radius, tx, ty, t.getRadius()) {
 			return t
 		}
 	}
