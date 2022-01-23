@@ -2,17 +2,17 @@ package main
 
 type tankAi struct {
 	chanceToRotateAnywhere          int
-	chanceToRotateAtTilePerfectSpot int
+	chanceToRotateAtTileMiddle      int
 	chanceToShootOnTarget           int
 	chanceToShootOnDestructibleTile int
 }
 
 func initSimpleTankAi() *tankAi {
 	return &tankAi{
-		chanceToRotateAnywhere: 100,
-		chanceToRotateAtTilePerfectSpot: 35,
-		chanceToShootOnTarget: 15,
-		chanceToShootOnDestructibleTile: 50,
+		chanceToRotateAnywhere:          100,
+		chanceToRotateAtTileMiddle:      35,
+		chanceToShootOnTarget:           15,
+		chanceToShootOnDestructibleTile: 30,
 	}
 }
 
@@ -41,7 +41,7 @@ func (b *battlefield) wantsToShoot(t *tank) bool {
 				return rnd.OneChanceFrom(t.ai.chanceToShootOnTarget) // enemy seen
 			}
 
-			if b.tiles[tilex][tiley].isImpassable() {
+			if b.tiles[tilex][tiley].stopsProjectiles() {
 				if b.tiles[tilex][tiley].isDestructible() {
 					return rnd.OneChanceFrom(t.ai.chanceToShootOnDestructibleTile) // destructible tile seen
 				}
@@ -63,7 +63,7 @@ func (b *battlefield) actAiForTank(t *tank) {
 	debugWrite("rotate; ")
 	wantsToRotate := rnd.OneChanceFrom(t.ai.chanceToRotateAnywhere)
 	if (t.centerX %TILE_PHYSICAL_SIZE == TILE_PHYSICAL_SIZE/2+1) || (t.centerY %TILE_PHYSICAL_SIZE == TILE_PHYSICAL_SIZE/ 2+1) {
-		wantsToRotate = wantsToRotate || rnd.OneChanceFrom(t.ai.chanceToRotateAtTilePerfectSpot)
+		wantsToRotate = wantsToRotate || rnd.OneChanceFrom(t.ai.chanceToRotateAtTileMiddle)
 	}
 	if t.canMoveNow() && !enemyInFront && (wantsToRotate || b.isTileInFrontOfTankImpassable(t)) {
 		t.faceX, t.faceY = randomUnitVector()
