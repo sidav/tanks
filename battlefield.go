@@ -64,17 +64,7 @@ func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
 
 	b.totalTanksRemainingToSpawn--
 	tankFaction := rnd.RandInRange(1, b.numFactions-1)
-	tankCode := -1
-	switch tankFaction {
-	case 1:
-		tankCode = TANK_T2
-	case 2:
-		tankCode = TANK_T3
-	case 3:
-		tankCode = TANK_T4
-	default:
-		tankCode = TANK_T5
-	}
+	tankCode := getRandomCode()
 	owner := &tank{
 		code:               tankCode,
 		centerX:            x*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,

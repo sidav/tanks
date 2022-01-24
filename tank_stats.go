@@ -9,6 +9,8 @@ const (
 	TANK_T4
 	TANK_T5
 	TANK_T6
+	TANK_T7
+	TANK_T8
 
 	PROJ_BULLET
 	PROJ_ROCKET
@@ -17,6 +19,10 @@ const (
 	EFFECT_BIG_EXPLOSION
 	EFFECT_SPAWN
 )
+
+func getRandomCode() int {
+	return rnd.RandInRange(TANK_T1, TANK_T8)
+}
 
 type tankStats struct {
 	shootsProjectileOfCode int
@@ -82,7 +88,7 @@ func initTankStatsList() {
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  2,
-			shootDelay: 25,
+			shootDelay: 45,
 		},
 		TANK_PLAYER2:
 		{
@@ -93,7 +99,7 @@ func initTankStatsList() {
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  2,
-			shootDelay: 25,
+			shootDelay: 45,
 		},
 		TANK_T1:
 		{
@@ -153,6 +159,28 @@ func initTankStatsList() {
 		TANK_T6:
 		{
 			sprites:    tankAtlaces[TANK_T6],
+
+			shootsProjectileOfCode: PROJ_BULLET,
+			effectOnDestroy:        EFFECT_EXPLOSION,
+
+			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			moveDelay:  6,
+			shootDelay: 45,
+		},
+		TANK_T7:
+		{
+			sprites:    tankAtlaces[TANK_T7],
+
+			shootsProjectileOfCode: PROJ_BULLET,
+			effectOnDestroy:        EFFECT_EXPLOSION,
+
+			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			moveDelay:  6,
+			shootDelay: 45,
+		},
+		TANK_T8:
+		{
+			sprites:    tankAtlaces[TANK_T8],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
