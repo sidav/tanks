@@ -3,7 +3,8 @@ package main
 type battlefield struct {
 	tiles [][]tile
 
-	playerTank *tank
+	numPlayers  int
+	playerTanks []*tank
 
 	maxTanksOnMap                     int
 	initialEnemiesCount               int
@@ -88,8 +89,12 @@ func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
 func (b *battlefield) removeTank(t *tank) {
 	for i := range b.tanks {
 		if b.tanks[i] == t {
-			if b.tanks[i] == b.playerTank {
-				b.playerTank = nil
+			if b.tanks[i].playerControlled {
+				for i := len(b.playerTanks) - 1; i >= 0; i-- {
+					if b.playerTanks[i] == t {
+						b.playerTanks[i] = nil // append(b.playerTanks[:i], b.playerTanks[i+1:]...)
+					}
+				}
 			}
 			cx, cy := b.tanks[i].getCenterCoords()
 			b.spawnEffect(b.tanks[i].getStats().effectOnDestroy, cx, cy, nil)

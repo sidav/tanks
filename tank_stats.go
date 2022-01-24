@@ -1,7 +1,8 @@
 package main
 
 const (
-	TANK_PLAYER = iota
+	TANK_PLAYER1 = iota
+	TANK_PLAYER2
 	TANK_T1
 	TANK_T2
 	TANK_T3
@@ -72,9 +73,20 @@ func initTankStatsList() {
 		},
 
 /////// TANKS
-		TANK_PLAYER:
+		TANK_PLAYER1:
 		{
 			sprites:    tankAtlaces[TANK_T1],
+
+			shootsProjectileOfCode: PROJ_BULLET,
+			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
+
+			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			moveDelay:  2,
+			shootDelay: 25,
+		},
+		TANK_PLAYER2:
+		{
+			sprites:    tankAtlaces[TANK_T6],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_BIG_EXPLOSION,

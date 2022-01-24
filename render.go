@@ -12,26 +12,62 @@ var gameOverLineH int32 = -TILE_SIZE_IN_PIXELS
 var gameOverRgb color.RGBA
 
 type renderer struct {
-	cameraCenterX, cameraCenterY int
+	cameraCenterX, cameraCenterY                int
+	viewportW                                   int
+	verticalViewportOffset, horizViewportOffset int // for split view
 }
 
-func (r *renderer) renderBattlefield(b *battlefield, centerTank *tank) {
-	if centerTank != nil {
-		r.cameraCenterX, r.cameraCenterY = centerTank.getCenterCoords()
-		r.cameraCenterX *= PIXEL_TO_PHYSICAL_RATIO
-		r.cameraCenterY *= PIXEL_TO_PHYSICAL_RATIO
+func (r *renderer) renderBattlefield(b *battlefield) {
+	r.viewportW = WINDOW_W / b.numPlayers
+	if r.doesLevelFitInScreenHorizontally() {
+		r.viewportW = WINDOW_W
 	}
 
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.Black)
 
-	r.renderTiles(b)
-	for i := range b.tanks {
-		r.renderTank(b.tanks[i], true)
+	for playerNumber := 0; playerNumber < b.numPlayers; playerNumber++ {
+		if playerNumber > 0 && r.doesLevelFitInScreenHorizontally() {
+			break
+		}
+		centerTank := b.playerTanks[playerNumber]
+
+		rl.BeginScissorMode(int32(playerNumber*r.viewportW), 0, int32(r.viewportW), WINDOW_H)
+		r.horizViewportOffset = r.viewportW * playerNumber
+
+		if centerTank != nil {
+			r.cameraCenterX, r.cameraCenterY = centerTank.getCenterCoords()
+			r.cameraCenterX *= PIXEL_TO_PHYSICAL_RATIO
+			r.cameraCenterY *= PIXEL_TO_PHYSICAL_RATIO
+		}
+
+		r.renderTiles(b)
+		for i := range b.tanks {
+			r.renderTank(b.tanks[i], true)
+		}
+		r.renderProjectiles(b)
+		r.renderEffects(b)
+		r.renderWood(b)
+		rl.EndScissorMode()
 	}
-	r.renderProjectiles(b)
-	r.renderEffects(b)
-	r.renderWood(b)
+
+	if b.numPlayers > 1 && !r.doesLevelFitInScreenHorizontally() {
+		separatorWidth := int32(TILE_PHYSICAL_SIZE/2)
+		rl.DrawRectangleGradientV(WINDOW_W/2-separatorWidth/2, 0, separatorWidth, WINDOW_H-(TEXT_MARGIN*2+TEXT_SIZE),
+			color.RGBA{
+				R: 32,
+				G: 32,
+				B: 32,
+				A: 255,
+			},
+			color.RGBA{
+				R: 64,
+				G: 64,
+				B: 64,
+				A: 255,
+			},
+		)
+	}
 
 	if gameOver {
 		rl.DrawText("GAME OVER.", int32(WINDOW_W)/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
@@ -58,7 +94,7 @@ func (r *renderer) renderBattlefield(b *battlefield, centerTank *tank) {
 		}
 	}
 
-	rl.DrawRectangleGradientV(0, WINDOW_H - 2*TEXT_MARGIN - TEXT_SIZE, WINDOW_W, TEXT_MARGIN*2 + TEXT_SIZE,
+	rl.DrawRectangleGradientV(0, WINDOW_H-2*TEXT_MARGIN-TEXT_SIZE, WINDOW_W, TEXT_MARGIN*2+TEXT_SIZE,
 		color.RGBA{
 			R: 64,
 			G: 64,
@@ -72,21 +108,23 @@ func (r *renderer) renderBattlefield(b *battlefield, centerTank *tank) {
 			A: 64,
 		},
 	)
-	rl.DrawText(fmt.Sprintf("Remaining tanks %d", b.totalTanksRemainingToSpawn), 0,
-		WINDOW_H - TEXT_MARGIN - TEXT_SIZE, TEXT_SIZE,
-		color.RGBA {
-			R: 255,
-			G: 255,
-			B: 255,
-			A: 255,
-	})
+	if !gameOver {
+		rl.DrawText(fmt.Sprintf("Remaining tanks %d", b.totalTanksRemainingToSpawn), 0,
+			WINDOW_H-TEXT_MARGIN-TEXT_SIZE, TEXT_SIZE,
+			color.RGBA{
+				R: 255,
+				G: 255,
+				B: 255,
+				A: 255,
+			})
+	}
 
 	rl.EndDrawing()
 }
 
 func (r *renderer) renderTank(t *tank, useFactionTint bool) {
 	cx, cy := r.physicalToOnScreenCoords(t.centerX, t.centerY)
-	x, y := float32(cx - t.getSpritesAtlas().spriteSize/2), float32(cy - t.getSpritesAtlas().spriteSize/2)
+	x, y := float32(cx-t.getSpritesAtlas().spriteSize/2), float32(cy-t.getSpritesAtlas().spriteSize/2)
 	if useFactionTint {
 		rl.DrawTextureRec(
 			t.getSpritesAtlas().atlas,
@@ -160,16 +198,16 @@ func (r *renderer) renderWood(b *battlefield) {
 func (r *renderer) physicalToOnScreenCoords(physX, physY int) (int, int) {
 	pixx, pixy := r.physicalToPixelCoords(physX, physY)
 	if !r.doesLevelFitInScreenHorizontally() {
-		pixx = pixx - r.cameraCenterX + WINDOW_W/2
+		pixx = pixx - r.cameraCenterX + r.viewportW/2
 	}
 	if !r.doesLevelFitInScreenVertically() {
 		pixy = pixy - r.cameraCenterY + WINDOW_H/2
 	}
-	return pixx, pixy
+	return pixx + r.horizViewportOffset, pixy
 }
 
 func (r *renderer) physicalToPixelCoords(px, py int) (int, int) {
-	return int(float32(px)* PIXEL_TO_PHYSICAL_RATIO), int(float32(py)* PIXEL_TO_PHYSICAL_RATIO)
+	return int(float32(px) * PIXEL_TO_PHYSICAL_RATIO), int(float32(py) * PIXEL_TO_PHYSICAL_RATIO)
 }
 
 func (r *renderer) doesLevelFitInScreenHorizontally() bool {

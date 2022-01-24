@@ -5,6 +5,8 @@ import (
 )
 
 type tank struct {
+	playerControlled bool
+
 	centerX, centerY   int
 	faceX, faceY       int
 	currentFrameNumber uint8

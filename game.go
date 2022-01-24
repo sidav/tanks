@@ -22,7 +22,7 @@ func runGame() {
 
 	debugWrite("AI {")
 	for i := range gameMap.tanks {
-		if gameMap.tanks[i] == gameMap.playerTank {
+		if gameMap.tanks[i].playerControlled {
 			continue
 		}
 		gameMap.actAiForTank(gameMap.tanks[i])
@@ -30,7 +30,7 @@ func runGame() {
 	debugWrite("} ")
 
 	debugWrite("RENDER ")
-	render.renderBattlefield(gameMap, gameMap.playerTank)
+	render.renderBattlefield(gameMap)
 
 	debugWrite("SPAWN ")
 	if len(gameMap.tanks) < gameMap.maxTanksOnMap && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) && gameMap.totalTanksRemainingToSpawn > 0 {
@@ -38,7 +38,12 @@ func runGame() {
 	}
 
 
-	gameOver = gameMap.playerTank == nil
+	gameOver = true
+	for i := range gameMap.playerTanks {
+		if gameMap.playerTanks[i] != nil {
+			gameOver = false
+		}
+	}
 	if gameOver {
 		gameMap.maxTanksOnMap = MAP_W*MAP_H/2
 		gameMap.totalTanksRemainingToSpawn = MAP_W*MAP_H/2

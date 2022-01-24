@@ -1,5 +1,73 @@
 package main
 
+func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desiredWater, desiredIce, numPlayers int) {
+	// todo: REWRITE, add better generator
+	b.tiles = make([][]tile, MAP_W)
+	for i := range b.tiles {
+		b.tiles[i] = make([]tile, MAP_H)
+	}
+
+	b.placeTilesRandomSymmetric(TILE_WALL, desiredWalls)
+	b.placeTilesRandomSymmetric(TILE_ARMORED, desiredArmoredWalls)
+	b.placeTilesRandomSymmetric(TILE_WATER, desiredWater)
+	b.placeTilesRandomSymmetric(TILE_WOOD, desiredWoods)
+	b.placeTilesRandomSymmetric(TILE_ICE, desiredIce)
+	b.clearTilesForTanksSpawnIfNeeded(b.initialEnemiesCount)
+
+	for x := MAP_W/2 - 1; x <= MAP_W/2+1; x++ {
+		for y := MAP_H - 2; y <= MAP_H-1; y++ {
+			b.tiles[x][y].code = TILE_ARMORED
+		}
+	}
+	b.tiles[MAP_W/2][MAP_H-1].code = TILE_HQ
+
+	b.numPlayers = numPlayers
+	if numPlayers == 2 {
+		player1 := &tank{
+			playerControlled:   true,
+			code:               TANK_PLAYER1,
+			centerX:            (MAP_W/2+1)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			centerY:            (MAP_H-3)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			faceX:              0,
+			faceY:              -1,
+			currentFrameNumber: 0,
+		}
+		player2 := &tank{
+			playerControlled:   true,
+			code:               TANK_PLAYER2,
+			centerX:            (MAP_W/2-1)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			centerY:            (MAP_H-3)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			faceX:              0,
+			faceY:              -1,
+			currentFrameNumber: 0,
+		}
+		b.playerTanks = append(b.playerTanks, player1)
+		b.tanks = append(b.tanks, player1)
+		b.playerTanks = append(b.playerTanks, player2)
+		b.tanks = append(b.tanks, player2)
+
+		b.tiles[MAP_W/2-1][MAP_H-3].code = TILE_EMPTY
+		b.tiles[MAP_W/2+1][MAP_H-3].code = TILE_EMPTY
+	} else {
+		player := &tank{
+			playerControlled:   true,
+			code:               TANK_PLAYER1,
+			centerX:            MAP_W/2*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			centerY:            (MAP_H-3)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			faceX:              0,
+			faceY:              -1,
+			currentFrameNumber: 0,
+		}
+		b.playerTanks = append(b.playerTanks, player)
+		b.tiles[MAP_W/2][MAP_H-3].code = TILE_EMPTY
+		b.tanks = append(b.playerTanks, player)
+	}
+
+	for i := 0; i < b.initialEnemiesCount; i++ {
+		b.spawnRandomTankInRect(0, MAP_W-1, 0, MAP_H-1)
+	}
+}
+
 func (b *battlefield) getRandomEmptyTileCoords(fx, tx, fy, ty int) (int, int) {
 	for tries := 0; tries < MAP_W*MAP_H*2; tries++ {
 		x, y := rnd.RandInRange(fx, tx), rnd.RandInRange(fy, ty)
@@ -40,42 +108,5 @@ func (b *battlefield) clearTilesForTanksSpawnIfNeeded(count int) {
 	for i := 0; i < count; i++ {
 		x, y := rnd.RandInRange(1, MAP_W-2), rnd.RandInRange(1, MAP_H-2)
 		b.tiles[x][y].code = TILE_EMPTY
-	}
-}
-
-func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desiredWater, desiredIce int) {
-	// todo: REWRITE, add better generator
-	b.tiles = make([][]tile, MAP_W)
-	for i := range b.tiles {
-		b.tiles[i] = make([]tile, MAP_H)
-	}
-
-	b.placeTilesRandomSymmetric(TILE_WALL, desiredWalls)
-	b.placeTilesRandomSymmetric(TILE_ARMORED, desiredArmoredWalls)
-	b.placeTilesRandomSymmetric(TILE_WATER, desiredWater)
-	b.placeTilesRandomSymmetric(TILE_WOOD, desiredWoods)
-	b.placeTilesRandomSymmetric(TILE_ICE, desiredIce)
-	b.clearTilesForTanksSpawnIfNeeded(b.initialEnemiesCount)
-
-	for x := MAP_W/2 - 1; x <= MAP_W/2+1; x++ {
-		for y := MAP_H - 2; y <= MAP_H-1; y++ {
-			b.tiles[x][y].code = TILE_ARMORED
-		}
-	}
-	b.tiles[MAP_W/2][MAP_H-1].code = TILE_HQ
-
-	b.playerTank = &tank{
-		code:               TANK_PLAYER,
-		centerX:            MAP_W/2*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
-		centerY:            (MAP_H-3)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
-		faceX:              0,
-		faceY:              -1,
-		currentFrameNumber: 0,
-	}
-	b.tanks = append(b.tanks, b.playerTank)
-	b.tiles[MAP_W/2][MAP_H-3].code = TILE_EMPTY
-
-	for i := 0; i < b.initialEnemiesCount; i++ {
-		b.spawnRandomTankInRect(0, MAP_W-1, 0, MAP_H-1)
 	}
 }
