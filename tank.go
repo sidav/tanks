@@ -42,7 +42,7 @@ func (t *tank) getStats() *tankStats {
 }
 
 func (t *tank) getSpritesAtlas() *horizSpriteAtlas {
-	debugWritef("ATLAS{%v}", t.code)
+	//debugWritef("ATLAS{%v}", t.code)
 	return t.getStats().sprites
 }
 

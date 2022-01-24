@@ -31,16 +31,10 @@ func runGame() {
 	}
 	debugWrite("} ")
 
-	debugWrite("RENDER ")
-	renderStart := time.Now()
-	render.renderBattlefield(gameMap)
-	renderDuration := time.Since(renderStart)
-
 	debugWrite("SPAWN ")
 	if len(gameMap.tanks) < gameMap.maxTanksOnMap && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) && gameMap.totalTanksRemainingToSpawn > 0 {
 		gameMap.spawnRandomTankInRect(0, MAP_W-1, 0, MAP_H-MAP_H/5)
 	}
-
 
 	gameOver = true
 	for i := range gameMap.playerTanks {
@@ -60,8 +54,14 @@ func runGame() {
 			gameMap.spawnEffect(EFFECT_BIG_EXPLOSION, rnd.Rand(WINDOW_W), rnd.Rand(WINDOW_H), nil)
 		}
 	}
+	logicDuration := time.Since(tickStart)
+
+	debugWrite("RENDER ")
+	renderStart := time.Now()
+	render.renderBattlefield(gameMap)
+	renderDuration := time.Since(renderStart)
 
 	debugWrite("TURN FINISHED. \n")
 	gameTick++
-	debugWritef("TICK DURATION %v (RENDER TOOK %v), approx. %v FPS\n", time.Since(tickStart), renderDuration, int(time.Second/time.Since(tickStart)))
+	debugWritef("TICK DURATION %v (LOGIC %v, RENDER %v) - approx. %v FPS\n", time.Since(tickStart), logicDuration, renderDuration, int(time.Second/time.Since(tickStart)))
 }
