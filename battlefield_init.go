@@ -63,7 +63,7 @@ func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desi
 		}
 		b.playerTanks = append(b.playerTanks, player)
 		b.tiles[MAP_W/2][MAP_H-3].code = TILE_EMPTY
-		b.tanks = append(b.playerTanks, player)
+		b.tanks = append(b.tanks, player)
 	}
 
 	for i := 0; i < b.initialEnemiesCount; i++ {
