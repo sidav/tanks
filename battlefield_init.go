@@ -23,20 +23,22 @@ func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desi
 
 	b.numPlayers = numPlayers
 	if numPlayers == 2 {
+		cx, cy := tileCoordsToPhysicalCoords(MAP_W/2+1, MAP_H-3)
 		player1 := &tank{
 			playerControlled:   true,
 			code:               TANK_PLAYER1,
-			centerX:            (MAP_W/2+1)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
-			centerY:            (MAP_H-3)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			centerX:            cx,
+			centerY:            cy,
 			faceX:              0,
 			faceY:              -1,
 			currentFrameNumber: 0,
 		}
+		cx, cy = tileCoordsToPhysicalCoords(MAP_W/2-1, MAP_H-3)
 		player2 := &tank{
 			playerControlled:   true,
 			code:               TANK_PLAYER2,
-			centerX:            (MAP_W/2-1)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
-			centerY:            (MAP_H-3)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			centerX:            cx,
+			centerY:            cy,
 			faceX:              0,
 			faceY:              -1,
 			currentFrameNumber: 0,
@@ -49,11 +51,12 @@ func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desi
 		b.tiles[MAP_W/2-1][MAP_H-3].code = TILE_EMPTY
 		b.tiles[MAP_W/2+1][MAP_H-3].code = TILE_EMPTY
 	} else {
+		cx, cy := tileCoordsToPhysicalCoords(MAP_W/2, MAP_H-3)
 		player := &tank{
 			playerControlled:   true,
 			code:               TANK_PLAYER1,
-			centerX:            MAP_W/2*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
-			centerY:            (MAP_H-3)*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+			centerX:            cx,
+			centerY:            cy,
 			faceX:              0,
 			faceY:              -1,
 			currentFrameNumber: 0,

@@ -37,8 +37,8 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 
 		if centerTank != nil {
 			r.cameraCenterX, r.cameraCenterY = centerTank.getCenterCoords()
-			r.cameraCenterX *= PIXEL_TO_PHYSICAL_RATIO
-			r.cameraCenterY *= PIXEL_TO_PHYSICAL_RATIO
+			r.cameraCenterX = int(float64(r.cameraCenterX)*PIXEL_TO_PHYSICAL_RATIO)
+			r.cameraCenterY = int(float64(r.cameraCenterY)*PIXEL_TO_PHYSICAL_RATIO)
 		}
 
 		r.renderTiles(b)

@@ -45,7 +45,7 @@ func (b *battlefield) moveTankByVector(t *tank, x, y int) {
 
 func (b *battlefield) howFarCanTankMoveByVectorInSingleTick(t *tank, vx, vy int) int {
 	var tx1, ty1, tx2, ty2 int
-	diagRadius := t.getRadius() * 100 / 100
+	diagRadius := t.getRadius() * 90 / 100
 	// we need to check "left corner" and "right corner" regarding to the tank
 	for currSpeed := t.getStats().speed; currSpeed > 0; currSpeed-- {
 		if vx == 0 {
@@ -89,15 +89,16 @@ func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
 	b.totalTanksRemainingToSpawn--
 	tankFaction := rnd.RandInRange(1, b.numFactions-1)
 	tankCode := getRandomCode()
+	cx, cy := tileCoordsToPhysicalCoords(x, y)
 	owner := &tank{
 		code:               tankCode,
-		centerX:            x*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
-		centerY:            y*TILE_PHYSICAL_SIZE + TILE_PHYSICAL_SIZE/2,
+		centerX:            cx,
+		centerY:            cy,
 		ai:                 initSimpleTankAi(),
 		faction:            tankFaction,
 		currentFrameNumber: 0,
 	}
-	b.spawnEffect(EFFECT_SPAWN, x*TILE_PHYSICAL_SIZE+TILE_PHYSICAL_SIZE/2, y*TILE_PHYSICAL_SIZE+TILE_PHYSICAL_SIZE/2, owner)
+	b.spawnEffect(EFFECT_SPAWN, cx, cy, owner)
 }
 
 func (b *battlefield) removeTank(t *tank) {

@@ -48,21 +48,21 @@ func initTankStatsList() {
 			sprites:         projectileAtlaces[PROJ_BULLET],
 			speed:           4,
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          2,
+			radius:          TILE_PHYSICAL_SIZE/8,
 		},
 		PROJ_ROCKET:
 		{
 			sprites:         projectileAtlaces[PROJ_ROCKET],
 			speed:           2,
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
-			radius:          2,
+			radius:          TILE_PHYSICAL_SIZE/8,
 		},
 
 		/////// EFFECTS
 		EFFECT_EXPLOSION:
 		{
 			sprites:   effectAtlaces[EFFECT_EXPLOSION],
-			radius:    TILE_PHYSICAL_SIZE/2 - 1,
+			radius:    halfPhysicalTileSize() - 1,
 			moveDelay: 3,
 		},
 		EFFECT_BIG_EXPLOSION:
@@ -74,7 +74,7 @@ func initTankStatsList() {
 		EFFECT_SPAWN:
 		{
 			sprites:   effectAtlaces[EFFECT_SPAWN],
-			radius:    TILE_PHYSICAL_SIZE/2 - 1,
+			radius:    halfPhysicalTileSize() - 1,
 			moveDelay: 7,
 		},
 
@@ -86,7 +86,7 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			radius:     halfPhysicalTileSize() - 2,
 			moveDelay:  2,
 			speed:      2,
 			shootDelay: 45,
@@ -98,9 +98,9 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			radius:     halfPhysicalTileSize() - 2,
 			moveDelay:  2,
-			speed:      1,
+			speed:      2,
 			shootDelay: 45,
 		},
 		TANK_T1:
@@ -110,9 +110,9 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			radius:     halfPhysicalTileSize() - 2,
 			moveDelay:  6,
-			speed:      1,
+			speed:      2,
 			shootDelay: 40,
 		},
 		TANK_T2:
@@ -122,9 +122,9 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			radius:     halfPhysicalTileSize() - 2,
 			moveDelay:  8,
-			speed:      1,
+			speed:      2,
 			shootDelay: 50,
 		},
 		TANK_T3:
@@ -134,9 +134,9 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			radius:     halfPhysicalTileSize() - 2,
 			moveDelay:  3,
-			speed:      1,
+			speed:      2,
 			shootDelay: 60,
 		},
 		TANK_T4:
@@ -146,7 +146,7 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_ROCKET,
 			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			radius:     halfPhysicalTileSize() - 2,
 			moveDelay:  10,
 			speed:      1,
 			shootDelay: 20,
@@ -158,8 +158,8 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
-			moveDelay:  2,
+			radius:     halfPhysicalTileSize() - 2,
+			moveDelay:  1,
 			speed:      1,
 			shootDelay: 60,
 		},
@@ -170,9 +170,9 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
-			moveDelay:  6,
-			speed:      1,
+			radius:     halfPhysicalTileSize() - 2,
+			moveDelay:  2,
+			speed:      3,
 			shootDelay: 45,
 		},
 		TANK_T7:
@@ -182,8 +182,8 @@ func initTankStatsList() {
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
-			moveDelay:  6,
+			radius:     halfPhysicalTileSize() - 2,
+			moveDelay:  5,
 			speed:      1,
 			shootDelay: 45,
 		},
@@ -191,13 +191,13 @@ func initTankStatsList() {
 		{
 			sprites: tankAtlaces[TANK_T8],
 
-			shootsProjectileOfCode: PROJ_BULLET,
-			effectOnDestroy:        EFFECT_EXPLOSION,
+			shootsProjectileOfCode: PROJ_ROCKET,
+			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
 
-			radius:     TILE_PHYSICAL_SIZE/2 - 2,
-			moveDelay:  6,
+			radius:     halfPhysicalTileSize() - 2,
+			moveDelay:  10,
 			speed:      1,
-			shootDelay: 45,
+			shootDelay: 55,
 		},
 	}
 }
