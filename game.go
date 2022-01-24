@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/sidav/golibrl/random/additive_random"
+	"time"
 )
 
 var gameTick = 0
@@ -11,6 +12,7 @@ var rnd additive_random.FibRandom
 var render renderer
 
 func runGame() {
+	tickStart := time.Now()
 	debugWritef("%d: START ", gameTick)
 	listenPlayerInput()
 
@@ -30,7 +32,9 @@ func runGame() {
 	debugWrite("} ")
 
 	debugWrite("RENDER ")
+	renderStart := time.Now()
 	render.renderBattlefield(gameMap)
+	renderDuration := time.Since(renderStart)
 
 	debugWrite("SPAWN ")
 	if len(gameMap.tanks) < gameMap.maxTanksOnMap && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) && gameMap.totalTanksRemainingToSpawn > 0 {
@@ -59,4 +63,5 @@ func runGame() {
 
 	debugWrite("TURN FINISHED. \n")
 	gameTick++
+	debugWritef("TICK DURATION %v (RENDER TOOK %v), approx. %v FPS\n", time.Since(tickStart), renderDuration, int(time.Second/time.Since(tickStart)))
 }

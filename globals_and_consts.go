@@ -61,8 +61,8 @@ func debugWrite(msg string) {
 	}
 }
 
-func debugWritef(msg string, args interface{}) {
+func debugWritef(msg string, args... interface{}) {
 	if DEBUG_OUTPUT {
-		fmt.Printf(msg, args)
+		fmt.Printf(msg, args...)
 	}
 }
