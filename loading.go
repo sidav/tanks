@@ -20,6 +20,8 @@ func loadImageResources() {
 	tankAtlaces[TANK_T4] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*3, 16, 8, 2)
 	tankAtlaces[TANK_T5] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*4, 16, 8, 2)
 	tankAtlaces[TANK_T6] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*5, 16, 8, 2)
+	tankAtlaces[TANK_T7] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*6, 16, 8, 2)
+	tankAtlaces[TANK_T8] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*7, 16, 8, 2)
 
 	tileAtlaces["WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*0, 16, 5, 1)
 	tileAtlaces["ARMORED_WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*1, 16, 5, 1)

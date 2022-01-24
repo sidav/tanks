@@ -27,7 +27,7 @@ func getRandomCode() int {
 type tankStats struct {
 	shootsProjectileOfCode int
 	effectOnDestroy        int
-	projectileSpeed int
+	speed                  int
 
 	sprites *horizSpriteAtlas
 
@@ -42,23 +42,23 @@ var tankStatsList map[int]*tankStats
 func initTankStatsList() {
 	tankStatsList = map[int]*tankStats{
 
-/////// PROJECTILES
+		/////// PROJECTILES
 		PROJ_BULLET:
 		{
 			sprites:         projectileAtlaces[PROJ_BULLET],
-			projectileSpeed: 2,
+			speed:           4,
 			effectOnDestroy: EFFECT_EXPLOSION,
 			radius:          2,
 		},
 		PROJ_ROCKET:
 		{
 			sprites:         projectileAtlaces[PROJ_ROCKET],
-			projectileSpeed: 1,
+			speed:           2,
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
 			radius:          2,
 		},
 
-/////// EFFECTS
+		/////// EFFECTS
 		EFFECT_EXPLOSION:
 		{
 			sprites:   effectAtlaces[EFFECT_EXPLOSION],
@@ -78,115 +78,125 @@ func initTankStatsList() {
 			moveDelay: 7,
 		},
 
-/////// TANKS
+		/////// TANKS
 		TANK_PLAYER1:
 		{
-			sprites:    tankAtlaces[TANK_T1],
+			sprites: tankAtlaces[TANK_T1],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  2,
+			speed:      2,
 			shootDelay: 45,
 		},
 		TANK_PLAYER2:
 		{
-			sprites:    tankAtlaces[TANK_T6],
+			sprites: tankAtlaces[TANK_T6],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  2,
+			speed:      1,
 			shootDelay: 45,
 		},
 		TANK_T1:
 		{
-			sprites:    tankAtlaces[TANK_T1],
+			sprites: tankAtlaces[TANK_T1],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  6,
+			speed:      1,
 			shootDelay: 40,
 		},
 		TANK_T2:
 		{
-			sprites:    tankAtlaces[TANK_T2],
+			sprites: tankAtlaces[TANK_T2],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  8,
+			speed:      1,
 			shootDelay: 50,
 		},
 		TANK_T3:
 		{
-			sprites:    tankAtlaces[TANK_T3],
+			sprites: tankAtlaces[TANK_T3],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  3,
+			speed:      1,
 			shootDelay: 60,
 		},
 		TANK_T4:
 		{
-			sprites:    tankAtlaces[TANK_T4],
+			sprites: tankAtlaces[TANK_T4],
 
 			shootsProjectileOfCode: PROJ_ROCKET,
 			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  10,
+			speed:      1,
 			shootDelay: 20,
 		},
 		TANK_T5:
 		{
-			sprites:    tankAtlaces[TANK_T5],
+			sprites: tankAtlaces[TANK_T5],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  2,
+			speed:      1,
 			shootDelay: 60,
 		},
 		TANK_T6:
 		{
-			sprites:    tankAtlaces[TANK_T6],
+			sprites: tankAtlaces[TANK_T6],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  6,
+			speed:      1,
 			shootDelay: 45,
 		},
 		TANK_T7:
 		{
-			sprites:    tankAtlaces[TANK_T7],
+			sprites: tankAtlaces[TANK_T7],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  6,
+			speed:      1,
 			shootDelay: 45,
 		},
 		TANK_T8:
 		{
-			sprites:    tankAtlaces[TANK_T8],
+			sprites: tankAtlaces[TANK_T8],
 
 			shootsProjectileOfCode: PROJ_BULLET,
 			effectOnDestroy:        EFFECT_EXPLOSION,
 
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  6,
+			speed:      1,
 			shootDelay: 45,
 		},
 	}

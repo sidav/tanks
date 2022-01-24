@@ -3,7 +3,7 @@ package main
 func (b *battlefield) actForProjectiles() {
 	for i := len(b.projectiles) - 1; i >= 0; i-- {
 		proj := b.projectiles[i]
-		speed := proj.getStats().projectileSpeed
+		speed := proj.getStats().speed
 		proj.centerX += proj.faceX*speed
 		proj.centerY += proj.faceY*speed
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)

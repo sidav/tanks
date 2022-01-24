@@ -75,7 +75,7 @@ func (b *battlefield) actAiForTank(t *tank) {
 		b.shootAsTank(t)
 	}
 	debugWrite("move; ")
-	if t.canMoveNow() && b.canTankMoveByVector(t, t.faceX, t.faceY) {
-		t.moveByVector(t.faceX, t.faceY)
+	if t.canMoveNow() && b.howFarCanTankMoveByVectorInSingleTick(t, t.faceX, t.faceY) > 0 {
+		b.moveTankByVector(t, t.faceX, t.faceY)
 	}
 }

@@ -26,13 +26,13 @@ func handleSinglePlayer() {
 	}
 	if currTank.canMoveNow() {
 		if rl.IsKeyDown(rl.KeyRight) || rl.IsKeyDown(rl.KeyD) {
-			currTank.moveByVector(1, 0)
+			gameMap.moveTankByVector(currTank, 1, 0)
 		} else if rl.IsKeyDown(rl.KeyLeft) || rl.IsKeyDown(rl.KeyA) {
-			currTank.moveByVector(-1, 0)
+			gameMap.moveTankByVector(currTank, -1, 0)
 		} else if rl.IsKeyDown(rl.KeyUp) || rl.IsKeyDown(rl.KeyW) {
-			currTank.moveByVector(0, -1)
+			gameMap.moveTankByVector(currTank, 0, -1)
 		} else if rl.IsKeyDown(rl.KeyDown) || rl.IsKeyDown(rl.KeyS) {
-			currTank.moveByVector(0, 1)
+			gameMap.moveTankByVector(currTank, 0, 1)
 		}
 	}
 	if currTank.canShootNow() {
@@ -51,13 +51,13 @@ func handleAllPlayers() {
 		if i == 0 {
 			if currTank.canMoveNow() {
 				if rl.IsKeyDown(rl.KeyD) {
-					currTank.moveByVector(1, 0)
+					gameMap.moveTankByVector(currTank, 1, 0)
 				} else if rl.IsKeyDown(rl.KeyA) {
-					currTank.moveByVector(-1, 0)
+					gameMap.moveTankByVector(currTank, -1, 0)
 				} else if rl.IsKeyDown(rl.KeyW) {
-					currTank.moveByVector(0, -1)
+					gameMap.moveTankByVector(currTank, 0, -1)
 				} else if rl.IsKeyDown(rl.KeyS) {
-					currTank.moveByVector(0, 1)
+					gameMap.moveTankByVector(currTank, 0, 1)
 				}
 			}
 			if currTank.canShootNow() {
@@ -68,13 +68,13 @@ func handleAllPlayers() {
 		} else if i == 1 {
 			if currTank.canMoveNow() {
 				if rl.IsKeyDown(rl.KeyRight) {
-					currTank.moveByVector(1, 0)
+					gameMap.moveTankByVector(currTank, 1, 0)
 				} else if rl.IsKeyDown(rl.KeyLeft) {
-					currTank.moveByVector(-1, 0)
+					gameMap.moveTankByVector(currTank, -1, 0)
 				} else if rl.IsKeyDown(rl.KeyUp) {
-					currTank.moveByVector(0, -1)
+					gameMap.moveTankByVector(currTank, 0, -1)
 				} else if rl.IsKeyDown(rl.KeyDown) {
-					currTank.moveByVector(0, 1)
+					gameMap.moveTankByVector(currTank, 0, 1)
 				}
 			}
 			if currTank.canShootNow() {

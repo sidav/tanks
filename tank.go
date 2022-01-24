@@ -46,21 +46,6 @@ func (t *tank) getSpritesAtlas() *horizSpriteAtlas {
 	return t.getStats().sprites
 }
 
-func (t *tank) moveByVector(x, y int) {
-	t.nextTickToMove = gameTick + t.getStats().moveDelay
-	tx, ty := trueCoordsToTileCoords(t.centerX, t.centerY)
-	if gameMap.tiles[tx][ty].isSlowing() {
-		t.nextTickToMove += t.getStats().moveDelay
-	}
-	if gameMap.canTankMoveByVector(t, x, y) {
-		t.centerX += x
-		t.centerY += y
-	}
-	t.faceX = x
-	t.faceY = y
-	t.currentFrameNumber = (t.currentFrameNumber + 1) % t.getSpritesAtlas().totalFrames
-}
-
 func (t *tank) getCurrentSpriteRect() rl.Rectangle {
 	var spriteGroup uint8 = 0
 	if t.faceX == 1 {
