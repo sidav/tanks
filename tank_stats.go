@@ -7,6 +7,7 @@ const (
 	TANK_T3
 	TANK_T4
 	TANK_T5
+	TANK_T6
 
 	PROJ_BULLET
 	PROJ_ROCKET
@@ -136,6 +137,17 @@ func initTankStatsList() {
 			radius:     TILE_PHYSICAL_SIZE/2 - 2,
 			moveDelay:  2,
 			shootDelay: 60,
+		},
+		TANK_T6:
+		{
+			sprites:    tankAtlaces[TANK_T6],
+
+			shootsProjectileOfCode: PROJ_BULLET,
+			effectOnDestroy:        EFFECT_EXPLOSION,
+
+			radius:     TILE_PHYSICAL_SIZE/2 - 2,
+			moveDelay:  6,
+			shootDelay: 45,
 		},
 	}
 }
