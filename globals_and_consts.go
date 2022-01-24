@@ -26,7 +26,7 @@ func areTileCoordsValid(tx, ty int) bool {
 }
 
 func trueCoordsToTileCoords(tx, ty int) (int, int) {
-	return tx / TILE_PHYSICAL_SIZE, ty / TILE_PHYSICAL_SIZE
+	return (tx-1) / TILE_PHYSICAL_SIZE, (ty-1) / TILE_PHYSICAL_SIZE
 }
 
 func tileCoordsToPhysicalCoords(tx, ty int) (int, int) {
