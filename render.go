@@ -48,6 +48,7 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 		r.renderProjectiles(b)
 		r.renderEffects(b)
 		r.renderWood(b)
+		r.renderLevelOutline()
 		rl.EndScissorMode()
 	}
 
@@ -193,6 +194,26 @@ func (r *renderer) renderWood(b *battlefield) {
 			}
 		}
 	}
+}
+
+func (r *renderer) renderLevelOutline() {
+	const thickness = 5
+	x, y := r.physicalToOnScreenCoords(-thickness/2, -thickness/2)
+	rl.DrawRectangleLinesEx(
+		rl.Rectangle{
+		X:      float32(x),
+		Y:      float32(y),
+		Width:  float32(TILE_SIZE_IN_PIXELS*MAP_W)+thickness*3/2,
+		Height: float32(TILE_SIZE_IN_PIXELS*MAP_H)+thickness*3/2,
+		},
+	thickness,
+		color.RGBA{
+			R: 128,
+			G: 128,
+			B: 160,
+			A: 255,
+		},
+	)
 }
 
 func (r *renderer) physicalToOnScreenCoords(physX, physY int) (int, int) {
