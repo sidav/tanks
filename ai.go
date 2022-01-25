@@ -3,29 +3,60 @@ package main
 type tankAi struct {
 	chanceToRotateAnywhere          int
 	chanceToRotateAtTileMiddle      int
+
 	chanceToShootOnTarget           int
 	chanceToShootOnDestructibleTile int
+	chanceToShootAnyway             int
 }
 
 func initSimpleTankAi() *tankAi {
 	return &tankAi{
-		chanceToRotateAnywhere:          100,
-		chanceToRotateAtTileMiddle:      35,
+		chanceToRotateAnywhere:          25,
+		chanceToRotateAtTileMiddle:      15,
 		chanceToShootOnTarget:           15,
-		chanceToShootOnDestructibleTile: 30,
+		chanceToShootOnDestructibleTile: 20,
+		chanceToShootAnyway:             75,
 	}
 }
 
-func (b *battlefield) isTileInFrontOfTankImpassable(t *tank) bool {
-	tilex, tiley := t.centerX/TILE_PHYSICAL_SIZE+t.faceX, t.centerY/TILE_PHYSICAL_SIZE+t.faceY
-	if !areTileCoordsValid(tilex, tiley) {
-		return true
+//func (b *battlefield) isTileInFrontOfTankImpassable(t *tank) bool {
+//	tilex, tiley := t.centerX/TILE_PHYSICAL_SIZE+t.faceX, t.centerY/TILE_PHYSICAL_SIZE+t.faceY
+//	if !areTileCoordsValid(tilex, tiley) {
+//		return true
+//	}
+//	return b.tiles[tilex][tiley].isImpassable()
+//}
+
+func (b *battlefield) getVectorToRotateBy(t *tank) (int, int) {
+	tileX, tileY := trueCoordsToTileCoords(t.centerX, t.centerY)
+	vectorsPassable := make([][2] int, 0)
+	vectorsDestructible := make([][2] int, 0)
+	for i := -1; i <= 1; i++ {
+		for j := -1; j <= 1; j++ {
+			if i != j && (i == 0 || j == 0) {
+				if areTileCoordsValid(tileX+i, tileY+j) {
+					if !b.tiles[tileX+i][tileY+j].isImpassable() {
+						vectorsPassable = append(vectorsPassable, [2]int{i, j})
+					} else if b.tiles[tileX+i][tileY+j].isDestructible() {
+						vectorsDestructible = append(vectorsDestructible, [2]int{i, j})
+					}
+				}
+			}
+		}
 	}
-	return b.tiles[tilex][tiley].isImpassable()
+	if len(vectorsDestructible) > 0 && rnd.OneChanceFrom(4) {
+		ind := rnd.Rand(len(vectorsDestructible))
+		return vectorsDestructible[ind][0], vectorsDestructible[ind][1]
+	}
+	if len(vectorsPassable) > 0 {
+		ind := rnd.Rand(len(vectorsPassable))
+		return vectorsPassable[ind][0], vectorsPassable[ind][1]
+	}
+	return randomUnitVector()
 }
 
-func (b *battlefield) wantsToShoot(t *tank) bool {
-	tilex, tiley := trueCoordsToTileCoords(t.centerX, t.centerY)
+func (b *battlefield) isThereEnemyInFront(t *tank) bool {
+	tileX, tileY := trueCoordsToTileCoords(t.centerX, t.centerY)
 
 	for i := range b.tanks {
 		if b.tanks[i].faction == t.faction {
@@ -33,40 +64,60 @@ func (b *battlefield) wantsToShoot(t *tank) bool {
 		}
 		ex, ey := b.tanks[i].getCenterCoords()
 		ex, ey = trueCoordsToTileCoords(ex, ey)
-		if ex != tilex && ey != tiley {
+		if ex != tileX && ey != tileY {
 			continue
 		}
-		for areTileCoordsValid(tilex, tiley) {
-			if ex == tilex && ey == tiley {
-				return rnd.OneChanceFrom(t.ai.chanceToShootOnTarget) // enemy seen
+		for areTileCoordsValid(tileX, tileY) {
+			if ex == tileX && ey == tileY {
+				return true
 			}
-
-			if b.tiles[tilex][tiley].stopsProjectiles() {
-				if b.tiles[tilex][tiley].isDestructible() {
-					return rnd.OneChanceFrom(t.ai.chanceToShootOnDestructibleTile) // destructible tile seen
-				}
+			if b.tiles[tileX][tileY].stopsProjectiles() {
 				return false
 			}
-			tilex += t.faceX
-			tiley += t.faceY
+			tileX += t.faceX
+			tileY += t.faceY
 		}
+	}
+	return false
+}
+
+func (b *battlefield) wantsToShoot(t *tank) bool {
+	if rnd.OneChanceFrom(t.ai.chanceToShootAnyway) {
+		return true
+	}
+	if rnd.OneChanceFrom(t.ai.chanceToShootOnTarget) && b.isThereEnemyInFront(t) {
+		return true
+	}
+	tilex, tiley := trueCoordsToTileCoords(t.centerX, t.centerY)
+	for areTileCoordsValid(tilex, tiley) {
+		if b.tiles[tilex][tiley].stopsProjectiles() {
+			if b.tiles[tilex][tiley].isDestructible() {
+				return rnd.OneChanceFrom(t.ai.chanceToShootOnDestructibleTile) // destructible tile seen
+			}
+			return false
+		}
+		tilex += t.faceX
+		tiley += t.faceY
 	}
 	return false
 }
 
 func (b *battlefield) actAiForTank(t *tank) {
 	if t.faceX == 0 && t.faceY == 0 {
-		t.faceX, t.faceY = randomUnitVector()
+		t.faceX, t.faceY = b.getVectorToRotateBy(t)
 	}
 	debugWrite("check player; ")
 	enemyInFront := b.wantsToShoot(t)
 	debugWrite("rotate; ")
 	wantsToRotate := rnd.OneChanceFrom(t.ai.chanceToRotateAnywhere)
-	if (t.centerX %TILE_PHYSICAL_SIZE == TILE_PHYSICAL_SIZE/2+1) || (t.centerY %TILE_PHYSICAL_SIZE == TILE_PHYSICAL_SIZE/ 2+1) {
+	if t.isAtCenterOfTile() {
 		wantsToRotate = wantsToRotate || rnd.OneChanceFrom(t.ai.chanceToRotateAtTileMiddle)
 	}
-	if t.canMoveNow() && !enemyInFront && (wantsToRotate || b.isTileInFrontOfTankImpassable(t)) {
-		t.faceX, t.faceY = randomUnitVector()
+
+	canMoveBy := b.howFarCanTankMoveByVectorInSingleTick(t, t.faceX, t.faceY)
+
+	if t.canMoveNow() && !b.isThereEnemyInFront(t) && (wantsToRotate || canMoveBy == 0) {
+		t.faceX, t.faceY = b.getVectorToRotateBy(t)
 		t.nextTickToMove = gameTick + t.getStats().moveDelay
 		return
 	}
@@ -75,7 +126,7 @@ func (b *battlefield) actAiForTank(t *tank) {
 		b.shootAsTank(t)
 	}
 	debugWrite("move; ")
-	if t.canMoveNow() && b.howFarCanTankMoveByVectorInSingleTick(t, t.faceX, t.faceY) > 0 {
+	if t.canMoveNow() && canMoveBy > 0 {
 		b.moveTankByVector(t, t.faceX, t.faceY)
 	}
 }

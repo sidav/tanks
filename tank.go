@@ -25,6 +25,16 @@ func (t *tank) getCenterCoords() (int, int) {
 	return t.centerX, t.centerY
 }
 
+func (t *tank) isAtCenterOfTile() bool {
+	xInTile := t.centerX % TILE_PHYSICAL_SIZE
+	yInTile := t.centerY % TILE_PHYSICAL_SIZE
+	precision := TILE_PHYSICAL_SIZE/10
+	if abs(halfPhysicalTileSize()-xInTile) <= precision && abs(halfPhysicalTileSize()-yInTile) <= precision {
+		return true
+	}
+	return false
+}
+
 func (t *tank) getRadius() int {
 	return tankStatsList[t.code].radius
 }

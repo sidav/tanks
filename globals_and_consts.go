@@ -22,9 +22,9 @@ const (
 )
 
 func halfPhysicalTileSize() int {
-	//if TILE_PHYSICAL_SIZE % 2 == 1 {
-	//	return TILE_PHYSICAL_SIZE/2+1
-	//}
+	if TILE_PHYSICAL_SIZE % 2 == 1 {
+		return TILE_PHYSICAL_SIZE/2+1
+	}
 	return TILE_PHYSICAL_SIZE/2
 }
 
@@ -76,4 +76,11 @@ func debugWritef(msg string, args... interface{}) {
 	if DEBUG_OUTPUT {
 		fmt.Printf(msg, args...)
 	}
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
