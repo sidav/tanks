@@ -197,20 +197,23 @@ func (r *renderer) renderWood(b *battlefield) {
 }
 
 func (r *renderer) renderLevelOutline() {
+	if r.doesLevelFitInScreenHorizontally() && r.doesLevelFitInScreenVertically() {
+		return
+	}
 	const thickness = 5
-	x, y := r.physicalToOnScreenCoords(-thickness/2, -thickness/2)
+	x, y := r.physicalToOnScreenCoords(0, 0)
 	rl.DrawRectangleLinesEx(
 		rl.Rectangle{
 		X:      float32(x),
 		Y:      float32(y),
-		Width:  float32(TILE_SIZE_IN_PIXELS*MAP_W)+thickness*3/2,
-		Height: float32(TILE_SIZE_IN_PIXELS*MAP_H)+thickness*3/2,
+		Width:  float32(TILE_SIZE_IN_PIXELS*MAP_W),
+		Height: float32(TILE_SIZE_IN_PIXELS*MAP_H),
 		},
 	thickness,
 		color.RGBA{
-			R: 128,
-			G: 128,
-			B: 160,
+			R: 255,
+			G: 96,
+			B: 96,
 			A: 255,
 		},
 	)
@@ -219,10 +222,18 @@ func (r *renderer) renderLevelOutline() {
 func (r *renderer) physicalToOnScreenCoords(physX, physY int) (int, int) {
 	pixx, pixy := r.physicalToPixelCoords(physX, physY)
 	if !r.doesLevelFitInScreenHorizontally() {
-		pixx = pixx - r.cameraCenterX + r.viewportW/2
+		if r.cameraCenterX > MAP_W*TILE_SIZE_IN_PIXELS-r.viewportW/2 {
+			pixx = pixx - MAP_W*TILE_SIZE_IN_PIXELS + r.viewportW
+		} else if r.cameraCenterX > r.viewportW/2 {
+			pixx = pixx - r.cameraCenterX + r.viewportW/2
+		}
 	}
 	if !r.doesLevelFitInScreenVertically() {
-		pixy = pixy - r.cameraCenterY + WINDOW_H/2
+		if r.cameraCenterY > MAP_H*TILE_SIZE_IN_PIXELS-WINDOW_H/2 {
+			pixy = pixy - MAP_H*TILE_SIZE_IN_PIXELS + WINDOW_H
+		} else if r.cameraCenterY > WINDOW_H/2 {
+			pixy = pixy - r.cameraCenterY + WINDOW_H/2
+		}
 	}
 	return pixx + r.horizViewportOffset, pixy
 }
