@@ -35,6 +35,8 @@ type tankStats struct {
 
 	moveDelay  int
 	shootDelay int
+
+	frameChangesForEffect uint8
 }
 
 var tankStatsList map[int]*tankStats
@@ -61,16 +63,19 @@ func initTankStatsList() {
 			sprites:   effectAtlaces[EFFECT_EXPLOSION],
 			radius:    halfPhysicalTileSize() - 1,
 			moveDelay: 3,
+			frameChangesForEffect: 7,
 		},
 		EFFECT_BIG_EXPLOSION: {
 			sprites:   effectAtlaces[EFFECT_BIG_EXPLOSION],
 			radius:    TILE_PHYSICAL_SIZE,
 			moveDelay: 5,
+			frameChangesForEffect: 3,
 		},
 		EFFECT_SPAWN: {
 			sprites:   effectAtlaces[EFFECT_SPAWN],
 			radius:    halfPhysicalTileSize() - 1,
 			moveDelay: 7,
+			frameChangesForEffect: 8,
 		},
 
 		/////// TANKS

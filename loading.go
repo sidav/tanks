@@ -1,11 +1,10 @@
 package main
 
 import (
-	"github.com/gen2brain/raylib-go/raylib"
+	rl "github.com/gen2brain/raylib-go/raylib"
 	"image"
 	"image/png"
 	"os"
-	"time"
 )
 
 var (
@@ -16,7 +15,7 @@ var (
 )
 
 func loadImageResources() {
-	var leftXForTank float32 = 0
+	var leftXForTank = 0
 	tankAtlaces[TANK_T1] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*0, 16, true, 2)
 	tankAtlaces[TANK_T2] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*1, 16, true, 2)
 	tankAtlaces[TANK_T3] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*2, 16, true, 2)
@@ -36,9 +35,9 @@ func loadImageResources() {
 	projectileAtlaces[PROJ_BULLET] = CreateAtlasFromFile("projectiles.png", 0, 0, 8, true, 1)
 	projectileAtlaces[PROJ_ROCKET] = CreateAtlasFromFile("projectiles.png", 0, 8, 8, true, 1)
 
-	effectAtlaces[EFFECT_EXPLOSION] = CreateAtlasFromFile("sprites.png", 16*0, 16*6, 16, false, 1)
-	effectAtlaces[EFFECT_BIG_EXPLOSION] = CreateAtlasFromFile("sprites.png", 16*3, 16*6, 16*2, false, 1)
-	effectAtlaces[EFFECT_SPAWN] = CreateAtlasFromFile("sprites.png", 16*0, 16*4, 16, false, 1)
+	effectAtlaces[EFFECT_EXPLOSION] = CreateAtlasFromFile("sprites.png", 16*0, 16*6, 16, false, 3)
+	effectAtlaces[EFFECT_BIG_EXPLOSION] = CreateAtlasFromFile("sprites.png", 16*3, 16*6, 16*2, false, 2)
+	effectAtlaces[EFFECT_SPAWN] = CreateAtlasFromFile("sprites.png", 16*0, 16*4, 16, false, 4)
 	// effectAtlaces["SPAWN"] = CreateAtlasFromFile("sprites.png", 16*16, 16*9, 16, 2, 7)
 }
 
@@ -49,71 +48,45 @@ func loadImageResources() {
 //	}
 //}
 
-func CreateAtlasFromFile(filename string, topleftx, toplefty, spriteSize float32, createAllDirections bool,
-	totalFrames uint8) *spriteAtlas {
+func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {
+	minx, miny := img.Bounds().Min.X, img.Bounds().Min.Y
+	//maxx, maxy := img.Bounds().Min.X, img.Bounds().Max.Y
+	subImg := img.(*image.NRGBA).SubImage(
+		image.Rect(minx+fromx, miny+fromy, minx+fromx+w, miny+fromy+h),
+	)
+	// reset img bounds, because RayLib goes nuts about it otherwise
+	subImg.(*image.NRGBA).Rect = image.Rect(0, 0, w, h)
+	return subImg
+}
+
+func CreateAtlasFromFile(filename string, topleftx, toplefty, spriteSize int, createAllDirections bool,
+	totalFrames int) *spriteAtlas {
 
 	file, _ := os.Open(filename)
-	spritesImg, _ := png.Decode(file)
-	defer file.Close()
+	img, _ := png.Decode(file)
+	file.Close()
 
-	newAtlas := spriteAtlas{}
-	newAtlas.atlas = make([][]rl.Texture2D, 0)
-
-	sprites := 1
-	if createAllDirections {
-		sprites = 4
+	newAtlas := spriteAtlas{
+		spriteSize:   spriteSize*int(SPRITE_SCALE_FACTOR),
 	}
-	spriteSize = 19
-	file.Seek(0, 0)
-	spritesImg, _ = png.Decode(file)
-
-	rl.BeginDrawing()
-	rl.ClearBackground(rl.Black)
-
-	//rl.DrawTexture(rl.LoadTextureFromImage(rl.NewImageFromImage(spritesImg)), 0, 0, DEFAULT_TINT)
-	//
-	//rl.DrawTexture(rl.LoadTextureFromImage(rl.NewImageFromImage(
-	//	spritesImg.(*image.NRGBA).SubImage(
-	//		image.Rect(0, 0, 10, 10),
-	//	),
-	//)), 32, 0, DEFAULT_TINT)
-	//
-	//rl.DrawTexture(rl.LoadTextureFromImage(rl.NewImageFromImage(
-	//	spritesImg.(*image.NRGBA).SubImage(
-	//		image.Rect(0, 0, 32, 16),
-	//	),
-	//)), 32, 16, DEFAULT_TINT)
-
-	rl.DrawTexture(rl.LoadTextureFromImage(rl.NewImageFromImage(
-		spritesImg.(*image.NRGBA).SubImage(
-			image.Rect(16, 0, 32, 16),
-		),
-	)), 64, 32, DEFAULT_TINT)
-
-	time.Sleep(1000 * time.Millisecond)
-	rl.EndDrawing()
-
-	for sprite := 0; sprite < sprites; sprite++ {
-		newAtlas.atlas = append(newAtlas.atlas, make([]rl.Texture2D, 0))
-		for frame := 0; frame < int(totalFrames); frame++ {
-			subImg := spritesImg.(*image.NRGBA).SubImage(
-				image.Rect(
-					int(topleftx)+frame*int(spriteSize),
-					int(toplefty),
-					int(topleftx)+(frame+1)*int(spriteSize),
-					int(toplefty)+int(spriteSize),
-				),
-			).(*image.NRGBA)
-			rlImg := rl.NewImageFromImage(subImg)
-			for r := 1; r <= sprite; r++ {
+	if createAllDirections {
+		newAtlas.atlas = make([][]rl.Texture2D, 4)
+	} else {
+		newAtlas.atlas = make([][]rl.Texture2D, 1)
+	}
+	// newAtlas.atlas
+	for currFrame := 0; currFrame < totalFrames; currFrame++ {
+		currPic := extractSubimageFromImage(img, topleftx+currFrame*spriteSize, toplefty, spriteSize, spriteSize)
+		rlImg := rl.NewImageFromImage(currPic)
+		rl.ImageResizeNN(rlImg, int32(spriteSize)*int32(SPRITE_SCALE_FACTOR), int32(spriteSize)*int32(SPRITE_SCALE_FACTOR))
+		newAtlas.atlas[0] = append(newAtlas.atlas[0], rl.LoadTextureFromImage(rlImg))
+		if createAllDirections {
+			for i := 1; i < 4; i++ {
 				rl.ImageRotateCCW(rlImg)
+				newAtlas.atlas[i] = append(newAtlas.atlas[i], rl.LoadTextureFromImage(rlImg))
 			}
-			rl.ImageResizeNN(rlImg, int32(float32(spriteSize)*SPRITE_SCALE_FACTOR), int32(float32(spriteSize)*SPRITE_SCALE_FACTOR))
-			newAtlas.atlas[sprite] = append(newAtlas.atlas[sprite], rl.LoadTextureFromImage(rlImg))
 		}
 	}
 
-	newAtlas.totalFrames = totalFrames
-	newAtlas.spriteSize = int(spriteSize * SPRITE_SCALE_FACTOR)
 	return &newAtlas
 }

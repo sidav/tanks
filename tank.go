@@ -68,5 +68,5 @@ func (t *tank) getCurrentSprite() rl.Texture2D {
 		spriteGroup = 2
 	}
 	// spriteNumber := int(spriteGroup*t.getSpritesAtlas().totalFrames + (t.currentFrameNumber % t.getSpritesAtlas().totalFrames))
-	return t.getSpritesAtlas().atlas[spriteGroup][t.currentFrameNumber]
+	return t.getSpritesAtlas().atlas[spriteGroup][t.currentFrameNumber % t.getSpritesAtlas().totalFrames()]
 }
