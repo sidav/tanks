@@ -40,7 +40,7 @@ func (b *battlefield) moveTankByVector(t *tank, x, y int) {
 	}
 	t.faceX = x
 	t.faceY = y
-	t.currentFrameNumber = (t.currentFrameNumber + 1) % t.getSpritesAtlas().totalFrames
+	t.currentFrameNumber = (t.currentFrameNumber + 1) % t.getSpritesAtlas().totalFrames()
 }
 
 func (b *battlefield) howFarCanTankMoveByVectorInSingleTick(t *tank, vx, vy int) int {

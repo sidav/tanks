@@ -1,79 +1,92 @@
 package main
 
 import (
-	"github.com/gen2brain/raylib-go/raylib"
-	"image/color"
+	rl "github.com/gen2brain/raylib-go/raylib"
+	"image"
+	"image/png"
+	"os"
 )
 
 var (
-	tankAtlaces = map[int]*horizSpriteAtlas{}
-	tileAtlaces = map[string]*horizSpriteAtlas{}
-	projectileAtlaces = map[int]*horizSpriteAtlas{}
-	effectAtlaces = map[int]*horizSpriteAtlas{}
+	tankAtlaces       = map[int]*spriteAtlas{}
+	tileAtlaces       = map[string]*spriteAtlas{}
+	projectileAtlaces = map[int]*spriteAtlas{}
+	effectAtlaces     = map[int]*spriteAtlas{}
 )
 
 func loadImageResources() {
-	var leftXForTank float32 = 128 // 0
-	tankAtlaces[TANK_T1] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*0, 16, 8, 2)
-	tankAtlaces[TANK_T2] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*1, 16, 8, 2)
-	tankAtlaces[TANK_T3] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*2, 16, 8, 2)
-	tankAtlaces[TANK_T4] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*3, 16, 8, 2)
-	tankAtlaces[TANK_T5] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*4, 16, 8, 2)
-	tankAtlaces[TANK_T6] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*5, 16, 8, 2)
-	tankAtlaces[TANK_T7] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*6, 16, 8, 2)
-	tankAtlaces[TANK_T8] = CreateHorizAtlasFromFile("sprites.png", leftXForTank, 16*7, 16, 8, 2)
+	var leftXForTank = 0
+	tankAtlaces[TANK_T1] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*0, 16, true, 2)
+	tankAtlaces[TANK_T2] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*1, 16, true, 2)
+	tankAtlaces[TANK_T3] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*2, 16, true, 2)
+	tankAtlaces[TANK_T4] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*3, 16, true, 2)
+	tankAtlaces[TANK_T5] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*4, 16, true, 2)
+	tankAtlaces[TANK_T6] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*5, 16, true, 2)
+	tankAtlaces[TANK_T7] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*6, 16, true, 2)
+	tankAtlaces[TANK_T8] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*7, 16, true, 2)
 
-	tileAtlaces["WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*0, 16, 5, 1)
-	tileAtlaces["ARMORED_WALL"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*1, 16, 5, 1)
-	tileAtlaces["WATER"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*3, 16, 2, 2)
-	tileAtlaces["WOOD"] = CreateHorizAtlasFromFile("sprites.png", 16*17, 16*2, 16, 1, 1)
-	tileAtlaces["ICE"] = CreateHorizAtlasFromFile("sprites.png", 16*18, 16*2, 16, 1, 1)
-	tileAtlaces["HQ"] = CreateHorizAtlasFromFile("sprites.png", 16*19, 16*2, 16, 1, 1)
+	tileAtlaces["WALL"] = CreateAtlasFromFile("sprites.png", 16*0, 16*0, 16, false, 5)
+	tileAtlaces["ARMORED_WALL"] = CreateAtlasFromFile("sprites.png", 16*0, 16*1, 16, false, 5)
+	tileAtlaces["WATER"] = CreateAtlasFromFile("sprites.png", 16*0, 16*3, 16, false, 2)
+	tileAtlaces["WOOD"] = CreateAtlasFromFile("sprites.png", 16*1, 16*2, 16, false, 1)
+	tileAtlaces["ICE"] = CreateAtlasFromFile("sprites.png", 16*2, 16*2, 16, false, 1)
+	tileAtlaces["HQ"] = CreateAtlasFromFile("sprites.png", 16*3, 16*2, 16, false, 1)
 
-	projectileAtlaces[PROJ_BULLET] = CreateHorizAtlasFromFile("projectiles.png", 0, 0, 8, 4, 1)
-	projectileAtlaces[PROJ_ROCKET] = CreateHorizAtlasFromFile("projectiles.png", 0, 8, 8, 4, 1)
+	projectileAtlaces[PROJ_BULLET] = CreateAtlasFromFile("projectiles.png", 0, 0, 8, true, 1)
+	projectileAtlaces[PROJ_ROCKET] = CreateAtlasFromFile("projectiles.png", 0, 8, 8, true, 1)
 
-	effectAtlaces[EFFECT_EXPLOSION] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*8, 16, 3, 7)
-	effectAtlaces[EFFECT_BIG_EXPLOSION] = CreateHorizAtlasFromFile("sprites.png", 16*19, 16*8, 16*2, 2, 7)
-	effectAtlaces[EFFECT_SPAWN] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*6, 16, 4, 8)
-	// effectAtlaces["SPAWN"] = CreateHorizAtlasFromFile("sprites.png", 16*16, 16*9, 16, 2, 7)
+	effectAtlaces[EFFECT_EXPLOSION] = CreateAtlasFromFile("sprites.png", 16*0, 16*6, 16, false, 3)
+	effectAtlaces[EFFECT_BIG_EXPLOSION] = CreateAtlasFromFile("sprites.png", 16*3, 16*6, 16*2, false, 2)
+	effectAtlaces[EFFECT_SPAWN] = CreateAtlasFromFile("sprites.png", 16*0, 16*4, 16, false, 4)
+	// effectAtlaces["SPAWN"] = CreateAtlasFromFile("sprites.png", 16*16, 16*9, 16, 2, 7)
 }
 
-func unloadResources() {
-	for k, v := range tankAtlaces {
-		debugWritef("Unload: ", k)
-		rl.UnloadTexture(v.atlas)
+//func unloadResources() {
+//	for k, v := range tankAtlaces {
+//		debugWritef("Unload: ", k)
+//		rl.UnloadTexture(v.atlas)
+//	}
+//}
+
+func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {
+	minx, miny := img.Bounds().Min.X, img.Bounds().Min.Y
+	//maxx, maxy := img.Bounds().Min.X, img.Bounds().Max.Y
+	subImg := img.(*image.NRGBA).SubImage(
+		image.Rect(minx+fromx, miny+fromy, minx+fromx+w, miny+fromy+h),
+	)
+	// reset img bounds, because RayLib goes nuts about it otherwise
+	subImg.(*image.NRGBA).Rect = image.Rect(0, 0, w, h)
+	return subImg
+}
+
+func CreateAtlasFromFile(filename string, topleftx, toplefty, spriteSize int, createAllDirections bool,
+	totalFrames int) *spriteAtlas {
+
+	file, _ := os.Open(filename)
+	img, _ := png.Decode(file)
+	file.Close()
+
+	newAtlas := spriteAtlas{
+		spriteSize:   spriteSize*int(SPRITE_SCALE_FACTOR),
 	}
-}
+	if createAllDirections {
+		newAtlas.atlas = make([][]rl.Texture2D, 4)
+	} else {
+		newAtlas.atlas = make([][]rl.Texture2D, 1)
+	}
+	// newAtlas.atlas
+	for currFrame := 0; currFrame < totalFrames; currFrame++ {
+		currPic := extractSubimageFromImage(img, topleftx+currFrame*spriteSize, toplefty, spriteSize, spriteSize)
+		rlImg := rl.NewImageFromImage(currPic)
+		rl.ImageResizeNN(rlImg, int32(spriteSize)*int32(SPRITE_SCALE_FACTOR), int32(spriteSize)*int32(SPRITE_SCALE_FACTOR))
+		newAtlas.atlas[0] = append(newAtlas.atlas[0], rl.LoadTextureFromImage(rlImg))
+		if createAllDirections {
+			for i := 1; i < 4; i++ {
+				rl.ImageRotateCCW(rlImg)
+				newAtlas.atlas[i] = append(newAtlas.atlas[i], rl.LoadTextureFromImage(rlImg))
+			}
+		}
+	}
 
-func CreateHorizAtlasFromFile(filename string, topleftx, toplefty, spriteSize, totalSprites float32,
-	totalFrames uint8) *horizSpriteAtlas {
-
-	s := horizSpriteAtlas{}
-	spritesImg := rl.LoadImage(filename)
-	rl.ImageColorReplace(spritesImg,
-		color.RGBA{
-			R: 0,
-			G: 0,
-			B: 1,
-			A: 255,
-		},
-		color.RGBA{
-			R: 0,
-			G: 0,
-			B: 0,
-			A: 0,
-		})
-	rl.ImageCrop(spritesImg, rl.Rectangle{
-		X:      topleftx,
-		Y:      toplefty,
-		Width:  spriteSize * totalSprites,
-		Height: spriteSize,
-	})
-	rl.ImageResizeNN(spritesImg, int32(float32(spritesImg.Width)*SPRITE_SCALE_FACTOR), int32(float32(spritesImg.Height)*SPRITE_SCALE_FACTOR))
-	s.atlas = rl.LoadTextureFromImage(spritesImg)
-	s.totalFrames = totalFrames
-	s.totalSprites = int32(totalSprites)
-	s.spriteSize = int(spriteSize* SPRITE_SCALE_FACTOR)
-	return &s
+	return &newAtlas
 }

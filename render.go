@@ -37,8 +37,8 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 
 		if centerTank != nil {
 			r.cameraCenterX, r.cameraCenterY = centerTank.getCenterCoords()
-			r.cameraCenterX = int(float64(r.cameraCenterX)*PIXEL_TO_PHYSICAL_RATIO)
-			r.cameraCenterY = int(float64(r.cameraCenterY)*PIXEL_TO_PHYSICAL_RATIO)
+			r.cameraCenterX = int(float64(r.cameraCenterX) * PIXEL_TO_PHYSICAL_RATIO)
+			r.cameraCenterY = int(float64(r.cameraCenterY) * PIXEL_TO_PHYSICAL_RATIO)
 		}
 
 		r.renderTiles(b)
@@ -53,7 +53,7 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 	}
 
 	if b.numPlayers > 1 && !r.doesLevelFitInScreenHorizontally() {
-		separatorWidth := int32(TILE_PHYSICAL_SIZE/2)
+		separatorWidth := int32(TILE_PHYSICAL_SIZE / 2)
 		rl.DrawRectangleGradientV(WINDOW_W/2-separatorWidth/2, 0, separatorWidth, WINDOW_H-(TEXT_MARGIN*2+TEXT_SIZE),
 			color.RGBA{
 				R: 32,
@@ -127,23 +127,17 @@ func (r *renderer) renderTank(t *tank, useFactionTint bool) {
 	cx, cy := r.physicalToOnScreenCoords(t.centerX, t.centerY)
 	x, y := float32(cx-t.getSpritesAtlas().spriteSize/2), float32(cy-t.getSpritesAtlas().spriteSize/2)
 	if useFactionTint {
-		rl.DrawTextureRec(
-			t.getSpritesAtlas().atlas,
-			t.getCurrentSpriteRect(),
-			rl.Vector2{
-				X: x,
-				Y: y,
-			},
+		rl.DrawTexture(
+			t.getCurrentSprite(),
+			int32(x),
+			int32(y),
 			factionTints[t.faction],
 		)
 	} else {
-		rl.DrawTextureRec(
-			t.getSpritesAtlas().atlas,
-			t.getCurrentSpriteRect(),
-			rl.Vector2{
-				X: x,
-				Y: y,
-			},
+		rl.DrawTexture(
+			t.getCurrentSprite(),
+			int32(x),
+			int32(y),
 			DEFAULT_TINT,
 		)
 	}
@@ -166,13 +160,10 @@ func (r *renderer) renderTile(b *battlefield, x, y int) {
 	spr := t.getSpritesAtlas()
 	if spr != nil {
 		osx, osy := r.physicalToOnScreenCoords(x*TILE_PHYSICAL_SIZE, y*TILE_PHYSICAL_SIZE)
-		rl.DrawTextureRec(
-			t.getSpritesAtlas().atlas,
-			t.getSpriteRect(),
-			rl.Vector2{
-				X: float32(osx),
-				Y: float32(osy),
-			},
+		rl.DrawTexture(
+			t.getSprite(),
+			int32(osx),
+			int32(osy),
 			DEFAULT_TINT,
 		)
 	}
@@ -204,12 +195,12 @@ func (r *renderer) renderLevelOutline() {
 	x, y := r.physicalToOnScreenCoords(0, 0)
 	rl.DrawRectangleLinesEx(
 		rl.Rectangle{
-		X:      float32(x),
-		Y:      float32(y),
-		Width:  float32(TILE_SIZE_IN_PIXELS*MAP_W),
-		Height: float32(TILE_SIZE_IN_PIXELS*MAP_H),
+			X:      float32(x),
+			Y:      float32(y),
+			Width:  float32(TILE_SIZE_IN_PIXELS * MAP_W),
+			Height: float32(TILE_SIZE_IN_PIXELS * MAP_H),
 		},
-	thickness,
+		thickness,
 		color.RGBA{
 			R: 255,
 			G: 96,

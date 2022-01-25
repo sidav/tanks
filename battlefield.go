@@ -33,7 +33,7 @@ func (b *battlefield) actForEffects() {
 			b.effects[i].currentFrameNumber++
 			b.effects[i].nextTickToMove = gameTick + tankStatsList[b.effects[i].code].moveDelay
 		}
-		if b.effects[i].currentFrameNumber >= b.effects[i].getSpritesAtlas().totalFrames {
+		if b.effects[i].currentFrameNumber > b.effects[i].getStats().frameChangesForEffect {
 			if b.effects[i].code == EFFECT_SPAWN {
 				b.tanks = append(b.tanks, b.effects[i].owner)
 			}

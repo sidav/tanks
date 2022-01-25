@@ -28,7 +28,7 @@ func (t *tank) getCenterCoords() (int, int) {
 func (t *tank) isAtCenterOfTile() bool {
 	xInTile := t.centerX % TILE_PHYSICAL_SIZE
 	yInTile := t.centerY % TILE_PHYSICAL_SIZE
-	precision := TILE_PHYSICAL_SIZE/10
+	precision := TILE_PHYSICAL_SIZE / 10
 	if abs(halfPhysicalTileSize()-xInTile) <= precision && abs(halfPhysicalTileSize()-yInTile) <= precision {
 		return true
 	}
@@ -51,12 +51,12 @@ func (t *tank) getStats() *tankStats {
 	return tankStatsList[t.code]
 }
 
-func (t *tank) getSpritesAtlas() *horizSpriteAtlas {
+func (t *tank) getSpritesAtlas() *spriteAtlas {
 	//debugWritef("ATLAS{%v}", t.code)
 	return t.getStats().sprites
 }
 
-func (t *tank) getCurrentSpriteRect() rl.Rectangle {
+func (t *tank) getCurrentSprite() rl.Texture2D {
 	var spriteGroup uint8 = 0
 	if t.faceX == 1 {
 		spriteGroup = 3
@@ -67,6 +67,6 @@ func (t *tank) getCurrentSpriteRect() rl.Rectangle {
 	if t.faceY == 1 {
 		spriteGroup = 2
 	}
-	spriteNumber := int(spriteGroup*t.getSpritesAtlas().totalFrames + (t.currentFrameNumber % t.getSpritesAtlas().totalFrames))
-	return t.getSpritesAtlas().getRectForSpriteFromAtlas(spriteNumber)
+	// spriteNumber := int(spriteGroup*t.getSpritesAtlas().totalFrames + (t.currentFrameNumber % t.getSpritesAtlas().totalFrames))
+	return t.getSpritesAtlas().atlas[spriteGroup][t.currentFrameNumber % t.getSpritesAtlas().totalFrames()]
 }
