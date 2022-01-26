@@ -12,13 +12,14 @@ func main() {
 	rl.SetTargetFPS(60)
 	rl.SetExitKey(rl.KeyF12)
 
+	rnd.InitDefault()
+
+	generateSpriteSheetFromParts()
+
 	loadImageResources()
-	generateAtlasFromParts()
 	initTankStatsList()
 	initTileDictionary()
 	// defer unloadResources()
-
-	rnd.InitDefault()
 
 	gameIsRunning = true
 

@@ -26,6 +26,7 @@ func loadImageResources() {
 	tankAtlaces[TANK_T6] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*5, 16, true, 2)
 	tankAtlaces[TANK_T7] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*6, 16, true, 2)
 	tankAtlaces[TANK_T8] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*7, 16, true, 2)
+	tankAtlaces[TANK_BOSS] = createAtlasFromRandomGenerated()
 
 	tileAtlaces["WALL"] = CreateAtlasFromFile("sprites.png", 16*0, 16*0, 16, false, 5)
 	tileAtlaces["ARMORED_WALL"] = CreateAtlasFromFile("sprites.png", 16*0, 16*1, 16, false, 5)
@@ -93,7 +94,7 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, spriteSize int, cr
 	return &newAtlas
 }
 
-func generateAtlasFromParts() {
+func generateSpriteSheetFromParts() {
 	const partSize = 24
 	const types = 7
 	file, _ := os.Open("parts.png")
@@ -111,7 +112,7 @@ func generateAtlasFromParts() {
 		guns = append(guns, extractSubimageFromImage(img, partSize, currLine*partSize, partSize, partSize))
 		legFramesCurrType := make([]image.Image, 0)
 		for j := 0; j < legFrames[currLine]; j++ {
-			legFramesCurrType = append(legFramesCurrType, extractSubimageFromImage(img, partSize*2+j, currLine*partSize, partSize, partSize))
+			legFramesCurrType = append(legFramesCurrType, extractSubimageFromImage(img, partSize*2+(j*partSize), currLine*partSize, partSize, partSize))
 		}
 		legs = append(legs, legFramesCurrType)
 	}
@@ -120,9 +121,10 @@ func generateAtlasFromParts() {
 	for bnum := 0; bnum < types; bnum++ {
 		for gnum := 0; gnum < types; gnum++ {
 			for lnum := 0; lnum < types; lnum++ {
-				for lframe := 0; lframe < legFrames[lnum]; lframe++ {
+				for lframe := 0; lframe < 4; lframe++ {
+					frameNum := lframe % legFrames[lnum]
 					currNewFrame := image.NewNRGBA(image.Rect(0, 0, partSize, partSize))
-					mergeImages(currNewFrame, legs[lnum][lframe], bodies[bnum], guns[gnum], partSize)
+					mergeImages(currNewFrame, legs[lnum][frameNum], bodies[bnum], guns[gnum], partSize)
 					draw.Draw(finishedPic, image.Rect(lframe*partSize, currLine*partSize, (lframe+1)*partSize, (currLine+1)*partSize), currNewFrame, image.Point{0, 0}, draw.Over)
 					finishedPic.Rect = image.Rect(0, 0, 4*partSize, types*types*types*partSize)
 				}
@@ -130,7 +132,7 @@ func generateAtlasFromParts() {
 			}
 		}
 	}
-	file, _ = os.Create(fmt.Sprintf("concat.png"))
+	file, _ = os.Create(fmt.Sprintf("generated.png"))
 	png.Encode(file, finishedPic)
 	file.Close()
 }
@@ -143,4 +145,15 @@ func mergeImages(newImg, legs, bodies, guns image.Image, partSize int) {
 	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
 	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), guns, image.Point{0, 0}, draw.Over)
 	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
+}
+
+func createAtlasFromRandomGenerated() *spriteAtlas {
+	return CreateAtlasFromFile(
+		"generated.png",
+		0,
+		rnd.Rand(100)*24,
+		24,
+		true,
+		4,
+		)
 }

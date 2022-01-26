@@ -11,6 +11,7 @@ const (
 	TANK_T6
 	TANK_T7
 	TANK_T8
+	TANK_BOSS
 
 	PROJ_BULLET
 	PROJ_ROCKET
@@ -21,7 +22,7 @@ const (
 )
 
 func getRandomCode() int {
-	return rnd.RandInRange(TANK_T1, TANK_T8)
+	return rnd.RandInRange(TANK_T1, PROJ_BULLET-1)
 }
 
 type tankStats struct {
@@ -188,6 +189,17 @@ func initTankStatsList() {
 			moveDelay:  10,
 			speed:      1,
 			shootDelay: 55,
+		},
+		TANK_BOSS: {
+			sprites: tankAtlaces[TANK_BOSS],
+
+			shootsProjectileOfCode: PROJ_ROCKET,
+			effectOnDestroy:        EFFECT_BIG_EXPLOSION,
+
+			radius:     halfPhysicalTileSize() - 2,
+			moveDelay:  5,
+			speed:      2,
+			shootDelay: 15,
 		},
 	}
 }
