@@ -13,6 +13,7 @@ func main() {
 	rl.SetExitKey(rl.KeyF12)
 
 	loadImageResources()
+	generateAtlasFromParts()
 	initTankStatsList()
 	initTileDictionary()
 	// defer unloadResources()
