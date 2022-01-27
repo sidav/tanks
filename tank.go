@@ -1,24 +1,31 @@
 package main
 
-import (
-	rl "github.com/gen2brain/raylib-go/raylib"
-)
-
 type tank struct {
 	playerControlled bool
 
 	centerX, centerY   int
 	faceX, faceY       int
-	currentFrameNumber uint8
+	currentFrameNumber int
 	faction            int
 
 	owner          *tank
 	markedToRemove bool
 	code           int
 
-	nextTickToMove, nextTickToShoot int
+	nextTickToMove int
+
+	weapons             []*tankWeapon
+	currentWeaponNumber int
 
 	ai *tankAi
+}
+
+func newTank(code, x, y, faction int) *tank {
+	t := &tank{code: code, centerX: x, centerY: y, faction: faction}
+	for i := 0; i < len(t.getStats().weaponCodes); i++ {
+		t.weapons = append(t.weapons, &tankWeapon{code: t.getStats().weaponCodes[i]})
+	}
+	return t
 }
 
 func (t *tank) getCenterCoords() (int, int) {
@@ -44,29 +51,22 @@ func (t *tank) canMoveNow() bool {
 }
 
 func (t *tank) canShootNow() bool {
-	return gameTick >= t.nextTickToShoot
+	return gameTick >= t.weapons[t.currentWeaponNumber].nexTickToShoot
 }
 
 func (t *tank) getStats() *tankStats {
 	return tankStatsList[t.code]
 }
 
+func (t *tank) getTractionStats() *tankTractionStats {
+	return tankTractionStatsList[t.getStats().tractionCode]
+}
+
+func (t *tank) getBodyStats() *tankBodyStats {
+	return tankBodyStatsList[t.getStats().bodyCode]
+}
+
 func (t *tank) getSpritesAtlas() *spriteAtlas {
 	//debugWritef("ATLAS{%v}", t.code)
 	return t.getStats().sprites
-}
-
-func (t *tank) getCurrentSprite() rl.Texture2D {
-	var spriteGroup uint8 = 0
-	if t.faceX == 1 {
-		spriteGroup = 3
-	}
-	if t.faceX == -1 {
-		spriteGroup = 1
-	}
-	if t.faceY == 1 {
-		spriteGroup = 2
-	}
-	// spriteNumber := int(spriteGroup*t.getSpritesAtlas().totalFrames + (t.currentFrameNumber % t.getSpritesAtlas().totalFrames))
-	return t.getSpritesAtlas().atlas[spriteGroup][t.currentFrameNumber % t.getSpritesAtlas().totalFrames()]
 }

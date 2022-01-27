@@ -24,25 +24,11 @@ func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desi
 	b.numPlayers = numPlayers
 	if numPlayers == 2 {
 		cx, cy := tileCoordsToPhysicalCoords(MAP_W/2+1, MAP_H-3)
-		player1 := &tank{
-			playerControlled:   true,
-			code:               TANK_PLAYER1,
-			centerX:            cx,
-			centerY:            cy,
-			faceX:              0,
-			faceY:              -1,
-			currentFrameNumber: 0,
-		}
+		player1 := newTank(TANK_PLAYER1, cx, cy, 0)
+		player1.playerControlled = true
 		cx, cy = tileCoordsToPhysicalCoords(MAP_W/2-1, MAP_H-3)
-		player2 := &tank{
-			playerControlled:   true,
-			code:               TANK_PLAYER2,
-			centerX:            cx,
-			centerY:            cy,
-			faceX:              0,
-			faceY:              -1,
-			currentFrameNumber: 0,
-		}
+		player2 := newTank(TANK_PLAYER2, cx, cy, 0)
+		player2.playerControlled = true
 		b.playerTanks = append(b.playerTanks, player1)
 		b.tanks = append(b.tanks, player1)
 		b.playerTanks = append(b.playerTanks, player2)
@@ -52,15 +38,8 @@ func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desi
 		b.tiles[MAP_W/2+1][MAP_H-3].code = TILE_EMPTY
 	} else {
 		cx, cy := tileCoordsToPhysicalCoords(MAP_W/2, MAP_H-3)
-		player := &tank{
-			playerControlled:   true,
-			code:               TANK_PLAYER1,
-			centerX:            cx,
-			centerY:            cy,
-			faceX:              0,
-			faceY:              -1,
-			currentFrameNumber: 0,
-		}
+		player := newTank(TANK_PLAYER1, cx, cy, 0)
+		player.playerControlled = true
 		b.playerTanks = append(b.playerTanks, player)
 		b.tiles[MAP_W/2][MAP_H-3].code = TILE_EMPTY
 		b.tanks = append(b.tanks, player)
@@ -83,7 +62,7 @@ func (b *battlefield) getRandomEmptyTileCoords(fx, tx, fy, ty int) (int, int) {
 
 func (b *battlefield) placeTilesRandomSymmetric(tileCode, tileCount int) {
 	if tileCount > MAP_W*MAP_H {
-		tileCount = MAP_W*MAP_H
+		tileCount = MAP_W * MAP_H
 	}
 	for i := 0; i < tileCount/2; i++ {
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
@@ -95,7 +74,7 @@ func (b *battlefield) placeTilesRandomSymmetric(tileCode, tileCount int) {
 func (b *battlefield) clearTilesForTanksSpawnIfNeeded(count int) {
 	debugWritef("COUNT %d", count)
 	if count > MAP_W*MAP_H {
-		count = MAP_W*MAP_H
+		count = MAP_W * MAP_H
 	}
 	if count == 0 {
 		count = 1

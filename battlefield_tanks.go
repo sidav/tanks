@@ -35,25 +35,25 @@ func (b *battlefield) moveTankByVector(t *tank, x, y int) {
 	}
 	speed := b.howFarCanTankMoveByVectorInSingleTick(t, x, y)
 	if speed > 0 {
-		t.centerX += x*speed
-		t.centerY += y*speed
+		t.centerX += x * speed
+		t.centerY += y * speed
 	}
 	t.faceX = x
 	t.faceY = y
-	t.currentFrameNumber = (t.currentFrameNumber + 1) % t.getSpritesAtlas().totalFrames()
+	t.currentFrameNumber++
 }
 
 func (b *battlefield) howFarCanTankMoveByVectorInSingleTick(t *tank, vx, vy int) int {
 	var tx1, ty1, tx2, ty2 int
 	diagRadius := t.getRadius() * 90 / 100
 	// we need to check "left corner" and "right corner" regarding to the tank
-	for currSpeed := t.getStats().speed; currSpeed > 0; currSpeed-- {
+	for currSpeed := t.getTractionStats().speed; currSpeed > 0; currSpeed-- {
 		if vx == 0 {
-			tx1, ty1 = trueCoordsToTileCoords(t.centerX-diagRadius, t.centerY+vy*(currSpeed + t.getRadius()))
-			tx2, ty2 = trueCoordsToTileCoords(t.centerX+diagRadius, t.centerY+vy*(currSpeed + t.getRadius()))
+			tx1, ty1 = trueCoordsToTileCoords(t.centerX-diagRadius, t.centerY+vy*(currSpeed+t.getRadius()))
+			tx2, ty2 = trueCoordsToTileCoords(t.centerX+diagRadius, t.centerY+vy*(currSpeed+t.getRadius()))
 		} else if vy == 0 {
-			tx1, ty1 = trueCoordsToTileCoords(t.centerX+vx*(currSpeed + t.getRadius()), t.centerY-diagRadius)
-			tx2, ty2 = trueCoordsToTileCoords(t.centerX+vx*(currSpeed + t.getRadius()), t.centerY+diagRadius)
+			tx1, ty1 = trueCoordsToTileCoords(t.centerX+vx*(currSpeed+t.getRadius()), t.centerY-diagRadius)
+			tx2, ty2 = trueCoordsToTileCoords(t.centerX+vx*(currSpeed+t.getRadius()), t.centerY+diagRadius)
 		}
 
 		if (t.centerX+vx >= t.getRadius()) && (t.centerY+vy >= t.getRadius()) &&
@@ -90,14 +90,8 @@ func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
 	tankFaction := rnd.RandInRange(1, b.numFactions-1)
 	tankCode := getRandomCode()
 	cx, cy := tileCoordsToPhysicalCoords(x, y)
-	owner := &tank{
-		code:               tankCode,
-		centerX:            cx,
-		centerY:            cy,
-		ai:                 initSimpleTankAi(),
-		faction:            tankFaction,
-		currentFrameNumber: 0,
-	}
+	owner := newTank(tankCode, cx, cy, tankFaction)
+	owner.ai = initSimpleTankAi()
 	b.spawnEffect(EFFECT_SPAWN, cx, cy, owner)
 }
 
@@ -121,7 +115,7 @@ func (b *battlefield) removeTank(t *tank) {
 
 func (b *battlefield) shootAsTank(t *tank) {
 	newProjectile := &tank{
-		code:               t.getStats().shootsProjectileOfCode,
+		code:               t.weapons[t.currentWeaponNumber].getStats().shootsProjectileOfCode,
 		centerX:            t.centerX + t.faceX*(t.getRadius()+1),
 		centerY:            t.centerY + t.faceY*(t.getRadius()+1),
 		faceX:              t.faceX,
@@ -130,5 +124,5 @@ func (b *battlefield) shootAsTank(t *tank) {
 		currentFrameNumber: 0,
 	}
 	b.projectiles = append(b.projectiles, newProjectile)
-	t.nextTickToShoot = gameTick + t.getStats().shootDelay
+	t.weapons[t.currentWeaponNumber].spendTime()
 }
