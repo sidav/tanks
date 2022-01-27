@@ -35,6 +35,7 @@ func loadImageResources() {
 	tileAtlaces["WOOD"] = CreateAtlasFromFile("assets/sprites.png", 16*1, 16*2, 16, 16, 1, false)
 	tileAtlaces["ICE"] = CreateAtlasFromFile("assets/sprites.png", 16*2, 16*2, 16, 16, 1, false)
 	tileAtlaces["HQ"] = CreateAtlasFromFile("assets/sprites.png", 16*3, 16*2, 16, 16, 1, false)
+	tileAtlaces["FLAG"] = CreateAtlasFromFile("assets/sprites.png", 16*4, 16*2, 16, 16, 1, false)
 
 	projectileAtlaces[PROJ_BULLET] = CreateAtlasFromFile("assets/projectiles.png", 0, 0, 8, 8, 1, true)
 	projectileAtlaces[PROJ_ROCKET] = CreateAtlasFromFile("assets/projectiles.png", 0, 8, 8, 8, 1, true)

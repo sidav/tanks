@@ -29,10 +29,15 @@ func (b *battlefield) initMission(missionType int) {
 		b.placePlayers(b.numPlayers, MAP_W/2, MAP_H-1, 0, MAP_H-1, MAP_W-1, MAP_H-1)
 	case MISSION_PROTECT_HQ:
 		b.placePlayers(b.numPlayers, MAP_W/2, MAP_H-3, MAP_W/2-1, MAP_H-3, MAP_W/2+1, MAP_H-3)
-		b.placeTilesInRect(TILE_EMPTY, MAP_W/2-2, MAP_H-4, 5, 3)
-		b.placeTilesInRect(TILE_ARMORED, MAP_W/2-1, MAP_H-3, 3, 2)
+		b.placeTilesInRect(TILE_EMPTY, MAP_W/2-2, MAP_H-3, 5, 3)
+		b.placeTilesInRect(TILE_ARMORED, MAP_W/2-1, MAP_H-2, 3, 2)
+		// b.tiles[MAP_W/2][MAP_H-1].code = TILE_HQ
 	case MISSION_COLLECT_FLAGS:
-
+		b.placePlayers(b.numPlayers, MAP_W/2, MAP_H-3, MAP_W/2-1, MAP_H-3, MAP_W/2+1, MAP_H-3)
+		for i := 0; i < 5*b.numPlayers; i++ {
+			x, y := rnd.RandInRange(0, MAP_W-1), rnd.RandInRange(0, MAP_H-3)
+			b.tiles[x][y].code = TILE_FLAG
+		}
 	}
 }
 
@@ -102,8 +107,8 @@ func (b *battlefield) placeTilesRandomSymmetric(tileCode, tilePercent int) {
 }
 
 func (b *battlefield) placeTilesInRect(tileCode, x, y, w, h int) {
-	for i := x; i <= x+w; i++ {
-		for j := y; j <= y+h; j++ {
+	for i := x; i < x+w; i++ {
+		for j := y; j < y+h; j++ {
 			b.tiles[i][j].code = tileCode
 		}
 	}

@@ -48,6 +48,13 @@ var (
 
 		"PLAYERS               <%d>",
 	}
+
+	missionsEntries = []string{
+		"DESTROY THEM ALL",
+		"PROTECT HQ",
+		"CAPTURE ALL FLAGS",
+	}
+
 	colorText = color.RGBA{
 		R: 255,
 		G: 255,
@@ -138,6 +145,7 @@ func showGameMenu() {
 		}
 
 	}
+	missionId := missionSelectMenu()
 	gameMap = &battlefield{
 		initialEnemiesCount:               menuValuesData[0][0],
 		maxTanksOnMap:                     menuValuesData[1][0],
@@ -145,5 +153,47 @@ func showGameMenu() {
 		chanceToSpawnEnemyEachTickOneFrom: menuValuesData[3][0],
 		numFactions:                       menuValuesData[4][0],
 	}
-	gameMap.init(menuValuesData[7][0], menuValuesData[8][0], menuValuesData[9][0], menuValuesData[10][0], menuValuesData[11][0], menuValuesData[12][0], 0)
+	gameMap.init(menuValuesData[7][0], menuValuesData[8][0], menuValuesData[9][0], menuValuesData[10][0], menuValuesData[11][0], menuValuesData[12][0], missionId)
+}
+
+func missionSelectMenu() int {
+	cursor := 0
+	for {
+		rl.BeginDrawing()
+		rl.ClearBackground(color.RGBA{0, 0, 0, 255})
+
+		for i := range missionsEntries {
+			if i == cursor {
+				rl.DrawText(fmt.Sprintf(missionsEntries[i]), 0, int32(i*(TEXT_SIZE+TEXT_MARGIN)), TEXT_SIZE, colorCursor)
+			} else {
+				rl.DrawText(fmt.Sprintf(missionsEntries[i]), 0, int32(i*(TEXT_SIZE+TEXT_MARGIN)), TEXT_SIZE, colorText)
+			}
+		}
+		rl.EndDrawing()
+
+		if rl.IsKeyPressed(rl.KeyUp) {
+			cursor--
+			if cursor < 0 {
+				cursor = len(missionsEntries) - 1
+			}
+		}
+		if rl.IsKeyPressed(rl.KeyDown) {
+			cursor++
+			if cursor == len(missionsEntries) {
+				cursor = 0
+			}
+		}
+		if rl.IsKeyPressed(rl.KeyEnter) {
+			gameIsRunning = true
+			gameWon = false
+			gameOver = false
+			return cursor
+		}
+		if rl.IsKeyPressed(rl.KeyEscape) {
+			gameIsRunning = false
+			playerPressedExit = true
+			break
+		}
+	}
+	return 0
 }
