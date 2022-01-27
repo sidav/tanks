@@ -9,7 +9,7 @@ const (
 	TILE_WOOD
 	TILE_WATER
 	TILE_ICE
-	TILE_HQ
+	TILE_FLAG
 )
 
 type tile struct {
@@ -99,10 +99,11 @@ func initTileDictionary() {
 			stopsBullets: false,
 			destructible: false,
 		},
-		TILE_HQ: {
-			sprite:       tileAtlaces["HQ"],
-			impassable:   true,
-			destructible: true,
+		TILE_FLAG: {
+			sprite:       tileAtlaces["FLAG"],
+			impassable:   false,
+			destructible: false,
+			stopsBullets: false,
 		},
 	}
 }

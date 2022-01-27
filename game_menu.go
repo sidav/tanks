@@ -20,11 +20,12 @@ var (
 
 		{25, 11, 1001, 2},
 		{14, 11, 1000, 2},
-		{MAP_H*MAP_W/3, 0, 100000, 4},
-		{MAP_H*MAP_W/8, 0, 10000, 4},
-		{MAP_H*MAP_W/12, 0, 10000, 4},
-		{MAP_H*MAP_W/12, 0, 10000, 4},
-		{MAP_H*MAP_W/20, 0, 10000, 4},
+
+		{33, 0, 100, 1},
+		{13, 0, 100, 1},
+		{8, 0, 100, 1},
+		{8, 0, 100, 1},
+		{5, 0, 100, 1},
 
 		{1, 1, 2, 1},
 	}
@@ -38,11 +39,12 @@ var (
 
 		"MAP WIDTH             <%d>",
 		"MAP HEIGHT            <%d>",
-		"DESIRED WALLS         <%d>",
-		"DESIRED ARMORED_WALLS <%d>",
-		"DESIRED WOODS         <%d>",
-		"DESIRED WATER         <%d>",
-		"DESIRED ICE           <%d>",
+
+		"DESIRED WALLS         <%d%%>",
+		"DESIRED ARMORED_WALLS <%d%%>",
+		"DESIRED WOODS         <%d%%>",
+		"DESIRED WATER         <%d%%>",
+		"DESIRED ICE           <%d%%>",
 
 		"PLAYERS               <%d>",
 	}
@@ -143,5 +145,5 @@ func showGameMenu() {
 		chanceToSpawnEnemyEachTickOneFrom: menuValuesData[3][0],
 		numFactions:                       menuValuesData[4][0],
 	}
-	gameMap.init(menuValuesData[7][0], menuValuesData[8][0], menuValuesData[9][0], menuValuesData[10][0], menuValuesData[11][0], menuValuesData[12][0])
+	gameMap.init(menuValuesData[7][0], menuValuesData[8][0], menuValuesData[9][0], menuValuesData[10][0], menuValuesData[11][0], menuValuesData[12][0], 0)
 }

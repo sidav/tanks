@@ -1,6 +1,6 @@
 package main
 
-func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desiredWater, desiredIce, numPlayers int) {
+func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desiredWater, desiredIce, numPlayers, missionType int) {
 	// todo: REWRITE, add better generator
 	b.tiles = make([][]tile, MAP_W)
 	for i := range b.tiles {
@@ -14,39 +14,62 @@ func (b *battlefield) init(desiredWalls, desiredArmoredWalls, desiredWoods, desi
 	b.placeTilesRandomSymmetric(TILE_ICE, desiredIce)
 	b.clearTilesForTanksSpawnIfNeeded(b.initialEnemiesCount)
 
-	for x := MAP_W/2 - 1; x <= MAP_W/2+1; x++ {
-		for y := MAP_H - 2; y <= MAP_H-1; y++ {
-			b.tiles[x][y].code = TILE_ARMORED
-		}
-	}
-	b.tiles[MAP_W/2][MAP_H-1].code = TILE_HQ
-
 	b.numPlayers = numPlayers
-	if numPlayers == 2 {
-		cx, cy := tileCoordsToPhysicalCoords(MAP_W/2+1, MAP_H-3)
-		player1 := newTank(TANK_PLAYER1, cx, cy, 0)
+	b.initMission(missionType)
+
+	for i := 0; i < b.initialEnemiesCount; i++ {
+		b.spawnRandomTankInRect(0, MAP_W-1, 0, MAP_H-1)
+	}
+}
+
+func (b *battlefield) initMission(missionType int) {
+	b.missionType = missionType
+	switch missionType {
+	case MISSION_KILL_ALL:
+		b.placePlayers(b.numPlayers, MAP_W/2, MAP_H-1, 0, MAP_H-1, MAP_W-1, MAP_H-1)
+	case MISSION_PROTECT_HQ:
+		b.placePlayers(b.numPlayers, MAP_W/2, MAP_H-3, MAP_W/2-1, MAP_H-3, MAP_W/2+1, MAP_H-3)
+		b.placeTilesInRect(TILE_EMPTY, MAP_W/2-2, MAP_H-4, 5, 3)
+		b.placeTilesInRect(TILE_ARMORED, MAP_W/2-1, MAP_H-3, 3, 2)
+	case MISSION_COLLECT_FLAGS:
+
+	}
+}
+
+func (b *battlefield) placePlayers(numPlayers, x, y, x1, y1, x2, y2 int) {
+	if numPlayers == 1 {
+		b.clearImpassableTilesInCrossFrom(x, y)
+		x, y = tileCoordsToPhysicalCoords(x, y)
+		player := newTank(TANK_PLAYER1, x, y, 0)
+		player.playerControlled = true
+		b.playerTanks = append(b.playerTanks, player)
+		b.tanks = append(b.tanks, player)
+	} else {
+		b.clearImpassableTilesInCrossFrom(x1, y1)
+		b.clearImpassableTilesInCrossFrom(x2, y2)
+		x1, y1 = tileCoordsToPhysicalCoords(x1, y1)
+		player1 := newTank(TANK_PLAYER1, x1, y1, 0)
 		player1.playerControlled = true
-		cx, cy = tileCoordsToPhysicalCoords(MAP_W/2-1, MAP_H-3)
-		player2 := newTank(TANK_PLAYER2, cx, cy, 0)
+		x2, y2 = tileCoordsToPhysicalCoords(x2, y2)
+		player2 := newTank(TANK_PLAYER2, x2, y2, 0)
 		player2.playerControlled = true
 		b.playerTanks = append(b.playerTanks, player1)
 		b.tanks = append(b.tanks, player1)
 		b.playerTanks = append(b.playerTanks, player2)
 		b.tanks = append(b.tanks, player2)
-
-		b.tiles[MAP_W/2-1][MAP_H-3].code = TILE_EMPTY
-		b.tiles[MAP_W/2+1][MAP_H-3].code = TILE_EMPTY
-	} else {
-		cx, cy := tileCoordsToPhysicalCoords(MAP_W/2, MAP_H-3)
-		player := newTank(TANK_PLAYER1, cx, cy, 0)
-		player.playerControlled = true
-		b.playerTanks = append(b.playerTanks, player)
-		b.tiles[MAP_W/2][MAP_H-3].code = TILE_EMPTY
-		b.tanks = append(b.tanks, player)
 	}
+}
 
-	for i := 0; i < b.initialEnemiesCount; i++ {
-		b.spawnRandomTankInRect(0, MAP_W-1, 0, MAP_H-1)
+func (b *battlefield) clearImpassableTilesInCrossFrom(x, y int) {
+	for i := -1; i <= 1; i++ {
+		for j := -1; j <= 1; j++ {
+			if i*j == 0 && areTileCoordsValid(x+i, y+j) {
+				if b.tiles[x+i][y+j].isImpassable() && !b.tiles[x+i][y+j].isDestructible() {
+					b.tiles[x+i][y+j].code = TILE_EMPTY
+				}
+				b.tiles[x][y].code = TILE_EMPTY
+			}
+		}
 	}
 }
 
@@ -60,7 +83,11 @@ func (b *battlefield) getRandomEmptyTileCoords(fx, tx, fy, ty int) (int, int) {
 	return 0, 0
 }
 
-func (b *battlefield) placeTilesRandomSymmetric(tileCode, tileCount int) {
+func (b *battlefield) placeTilesRandomSymmetric(tileCode, tilePercent int) {
+	if tilePercent > 100 {
+		panic("Wrong tile percent")
+	}
+	tileCount := (MAP_W*MAP_H)*tilePercent/100
 	if tileCount > MAP_W*MAP_H {
 		tileCount = MAP_W * MAP_H
 	}
@@ -68,6 +95,14 @@ func (b *battlefield) placeTilesRandomSymmetric(tileCode, tileCount int) {
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W/2, 0, MAP_H-1)
 		b.tiles[x][y].code = tileCode
 		b.tiles[MAP_W-x-1][y].code = tileCode
+	}
+}
+
+func (b *battlefield) placeTilesInRect(tileCode, x, y, w, h int) {
+	for i := x; i <= x+w; i++ {
+		for j := y; j <= y+h; j++ {
+			b.tiles[i][j].code = tileCode
+		}
 	}
 }
 

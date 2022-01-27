@@ -6,6 +6,7 @@ type battlefield struct {
 	numPlayers  int
 	playerTanks []*tank
 
+	missionType                       int
 	maxTanksOnMap                     int
 	initialEnemiesCount               int
 	totalTanksRemainingToSpawn        int

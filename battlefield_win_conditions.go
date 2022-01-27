@@ -1,0 +1,7 @@
+package main
+
+const (
+	MISSION_KILL_ALL = iota
+	MISSION_PROTECT_HQ
+	MISSION_COLLECT_FLAGS
+)
