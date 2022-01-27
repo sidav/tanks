@@ -42,12 +42,11 @@ func (t *tile) getSpritesAtlas() *spriteAtlas {
 }
 
 func (t *tile) getSprite() rl.Texture2D {
-	// number = t.getMaxDamageTaken()*int(t.getSpritesAtlas().totalSprites)/t.damageTaken
-	number := t.damageTaken
-	//if t.getSpritesAtlas().totalFrames > 1 {
-	//	number = (gameTick / 50) % int(t.getSpritesAtlas().totalFrames)
-	//}
-	return t.getSpritesAtlas().atlas[0][number]
+	frameNumber := (gameTick / 50) % int(t.getSpritesAtlas().totalFrames())
+	if t.isDestructible() || t.getMaxDamageTaken() > 0 {
+		frameNumber = t.damageTaken
+	}
+	return t.getSpritesAtlas().atlas[0][frameNumber]
 }
 
 type tileStats struct {
