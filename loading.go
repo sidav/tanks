@@ -13,9 +13,9 @@ var (
 	projectileAtlaces = map[int]*spriteAtlas{}
 	effectAtlaces     = map[int]*spriteAtlas{}
 
-	weaponAtlaces = map[int]*spriteAtlas{}
-	trackAtlaces  = map[int]*spriteAtlas{}
-	bodiesAtlaces = map[int]*spriteAtlas{}
+	weaponAtlaces = []*spriteAtlas{}
+	trackAtlaces  = []*spriteAtlas{}
+	bodiesAtlaces = []*spriteAtlas{}
 )
 
 func loadImageResources() {
@@ -42,7 +42,17 @@ func loadImageResources() {
 	effectAtlaces[EFFECT_EXPLOSION] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*6, 16, 16, 3, false)
 	effectAtlaces[EFFECT_BIG_EXPLOSION] = CreateAtlasFromFile("assets/sprites.png", 16*3, 16*6, 32, 32, 2, false)
 	effectAtlaces[EFFECT_SPAWN] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*4, 16, 16, 4, false)
-	// effectAtlaces["ASSETS/SPAWN"] = CreateAtlasFromFile("assets/sprites.png", 16*16, 16*9, 16, 2, 7)
+
+	// parts
+	for i := 0; i < 27; i++ {
+		bodiesAtlaces = append(bodiesAtlaces, CreateAtlasFromFile("assets/parts/TankBase24x24.png", 0, i*24, 24, 16, 1, true))
+	}
+	for i := 0; i < 16; i++ {
+		weaponAtlaces = append(weaponAtlaces, CreateAtlasFromFile("assets/parts/TankWeapon24x24.png", 0, i*24, 24, 16, 1, true))
+	}
+	for i := 0; i < 6; i++ {
+		trackAtlaces = append(trackAtlaces, CreateAtlasFromFile("assets/parts/TankTracksAnimated(2)24x24.png", 0, i*24, 24, 16, 2, true))
+	}
 }
 
 //func unloadResources() {
@@ -70,7 +80,7 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize
 	file.Close()
 
 	newAtlas := spriteAtlas{
-		spriteSize: originalSpriteSize * int(SPRITE_SCALE_FACTOR),
+		spriteSize: desiredSpriteSize * int(SPRITE_SCALE_FACTOR),
 	}
 	if createAllDirections {
 		newAtlas.atlas = make([][]rl.Texture2D, 4)

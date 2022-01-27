@@ -3,6 +3,7 @@ package main
 const (
 	WEAPON_BULLET = iota
 	WEAPON_ROCKET
+	WEAPON_PART1
 )
 
 type tankWeapon struct {
@@ -36,6 +37,12 @@ func initTankWeaponStatsList() {
 		WEAPON_ROCKET: {
 			sprites:                nil,
 			shootsProjectileOfCode: PROJ_ROCKET,
+			shootDelay:             75,
+		},
+
+		WEAPON_PART1: {
+			sprites:                weaponAtlaces[rnd.Rand(len(weaponAtlaces))],
+			shootsProjectileOfCode: PROJ_BULLET,
 			shootDelay:             75,
 		},
 	}

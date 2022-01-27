@@ -2,6 +2,7 @@ package main
 
 const (
 	TTRACTION_TRACKS = iota
+	TTRACTION_PART1
 )
 
 type tankTraction struct {
@@ -20,6 +21,12 @@ func initTankTractionStatsList() {
 		/////// TANKS
 		TTRACTION_TRACKS: {
 			sprites:   nil,
+			speed:     1,
+			moveDelay: 2,
+		},
+
+		TTRACTION_PART1: {
+			sprites:   trackAtlaces[rnd.Rand(len(trackAtlaces))],
 			speed:     1,
 			moveDelay: 2,
 		},

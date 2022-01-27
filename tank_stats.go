@@ -11,7 +11,7 @@ const (
 	TANK_T6
 	TANK_T7
 	TANK_T8
-	TANK_BOSS
+	TANK_GENERATED
 
 	PROJ_BULLET
 	PROJ_ROCKET
@@ -134,6 +134,13 @@ func initTankStatsList() {
 		TANK_T8: {
 			effectOnDestroy: EFFECT_EXPLOSION,
 			radius:          halfPhysicalTileSize() - 2,
+		},
+		TANK_GENERATED: {
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          halfPhysicalTileSize() - 2,
+			bodyCode:        TBODY_PART1,
+			tractionCode:    TTRACTION_PART1,
+			weaponCodes:     []int{WEAPON_PART1},
 		},
 	}
 }

@@ -9,6 +9,7 @@ const (
 	TBODY_TANK6
 	TBODY_TANK7
 	TBODY_TANK8
+	TBODY_PART1
 )
 
 type tankBodyStats struct {
@@ -27,6 +28,11 @@ func initTankBodyStatsList() {
 		},
 		TBODY_TANK2: {
 			sprites: tankAtlaces[TANK_T2],
+		},
+
+		TBODY_PART1: {
+			sprites: bodiesAtlaces[rnd.Rand(len(bodiesAtlaces))],
+			maxHp:   1,
 		},
 	}
 }
