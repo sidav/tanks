@@ -41,6 +41,7 @@ func (b *battlefield) placePlayers(numPlayers, x, y, x1, y1, x2, y2 int) {
 		b.clearImpassableTilesInCrossFrom(x, y)
 		x, y = tileCoordsToPhysicalCoords(x, y)
 		player := newTank(TANK_PLAYER1, x, y, 0)
+		player.faceY = -1
 		player.playerControlled = true
 		b.playerTanks = append(b.playerTanks, player)
 		b.tanks = append(b.tanks, player)
@@ -49,9 +50,11 @@ func (b *battlefield) placePlayers(numPlayers, x, y, x1, y1, x2, y2 int) {
 		b.clearImpassableTilesInCrossFrom(x2, y2)
 		x1, y1 = tileCoordsToPhysicalCoords(x1, y1)
 		player1 := newTank(TANK_PLAYER1, x1, y1, 0)
+		player1.faceY = -1
 		player1.playerControlled = true
 		x2, y2 = tileCoordsToPhysicalCoords(x2, y2)
 		player2 := newTank(TANK_PLAYER2, x2, y2, 0)
+		player2.faceY = -1
 		player2.playerControlled = true
 		b.playerTanks = append(b.playerTanks, player1)
 		b.tanks = append(b.tanks, player1)
