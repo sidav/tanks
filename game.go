@@ -47,13 +47,15 @@ func runGame() {
 		gameMap.totalTanksRemainingToSpawn = MAP_W*MAP_H/2
 		gameMap.chanceToSpawnEnemyEachTickOneFrom = 5
 	}
-	gameWon = gameWon || gameMap.totalTanksRemainingToSpawn <= 0 && len(gameMap.tanks) == 1 && len(gameMap.effects) == 0
+	gameWon = gameWon || gameMap.isMissionCompleted()
 	if gameWon {
 		for i := 0; i < 3; i++ {
 			gameMap.spawnEffect(EFFECT_EXPLOSION, rnd.Rand(WINDOW_W), rnd.Rand(WINDOW_H), nil)
 			gameMap.spawnEffect(EFFECT_BIG_EXPLOSION, rnd.Rand(WINDOW_W), rnd.Rand(WINDOW_H), nil)
 		}
 	}
+	gameMap.PerformMissionSpecificActions()
+
 	logicDuration := time.Since(tickStart)
 
 	debugWrite("RENDER ")
