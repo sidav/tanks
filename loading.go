@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"image"
-	"image/draw"
 	"image/png"
 	"os"
 )
@@ -14,34 +12,37 @@ var (
 	tileAtlaces       = map[string]*spriteAtlas{}
 	projectileAtlaces = map[int]*spriteAtlas{}
 	effectAtlaces     = map[int]*spriteAtlas{}
+
+	weaponAtlaces = map[int]*spriteAtlas{}
+	trackAtlaces  = map[int]*spriteAtlas{}
+	bodiesAtlaces = map[int]*spriteAtlas{}
 )
 
 func loadImageResources() {
 	var leftXForTank = 0
-	tankAtlaces[TANK_T1] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*0, 16, 16, 2, true)
-	tankAtlaces[TANK_T2] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*1, 16, 16, 2, true)
-	tankAtlaces[TANK_T3] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*2, 16, 16, 2, true)
-	tankAtlaces[TANK_T4] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*3, 16, 16, 2, true)
-	tankAtlaces[TANK_T5] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*4, 16, 16, 2, true)
-	tankAtlaces[TANK_T6] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*5, 16, 16, 2, true)
-	tankAtlaces[TANK_T7] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*6, 16, 16, 2, true)
-	tankAtlaces[TANK_T8] = CreateAtlasFromFile("tanks.png", leftXForTank, 16*7, 16, 16, 2, true)
-	tankAtlaces[TANK_BOSS] = createAtlasFromRandomGenerated()
+	tankAtlaces[TANK_T1] = CreateAtlasFromFile("assets/tanks.png", leftXForTank, 16*0, 16, 16, 2, true)
+	tankAtlaces[TANK_T2] = CreateAtlasFromFile("assets/tanks.png", leftXForTank, 16*1, 16, 16, 2, true)
+	tankAtlaces[TANK_T3] = CreateAtlasFromFile("assets/tanks.png", leftXForTank, 16*2, 16, 16, 2, true)
+	tankAtlaces[TANK_T4] = CreateAtlasFromFile("assets/tanks.png", leftXForTank, 16*3, 16, 16, 2, true)
+	tankAtlaces[TANK_T5] = CreateAtlasFromFile("assets/tanks.png", leftXForTank, 16*4, 16, 16, 2, true)
+	tankAtlaces[TANK_T6] = CreateAtlasFromFile("assets/tanks.png", leftXForTank, 16*5, 16, 16, 2, true)
+	tankAtlaces[TANK_T7] = CreateAtlasFromFile("assets/tanks.png", leftXForTank, 16*6, 16, 16, 2, true)
+	tankAtlaces[TANK_T8] = CreateAtlasFromFile("assets/tanks.png", leftXForTank, 16*7, 16, 16, 2, true)
 
-	tileAtlaces["WALL"] = CreateAtlasFromFile("sprites.png", 16*0, 16*0, 16, 16, 5, false)
-	tileAtlaces["ARMORED_WALL"] = CreateAtlasFromFile("sprites.png", 16*0, 16*1, 16, 16, 5, false)
-	tileAtlaces["WATER"] = CreateAtlasFromFile("sprites.png", 16*0, 16*3, 16, 16, 2, false)
-	tileAtlaces["WOOD"] = CreateAtlasFromFile("sprites.png", 16*1, 16*2, 16, 16, 1, false)
-	tileAtlaces["ICE"] = CreateAtlasFromFile("sprites.png", 16*2, 16*2, 16, 16, 1, false)
-	tileAtlaces["HQ"] = CreateAtlasFromFile("sprites.png", 16*3, 16*2, 16, 16, 1, false)
+	tileAtlaces["WALL"] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*0, 16, 16, 5, false)
+	tileAtlaces["ARMORED_WALL"] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*1, 16, 16, 5, false)
+	tileAtlaces["WATER"] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*3, 16, 16, 2, false)
+	tileAtlaces["WOOD"] = CreateAtlasFromFile("assets/sprites.png", 16*1, 16*2, 16, 16, 1, false)
+	tileAtlaces["ICE"] = CreateAtlasFromFile("assets/sprites.png", 16*2, 16*2, 16, 16, 1, false)
+	tileAtlaces["HQ"] = CreateAtlasFromFile("assets/sprites.png", 16*3, 16*2, 16, 16, 1, false)
 
-	projectileAtlaces[PROJ_BULLET] = CreateAtlasFromFile("projectiles.png", 0, 0, 8, 8, 1, true)
-	projectileAtlaces[PROJ_ROCKET] = CreateAtlasFromFile("projectiles.png", 0, 8, 8, 8, 1, true)
+	projectileAtlaces[PROJ_BULLET] = CreateAtlasFromFile("assets/projectiles.png", 0, 0, 8, 8, 1, true)
+	projectileAtlaces[PROJ_ROCKET] = CreateAtlasFromFile("assets/projectiles.png", 0, 8, 8, 8, 1, true)
 
-	effectAtlaces[EFFECT_EXPLOSION] = CreateAtlasFromFile("sprites.png", 16*0, 16*6, 16, 16, 3, false)
-	effectAtlaces[EFFECT_BIG_EXPLOSION] = CreateAtlasFromFile("sprites.png", 16*3, 16*6, 32, 32, 2, false)
-	effectAtlaces[EFFECT_SPAWN] = CreateAtlasFromFile("sprites.png", 16*0, 16*4, 16, 16, 4, false)
-	// effectAtlaces["SPAWN"] = CreateAtlasFromFile("sprites.png", 16*16, 16*9, 16, 2, 7)
+	effectAtlaces[EFFECT_EXPLOSION] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*6, 16, 16, 3, false)
+	effectAtlaces[EFFECT_BIG_EXPLOSION] = CreateAtlasFromFile("assets/sprites.png", 16*3, 16*6, 32, 32, 2, false)
+	effectAtlaces[EFFECT_SPAWN] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*4, 16, 16, 4, false)
+	// effectAtlaces["ASSETS/SPAWN"] = CreateAtlasFromFile("assets/sprites.png", 16*16, 16*9, 16, 2, 7)
 }
 
 //func unloadResources() {
@@ -69,7 +70,7 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize
 	file.Close()
 
 	newAtlas := spriteAtlas{
-		spriteSize: originalSpriteSize *int(SPRITE_SCALE_FACTOR),
+		spriteSize: originalSpriteSize * int(SPRITE_SCALE_FACTOR),
 	}
 	if createAllDirections {
 		newAtlas.atlas = make([][]rl.Texture2D, 4)
@@ -93,67 +94,67 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize
 	return &newAtlas
 }
 
-func generateSpriteSheetFromParts() {
-	const partSize = 24
-	const types = 7
-	file, _ := os.Open("parts.png")
-	img, _ := png.Decode(file)
-	file.Close()
-
-	bodies := make([]image.Image, 0)
-	guns := make([]image.Image, 0)
-	legs := make([][]image.Image, 0) // legs have frames, so 2-dimensional
-
-	legFrames := []int{2, 2, 3, 1, 2, 2, 4}
-	// legFrames := []int{1, 1, 1, 1, 1, 1, 1}
-	for currLine := 0; currLine < types; currLine++ {
-		bodies = append(bodies, extractSubimageFromImage(img, 0, currLine*partSize, partSize, partSize))
-		guns = append(guns, extractSubimageFromImage(img, partSize, currLine*partSize, partSize, partSize))
-		legFramesCurrType := make([]image.Image, 0)
-		for j := 0; j < legFrames[currLine]; j++ {
-			legFramesCurrType = append(legFramesCurrType, extractSubimageFromImage(img, partSize*2+(j*partSize), currLine*partSize, partSize, partSize))
-		}
-		legs = append(legs, legFramesCurrType)
-	}
-	finishedPic := image.NewNRGBA(image.Rect(0, 0, 4*partSize, types*types*types*partSize))
-	currLine := 0
-	for bnum := 0; bnum < types; bnum++ {
-		for gnum := 0; gnum < types; gnum++ {
-			for lnum := 0; lnum < types; lnum++ {
-				for lframe := 0; lframe < 4; lframe++ {
-					frameNum := lframe % legFrames[lnum]
-					currNewFrame := image.NewNRGBA(image.Rect(0, 0, partSize, partSize))
-					mergeImages(currNewFrame, legs[lnum][frameNum], bodies[bnum], guns[gnum], partSize)
-					draw.Draw(finishedPic, image.Rect(lframe*partSize, currLine*partSize, (lframe+1)*partSize, (currLine+1)*partSize), currNewFrame, image.Point{0, 0}, draw.Over)
-					finishedPic.Rect = image.Rect(0, 0, 4*partSize, types*types*types*partSize)
-				}
-				currLine++
-			}
-		}
-	}
-	file, _ = os.Create(fmt.Sprintf("generated.png"))
-	png.Encode(file, finishedPic)
-	file.Close()
-}
-
-func mergeImages(newImg, legs, bodies, guns image.Image, partSize int) {
-	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
-	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), legs, image.Point{0, 0}, draw.Over)
-	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
-	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), bodies, image.Point{0, 0}, draw.Over)
-	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
-	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), guns, image.Point{0, 0}, draw.Over)
-	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
-}
-
-func createAtlasFromRandomGenerated() *spriteAtlas {
-	return CreateAtlasFromFile(
-		"generated.png",
-		0,
-		rnd.Rand(100)*24,
-		24,
-		16,
-		4,
-		true,
-		)
-}
+//func generateSpriteSheetFromParts() {
+//	const partSize = 24
+//	const types = 7
+//	file, _ := os.Open("parts.png")
+//	img, _ := png.Decode(file)
+//	file.Close()
+//
+//	bodies := make([]image.Image, 0)
+//	guns := make([]image.Image, 0)
+//	legs := make([][]image.Image, 0) // legs have frames, so 2-dimensional
+//
+//	legFrames := []int{2, 2, 3, 1, 2, 2, 4}
+//	// legFrames := []int{1, 1, 1, 1, 1, 1, 1}
+//	for currLine := 0; currLine < types; currLine++ {
+//		bodies = append(bodies, extractSubimageFromImage(img, 0, currLine*partSize, partSize, partSize))
+//		guns = append(guns, extractSubimageFromImage(img, partSize, currLine*partSize, partSize, partSize))
+//		legFramesCurrType := make([]image.Image, 0)
+//		for j := 0; j < legFrames[currLine]; j++ {
+//			legFramesCurrType = append(legFramesCurrType, extractSubimageFromImage(img, partSize*2+(j*partSize), currLine*partSize, partSize, partSize))
+//		}
+//		legs = append(legs, legFramesCurrType)
+//	}
+//	finishedPic := image.NewNRGBA(image.Rect(0, 0, 4*partSize, types*types*types*partSize))
+//	currLine := 0
+//	for bnum := 0; bnum < types; bnum++ {
+//		for gnum := 0; gnum < types; gnum++ {
+//			for lnum := 0; lnum < types; lnum++ {
+//				for lframe := 0; lframe < 4; lframe++ {
+//					frameNum := lframe % legFrames[lnum]
+//					currNewFrame := image.NewNRGBA(image.Rect(0, 0, partSize, partSize))
+//					mergeImages(currNewFrame, legs[lnum][frameNum], bodies[bnum], guns[gnum], partSize)
+//					draw.Draw(finishedPic, image.Rect(lframe*partSize, currLine*partSize, (lframe+1)*partSize, (currLine+1)*partSize), currNewFrame, image.Point{0, 0}, draw.Over)
+//					finishedPic.Rect = image.Rect(0, 0, 4*partSize, types*types*types*partSize)
+//				}
+//				currLine++
+//			}
+//		}
+//	}
+//	file, _ = os.Create(fmt.Sprintf("generated.png"))
+//	png.Encode(file, finishedPic)
+//	file.Close()
+//}
+//
+//func mergeImages(newImg, legs, bodies, guns image.Image, partSize int) {
+//	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
+//	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), legs, image.Point{0, 0}, draw.Over)
+//	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
+//	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), bodies, image.Point{0, 0}, draw.Over)
+//	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
+//	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), guns, image.Point{0, 0}, draw.Over)
+//	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
+//}
+//
+//func createAtlasFromRandomGenerated() *spriteAtlas {
+//	return CreateAtlasFromFile(
+//		"generated.png",
+//		0,
+//		rnd.Rand(100)*24,
+//		24,
+//		16,
+//		4,
+//		true,
+//		)
+//}
