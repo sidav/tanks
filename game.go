@@ -36,12 +36,7 @@ func runGame() {
 		gameMap.spawnRandomTankInRect(0, MAP_W-1, 0, MAP_H-MAP_H/5)
 	}
 
-	gameOver = true
-	for i := range gameMap.playerTanks {
-		if gameMap.playerTanks[i] != nil {
-			gameOver = false
-		}
-	}
+	gameOver = gameMap.isMissionFailed()
 	if gameOver {
 		gameMap.maxTanksOnMap = MAP_W*MAP_H/2
 		gameMap.totalTanksRemainingToSpawn = MAP_W*MAP_H/2

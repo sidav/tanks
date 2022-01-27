@@ -49,3 +49,31 @@ func (b *battlefield) PerformMissionSpecificActions() {
 	}
 	return
 }
+
+func (b *battlefield) isMissionFailed() bool {
+	playersDead := true
+	for i := range gameMap.playerTanks {
+		if gameMap.playerTanks[i] != nil {
+			playersDead = false
+		}
+	}
+	if playersDead {
+		return true
+	}
+
+	switch b.missionType {
+	case MISSION_KILL_ALL:
+	case MISSION_PROTECT_HQ:
+		for i := 0; i < MAP_W; i++ {
+			for j := 0; j < MAP_H; j++ {
+				if b.tiles[i][j].code == TILE_HQ {
+					return false
+				}
+			}
+		}
+		return true
+	case MISSION_COLLECT_FLAGS:
+	}
+
+	return false
+}

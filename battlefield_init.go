@@ -30,8 +30,8 @@ func (b *battlefield) initMission(missionType int) {
 	case MISSION_PROTECT_HQ:
 		b.placePlayers(b.numPlayers, MAP_W/2, MAP_H-3, MAP_W/2-1, MAP_H-3, MAP_W/2+1, MAP_H-3)
 		b.placeTilesInRect(TILE_EMPTY, MAP_W/2-2, MAP_H-3, 5, 3)
-		b.placeTilesInRect(TILE_ARMORED, MAP_W/2-1, MAP_H-2, 3, 2)
-		// b.tiles[MAP_W/2][MAP_H-1].code = TILE_HQ
+		b.placeTilesInRect(TILE_WALL, MAP_W/2-1, MAP_H-2, 3, 2)
+		b.tiles[MAP_W/2][MAP_H-1].code = TILE_HQ
 	case MISSION_COLLECT_FLAGS:
 		b.placePlayers(b.numPlayers, MAP_W/2, MAP_H-3, MAP_W/2-1, MAP_H-3, MAP_W/2+1, MAP_H-3)
 		for i := 0; i < 5*b.numPlayers; i++ {

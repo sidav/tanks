@@ -9,6 +9,7 @@ const (
 	TILE_WOOD
 	TILE_WATER
 	TILE_ICE
+	TILE_HQ
 	TILE_FLAG
 )
 
@@ -42,9 +43,10 @@ func (t *tile) getSpritesAtlas() *spriteAtlas {
 }
 
 func (t *tile) getSprite() rl.Texture2D {
-	frameNumber := (gameTick / 50) % int(t.getSpritesAtlas().totalFrames())
+	totalFrames := t.getSpritesAtlas().totalFrames()
+	frameNumber := (gameTick / 50) % totalFrames
 	if t.isDestructible() || t.getMaxDamageTaken() > 0 {
-		frameNumber = t.damageTaken
+		frameNumber = t.damageTaken*totalFrames/t.getMaxDamageTaken()
 	}
 	return t.getSpritesAtlas().atlas[0][frameNumber]
 }
@@ -98,6 +100,13 @@ func initTileDictionary() {
 			impassable:   true,
 			stopsBullets: false,
 			destructible: false,
+		},
+		TILE_HQ: {
+			maxDamage:    2,
+			sprite:       tileAtlaces["HQ"],
+			impassable:   true,
+			destructible: true,
+			stopsBullets: true,
 		},
 		TILE_FLAG: {
 			sprite:       tileAtlaces["FLAG"],

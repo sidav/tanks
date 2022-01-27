@@ -72,6 +72,15 @@ func (b *battlefield) isThereEnemyInFront(t *tank) bool {
 				return true
 			}
 			if b.tiles[tileX][tileY].stopsProjectiles() {
+				// if it's HQ...
+				if b.tiles[tileX][tileY].code == TILE_HQ {
+					return true
+				}
+				// or if there's an HQ just behind of it...
+				if areTileCoordsValid(tileX+t.faceX, tileY+t.faceY) && b.tiles[tileX+t.faceX][tileY+t.faceY].code == TILE_HQ {
+					return true
+				}
+
 				return false
 			}
 			tileX += t.faceX
