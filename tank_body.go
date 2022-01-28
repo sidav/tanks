@@ -29,6 +29,24 @@ func initTankBodyStatsList() {
 		TBODY_TANK2: {
 			sprites: tankAtlaces[TANK_T2],
 		},
+		TBODY_TANK3: {
+			sprites: tankAtlaces[TANK_T3],
+		},
+		TBODY_TANK4: {
+			sprites: tankAtlaces[TANK_T4],
+		},
+		TBODY_TANK5: {
+			sprites: tankAtlaces[TANK_T5],
+		},
+		TBODY_TANK6: {
+			sprites: tankAtlaces[TANK_T6],
+		},
+		TBODY_TANK7: {
+			sprites: tankAtlaces[TANK_T7],
+		},
+		TBODY_TANK8: {
+			sprites: tankAtlaces[TANK_T8],
+		},
 
 		TBODY_PART1: {
 			sprites: bodiesAtlaces[rnd.Rand(len(bodiesAtlaces))],
