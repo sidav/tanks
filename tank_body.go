@@ -24,28 +24,35 @@ func initTankBodyStatsList() {
 		/////// TANKS
 		TBODY_TANK1: {
 			sprites: tankAtlaces[TANK_T1],
-			maxHp:   1,
+			maxHp:   3,
 		},
 		TBODY_TANK2: {
 			sprites: tankAtlaces[TANK_T2],
+			maxHp:   3,
 		},
 		TBODY_TANK3: {
 			sprites: tankAtlaces[TANK_T3],
+			maxHp:   4,
 		},
 		TBODY_TANK4: {
 			sprites: tankAtlaces[TANK_T4],
+			maxHp:   12,
 		},
 		TBODY_TANK5: {
 			sprites: tankAtlaces[TANK_T5],
+			maxHp:   2,
 		},
 		TBODY_TANK6: {
 			sprites: tankAtlaces[TANK_T6],
+			maxHp:   1,
 		},
 		TBODY_TANK7: {
 			sprites: tankAtlaces[TANK_T7],
+			maxHp:   3,
 		},
 		TBODY_TANK8: {
 			sprites: tankAtlaces[TANK_T8],
+			maxHp:   7,
 		},
 
 		TBODY_PART1: {

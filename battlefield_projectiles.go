@@ -40,7 +40,7 @@ func (b *battlefield) actForProjectiles() {
 		if hitTank != nil {
 			proj.markedToRemove = true
 			if proj.owner == nil || proj.owner.faction != hitTank.faction {
-				b.removeTank(hitTank)
+				b.dealDamageToTank(hitTank, proj.getStats().damageAsProjectile)
 			}
 			continue
 		}

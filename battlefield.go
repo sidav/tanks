@@ -61,3 +61,10 @@ func (b *battlefield) dealDamageToTile(projTx, projTy, damage int) {
 		}
 	}
 }
+
+func (b *battlefield) dealDamageToTank(t *tank, damage int) {
+	t.hitpoints -= damage
+	if t.hitpoints <= 0 {
+		b.removeTank(t)
+	}
+}
