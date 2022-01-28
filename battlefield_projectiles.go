@@ -4,8 +4,8 @@ func (b *battlefield) actForProjectiles() {
 	for i := len(b.projectiles) - 1; i >= 0; i-- {
 		proj := b.projectiles[i]
 		speed := proj.getStats().speed
-		proj.centerX += proj.faceX*speed
-		proj.centerY += proj.faceY*speed
+		proj.centerX += proj.faceX * speed
+		proj.centerY += proj.faceY * speed
 		proj.currentFrameNumber++
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
 		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) ||
@@ -30,12 +30,7 @@ func (b *battlefield) actForProjectiles() {
 
 		// check if we hit wall
 		if b.tiles[projTx][projTy].stopsProjectiles() {
-			if b.tiles[projTx][projTy].isDestructible() {
-				b.tiles[projTx][projTy].damageTaken++
-				if b.tiles[projTx][projTy].damageTaken == b.tiles[projTx][projTy].getMaxDamageTaken() {
-					b.tiles[projTx][projTy].code = TILE_EMPTY
-				}
-			}
+			b.dealDamageToTile(projTx, projTy, proj.getStats().damageAsProjectile)
 			proj.markedToRemove = true
 			continue
 		}

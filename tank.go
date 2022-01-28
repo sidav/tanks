@@ -6,7 +6,8 @@ type tank struct {
 	centerX, centerY   int
 	faceX, faceY       int
 	currentFrameNumber int
-	faction            int
+
+	faction int
 
 	owner          *tank
 	markedToRemove bool
@@ -14,6 +15,7 @@ type tank struct {
 
 	nextTickToMove int
 
+	hitpoints           int
 	weapons             []*tankWeapon
 	currentWeaponNumber int
 
@@ -25,6 +27,7 @@ func newTank(code, x, y, faction int) *tank {
 	for i := 0; i < len(t.getStats().weaponCodes); i++ {
 		t.weapons = append(t.weapons, &tankWeapon{code: t.getStats().weaponCodes[i]})
 	}
+	t.hitpoints = t.getBodyStats().maxHp
 	return t
 }
 

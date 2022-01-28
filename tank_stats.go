@@ -27,6 +27,8 @@ func getRandomCode() int {
 }
 
 type tankStats struct {
+	damageAsProjectile int
+
 	tractionCode int
 	bodyCode     int
 	weaponCodes  []int
@@ -47,22 +49,25 @@ func initTankStatsList() {
 
 		/////// PROJECTILES
 		PROJ_BULLET: {
-			sprites:         projectileAtlaces[PROJ_BULLET],
-			speed:           4,
-			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          TILE_PHYSICAL_SIZE / 8,
+			sprites:            projectileAtlaces[PROJ_BULLET],
+			damageAsProjectile: 1,
+			speed:              4,
+			effectOnDestroy:    EFFECT_EXPLOSION,
+			radius:             TILE_PHYSICAL_SIZE / 8,
 		},
 		PROJ_ROCKET: {
-			sprites:         projectileAtlaces[PROJ_ROCKET],
-			speed:           2,
-			effectOnDestroy: EFFECT_BIG_EXPLOSION,
-			radius:          TILE_PHYSICAL_SIZE / 8,
+			sprites:            projectileAtlaces[PROJ_ROCKET],
+			damageAsProjectile: 2,
+			speed:              2,
+			effectOnDestroy:    EFFECT_BIG_EXPLOSION,
+			radius:             TILE_PHYSICAL_SIZE / 8,
 		},
 		PROJ_LIGHTNING: {
-			sprites:         projectileAtlaces[PROJ_LIGHTNING],
-			speed:           3,
-			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          TILE_PHYSICAL_SIZE / 8,
+			sprites:            projectileAtlaces[PROJ_LIGHTNING],
+			damageAsProjectile: 1,
+			speed:              3,
+			effectOnDestroy:    EFFECT_EXPLOSION,
+			radius:             TILE_PHYSICAL_SIZE / 8,
 		},
 
 		/////// EFFECTS
@@ -92,7 +97,7 @@ func initTankStatsList() {
 
 			bodyCode:     TBODY_TANK1,
 			tractionCode: TTRACTION_DEFAULT_MEDIUM,
-			weaponCodes:  []int{WEAPON_BULLET},
+			weaponCodes:  []int{WEAPON_ROCKET},
 		},
 		TANK_PLAYER2: {
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
