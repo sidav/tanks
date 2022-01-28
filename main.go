@@ -14,14 +14,14 @@ func main() {
 
 	rnd.InitDefault()
 
-	//generateSpriteSheetFromParts()
-
 	loadImageResources()
 	initTankStatsList()
 	initTankBodyStatsList()
 	initTankWeaponStatsList()
 	initTankTractionStatsList()
 	initTileDictionary()
+
+	// generateSpriteSheetFromParts()
 	// defer unloadResources()
 
 	gameIsRunning = true

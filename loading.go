@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"image"
+	"image/draw"
 	"image/png"
 	"os"
 )
@@ -47,13 +49,13 @@ func loadImageResources() {
 
 	// parts
 	for i := 0; i < 27; i++ {
-		bodiesAtlaces = append(bodiesAtlaces, CreateAtlasFromFile("assets/parts/TankBase24x24.png", 0, i*24, 24, 16, 1, true))
+		bodiesAtlaces = append(bodiesAtlaces, CreateAtlasFromFile("assets/parts/TankBase24x24.png", 0, i*24, 24, ORIGINAL_TILE_SIZE_IN_PIXELS, 1, true))
 	}
 	for i := 0; i < 16; i++ {
-		weaponAtlaces = append(weaponAtlaces, CreateAtlasFromFile("assets/parts/TankWeapon24x24.png", 0, i*24, 24, 16, 1, true))
+		weaponAtlaces = append(weaponAtlaces, CreateAtlasFromFile("assets/parts/TankWeapon24x24.png", 0, i*24, 24, ORIGINAL_TILE_SIZE_IN_PIXELS, 1, true))
 	}
 	for i := 0; i < 6; i++ {
-		trackAtlaces = append(trackAtlaces, CreateAtlasFromFile("assets/parts/TankTracksAnimated(2)24x24.png", 0, i*24, 24, 16, 2, true))
+		trackAtlaces = append(trackAtlaces, CreateAtlasFromFile("assets/parts/TankTracksAnimated(2)24x24.png", 0, i*24, 24, ORIGINAL_TILE_SIZE_IN_PIXELS, 2, true))
 	}
 }
 
@@ -106,67 +108,46 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize
 	return &newAtlas
 }
 
-//func generateSpriteSheetFromParts() {
-//	const partSize = 24
-//	const types = 7
-//	file, _ := os.Open("parts.png")
-//	img, _ := png.Decode(file)
-//	file.Close()
-//
-//	bodies := make([]image.Image, 0)
-//	guns := make([]image.Image, 0)
-//	legs := make([][]image.Image, 0) // legs have frames, so 2-dimensional
-//
-//	legFrames := []int{2, 2, 3, 1, 2, 2, 4}
-//	// legFrames := []int{1, 1, 1, 1, 1, 1, 1}
-//	for currLine := 0; currLine < types; currLine++ {
-//		bodies = append(bodies, extractSubimageFromImage(img, 0, currLine*partSize, partSize, partSize))
-//		guns = append(guns, extractSubimageFromImage(img, partSize, currLine*partSize, partSize, partSize))
-//		legFramesCurrType := make([]image.Image, 0)
-//		for j := 0; j < legFrames[currLine]; j++ {
-//			legFramesCurrType = append(legFramesCurrType, extractSubimageFromImage(img, partSize*2+(j*partSize), currLine*partSize, partSize, partSize))
-//		}
-//		legs = append(legs, legFramesCurrType)
-//	}
-//	finishedPic := image.NewNRGBA(image.Rect(0, 0, 4*partSize, types*types*types*partSize))
-//	currLine := 0
-//	for bnum := 0; bnum < types; bnum++ {
-//		for gnum := 0; gnum < types; gnum++ {
-//			for lnum := 0; lnum < types; lnum++ {
-//				for lframe := 0; lframe < 4; lframe++ {
-//					frameNum := lframe % legFrames[lnum]
-//					currNewFrame := image.NewNRGBA(image.Rect(0, 0, partSize, partSize))
-//					mergeImages(currNewFrame, legs[lnum][frameNum], bodies[bnum], guns[gnum], partSize)
-//					draw.Draw(finishedPic, image.Rect(lframe*partSize, currLine*partSize, (lframe+1)*partSize, (currLine+1)*partSize), currNewFrame, image.Point{0, 0}, draw.Over)
-//					finishedPic.Rect = image.Rect(0, 0, 4*partSize, types*types*types*partSize)
-//				}
-//				currLine++
-//			}
-//		}
-//	}
-//	file, _ = os.Create(fmt.Sprintf("generated.png"))
-//	png.Encode(file, finishedPic)
-//	file.Close()
-//}
-//
-//func mergeImages(newImg, legs, bodies, guns image.Image, partSize int) {
-//	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
-//	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), legs, image.Point{0, 0}, draw.Over)
-//	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
-//	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), bodies, image.Point{0, 0}, draw.Over)
-//	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
-//	draw.Draw(newImg.(*image.NRGBA), image.Rect(0, 0, partSize, partSize), guns, image.Point{0, 0}, draw.Over)
-//	newImg.(*image.NRGBA).Rect = image.Rect(0, 0, partSize, partSize)
-//}
-//
-//func createAtlasFromRandomGenerated() *spriteAtlas {
-//	return CreateAtlasFromFile(
-//		"generated.png",
-//		0,
-//		rnd.Rand(100)*24,
-//		24,
-//		16,
-//		4,
-//		true,
-//		)
-//}
+func generateSpriteSheetFromParts() {
+	const partSize = TILE_SIZE_IN_PIXELS+5
+
+	finishedPic := image.NewNRGBA(image.Rect(0, 0, len(trackAtlaces)*len(weaponAtlaces)*partSize, len(bodiesAtlaces)*partSize))
+	currLine := 0
+	for body := range bodiesAtlaces {
+		currColumn := 0
+		for legs := range trackAtlaces {
+			for weapon := range weaponAtlaces {
+				currNewFrame := image.NewRGBA(image.Rect(0, 0, partSize, partSize))
+				mergeImages(currNewFrame,
+					textureToGolangImage(trackAtlaces[legs].atlas[0][0]),
+					textureToGolangImage(bodiesAtlaces[body].atlas[0][0]),
+					textureToGolangImage(weaponAtlaces[weapon].atlas[0][0]),
+					partSize,
+				)
+				draw.Draw(finishedPic, image.Rect(currColumn*partSize, currLine*partSize, (currColumn+1)*partSize, (currLine+1)*partSize), currNewFrame, image.Point{0, 0}, draw.Over)
+				currColumn++
+			}
+		}
+		currLine++
+	}
+
+	file, _ := os.Create(fmt.Sprintf("build/generated.png"))
+	png.Encode(file, finishedPic)
+	file.Close()
+}
+
+func textureToGolangImage(t rl.Texture2D) *image.RGBA {
+	img := rl.LoadImageFromTexture(t)
+	nrgba := img.ToImage().(*image.RGBA)
+	return nrgba
+}
+
+func mergeImages(newImg, legs, bodies, guns image.Image, partSize int) {
+	newImg.(*image.RGBA).Rect = image.Rect(0, 0, partSize, partSize)
+	draw.Draw(newImg.(*image.RGBA), image.Rect(0, 0, partSize, partSize), legs, image.Point{0, 0}, draw.Over)
+	newImg.(*image.RGBA).Rect = image.Rect(0, 0, partSize, partSize)
+	draw.Draw(newImg.(*image.RGBA), image.Rect(0, 0, partSize, partSize), bodies, image.Point{0, 0}, draw.Over)
+	newImg.(*image.RGBA).Rect = image.Rect(0, 0, partSize, partSize)
+	draw.Draw(newImg.(*image.RGBA), image.Rect(0, 0, partSize, partSize), guns, image.Point{0, 0}, draw.Over)
+	newImg.(*image.RGBA).Rect = image.Rect(0, 0, partSize, partSize)
+}
