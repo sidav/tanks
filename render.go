@@ -171,13 +171,13 @@ func (r *renderer) renderTank(t *tank, useFactionTint bool) {
 }
 
 func (r *renderer) renderProjectiles(b *battlefield) {
-	for _, t := range b.projectiles {
-		sprites := t.getStats().sprites
+	for _, p := range b.projectiles {
+		sprites := p.getStats().sprites
 		if sprites != nil {
-			cx, cy := r.physicalToOnScreenCoords(t.centerX, t.centerY)
+			cx, cy := r.physicalToOnScreenCoords(p.centerX, p.centerY)
 			x, y := float32(cx-sprites.spriteSize/2), float32(cy-sprites.spriteSize/2)
 			rl.DrawTexture(
-				sprites.getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
+				sprites.getSpriteByDirectionAndFrameNumber(p.faceX, p.faceY, p.currentFrameNumber),
 				int32(x),
 				int32(y),
 				DEFAULT_TINT,
@@ -188,7 +188,17 @@ func (r *renderer) renderProjectiles(b *battlefield) {
 
 func (r *renderer) renderEffects(b *battlefield) {
 	for _, p := range b.effects {
-		r.renderTank(p, false)
+		sprites := p.getStats().sprites
+		if sprites != nil {
+			cx, cy := r.physicalToOnScreenCoords(p.centerX, p.centerY)
+			x, y := float32(cx-sprites.spriteSize/2), float32(cy-sprites.spriteSize/2)
+			rl.DrawTexture(
+				sprites.getSpriteByDirectionAndFrameNumber(p.faceX, p.faceY, p.currentFrameNumber),
+				int32(x),
+				int32(y),
+				DEFAULT_TINT,
+			)
+		}
 	}
 }
 

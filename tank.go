@@ -9,7 +9,6 @@ type tank struct {
 
 	faction int
 
-	owner          *tank
 	code           int
 
 	nextTickToMove int
