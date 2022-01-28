@@ -10,7 +10,6 @@ type tank struct {
 	faction int
 
 	owner          *tank
-	markedToRemove bool
 	code           int
 
 	nextTickToMove int

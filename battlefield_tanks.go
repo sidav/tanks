@@ -115,7 +115,7 @@ func (b *battlefield) removeTank(t *tank) {
 }
 
 func (b *battlefield) shootAsTank(t *tank) {
-	newProjectile := &tank{
+	newProjectile := &projectile{
 		code:               t.weapons[t.currentWeaponNumber].getStats().shootsProjectileOfCode,
 		centerX:            t.centerX + t.faceX*(t.getRadius()+1),
 		centerY:            t.centerY + t.faceY*(t.getRadius()+1),

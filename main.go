@@ -15,6 +15,8 @@ func main() {
 	rnd.InitDefault()
 
 	loadImageResources()
+
+	initProjectileStatsList()
 	initTankStatsList()
 	initTankBodyStatsList()
 	initTankWeaponStatsList()

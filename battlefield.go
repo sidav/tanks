@@ -14,8 +14,8 @@ type battlefield struct {
 	numFactions                       int
 	tanks                             []*tank
 
-	projectiles []*tank // haha, projectiles are tanks. TODO: refactor
-	effects     []*tank // haha, effects are too. TODO: refactor
+	projectiles []*projectile // haha, projectiles are tanks. TODO: refactor
+	effects     []*tank       // haha, effects are too. TODO: refactor
 }
 
 func (b *battlefield) spawnEffect(code int, cx, cy int, owner *tank) {

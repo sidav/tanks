@@ -13,10 +13,6 @@ const (
 	TANK_T8
 	TANK_GENERATED
 
-	PROJ_BULLET
-	PROJ_ROCKET
-	PROJ_LIGHTNING
-
 	EFFECT_EXPLOSION
 	EFFECT_BIG_EXPLOSION
 	EFFECT_SPAWN
@@ -46,30 +42,6 @@ var tankStatsList map[int]*tankStats
 
 func initTankStatsList() {
 	tankStatsList = map[int]*tankStats{
-
-		/////// PROJECTILES
-		PROJ_BULLET: {
-			sprites:            projectileAtlaces[PROJ_BULLET],
-			damageAsProjectile: 1,
-			speed:              4,
-			effectOnDestroy:    EFFECT_EXPLOSION,
-			radius:             TILE_PHYSICAL_SIZE / 8,
-		},
-		PROJ_ROCKET: {
-			sprites:            projectileAtlaces[PROJ_ROCKET],
-			damageAsProjectile: 2,
-			speed:              2,
-			effectOnDestroy:    EFFECT_BIG_EXPLOSION,
-			radius:             TILE_PHYSICAL_SIZE / 8,
-		},
-		PROJ_LIGHTNING: {
-			sprites:            projectileAtlaces[PROJ_LIGHTNING],
-			damageAsProjectile: 1,
-			speed:              3,
-			effectOnDestroy:    EFFECT_EXPLOSION,
-			radius:             TILE_PHYSICAL_SIZE / 8,
-		},
-
 		/////// EFFECTS
 		EFFECT_EXPLOSION: {
 			sprites:               effectAtlaces[EFFECT_EXPLOSION],

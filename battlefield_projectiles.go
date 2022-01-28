@@ -30,7 +30,7 @@ func (b *battlefield) actForProjectiles() {
 
 		// check if we hit wall
 		if b.tiles[projTx][projTy].stopsProjectiles() {
-			b.dealDamageToTile(projTx, projTy, proj.getStats().damageAsProjectile)
+			b.dealDamageToTile(projTx, projTy, proj.getStats().damage)
 			proj.markedToRemove = true
 			continue
 		}
@@ -40,7 +40,7 @@ func (b *battlefield) actForProjectiles() {
 		if hitTank != nil {
 			proj.markedToRemove = true
 			if proj.owner == nil || proj.owner.faction != hitTank.faction {
-				b.dealDamageToTank(hitTank, proj.getStats().damageAsProjectile)
+				b.dealDamageToTank(hitTank, proj.getStats().damage)
 			}
 			continue
 		}
