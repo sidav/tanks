@@ -66,8 +66,3 @@ func (t *tank) getTractionStats() *tankTractionStats {
 func (t *tank) getBodyStats() *tankBodyStats {
 	return tankBodyStatsList[t.getStats().bodyCode]
 }
-
-func (t *tank) getSpritesAtlas() *spriteAtlas {
-	//debugWritef("ATLAS{%v}", t.code)
-	return t.getStats().sprites
-}

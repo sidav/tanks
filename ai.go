@@ -127,7 +127,7 @@ func (b *battlefield) actAiForTank(t *tank) {
 
 	if t.canMoveNow() && !b.isThereEnemyInFront(t) && (wantsToRotate || canMoveBy == 0) {
 		t.faceX, t.faceY = b.getVectorToRotateBy(t)
-		t.nextTickToMove = gameTick + t.getStats().moveDelay
+		t.nextTickToMove = gameTick + t.getTractionStats().moveDelay
 		return
 	}
 	debugWrite("shoot; ")

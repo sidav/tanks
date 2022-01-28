@@ -26,12 +26,7 @@ type tankStats struct {
 	weaponCodes  []int
 
 	effectOnDestroy  int
-	sprites          *spriteAtlas
 	radius           int
-	speed, moveDelay int
-	shootDelay       int
-
-	frameChangesForEffect int
 }
 
 var tankStatsList map[int]*tankStats

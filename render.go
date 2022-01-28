@@ -125,48 +125,29 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 
 func (r *renderer) renderTank(t *tank, useFactionTint bool) {
 	cx, cy := r.physicalToOnScreenCoords(t.centerX, t.centerY)
-	if t.getSpritesAtlas() != nil {
-		x, y := float32(cx-t.getSpritesAtlas().spriteSize/2), float32(cy-t.getSpritesAtlas().spriteSize/2)
-		if useFactionTint {
-			rl.DrawTexture(
-				t.getSpritesAtlas().getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
-				int32(x),
-				int32(y),
-				factionTints[t.faction],
-			)
-		} else {
-			rl.DrawTexture(
-				t.getSpritesAtlas().getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
-				int32(x),
-				int32(y),
-				DEFAULT_TINT,
-			)
-		}
-	} else {
-		spriteSize := tankBodyStatsList[t.getStats().bodyCode].sprites.spriteSize
-		x, y := float32(cx-spriteSize/2), float32(cy-spriteSize/2)
-		if tankTractionStatsList[t.getStats().tractionCode].sprites != nil {
-			rl.DrawTexture(
-				tankTractionStatsList[t.getStats().tractionCode].sprites.getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
-				int32(x),
-				int32(y),
-				factionTints[t.faction],
-			)
-		}
+	spriteSize := tankBodyStatsList[t.getStats().bodyCode].sprites.spriteSize
+	x, y := float32(cx-spriteSize/2), float32(cy-spriteSize/2)
+	if tankTractionStatsList[t.getStats().tractionCode].sprites != nil {
 		rl.DrawTexture(
-			tankBodyStatsList[t.getStats().bodyCode].sprites.getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
+			tankTractionStatsList[t.getStats().tractionCode].sprites.getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
 			int32(x),
 			int32(y),
 			factionTints[t.faction],
 		)
-		if tankWeaponStatsList[t.weapons[0].code].sprites != nil {
-			rl.DrawTexture(
-				tankWeaponStatsList[t.weapons[t.currentWeaponNumber].code].sprites.getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
-				int32(x),
-				int32(y),
-				factionTints[t.faction],
-			)
-		}
+	}
+	rl.DrawTexture(
+		tankBodyStatsList[t.getStats().bodyCode].sprites.getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
+		int32(x),
+		int32(y),
+		factionTints[t.faction],
+	)
+	if tankWeaponStatsList[t.weapons[0].code].sprites != nil {
+		rl.DrawTexture(
+			tankWeaponStatsList[t.weapons[t.currentWeaponNumber].code].sprites.getSpriteByDirectionAndFrameNumber(t.faceX, t.faceY, t.currentFrameNumber),
+			int32(x),
+			int32(y),
+			factionTints[t.faction],
+		)
 	}
 }
 
