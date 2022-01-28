@@ -15,6 +15,7 @@ const (
 
 	PROJ_BULLET
 	PROJ_ROCKET
+	PROJ_LIGHTNING
 
 	EFFECT_EXPLOSION
 	EFFECT_BIG_EXPLOSION
@@ -57,6 +58,12 @@ func initTankStatsList() {
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
 			radius:          TILE_PHYSICAL_SIZE / 8,
 		},
+		PROJ_LIGHTNING: {
+			sprites:         projectileAtlaces[PROJ_LIGHTNING],
+			speed:           3,
+			effectOnDestroy: EFFECT_EXPLOSION,
+			radius:          TILE_PHYSICAL_SIZE / 8,
+		},
 
 		/////// EFFECTS
 		EFFECT_EXPLOSION: {
@@ -97,7 +104,7 @@ func initTankStatsList() {
 		},
 		TANK_T1: {
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 
 			bodyCode:     TBODY_TANK1,
 			tractionCode: TTRACTION_DEFAULT_MEDIUM,
@@ -105,7 +112,7 @@ func initTankStatsList() {
 		},
 		TANK_T2: {
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 
 			bodyCode:     TBODY_TANK2,
 			tractionCode: TTRACTION_DEFAULT_SLOW,
@@ -113,7 +120,7 @@ func initTankStatsList() {
 		},
 		TANK_T3: {
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 
 			bodyCode:     TBODY_TANK3,
 			tractionCode: TTRACTION_DEFAULT_SLOW,
@@ -121,7 +128,7 @@ func initTankStatsList() {
 		},
 		TANK_T4: {
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 
 			bodyCode:     TBODY_TANK4,
 			tractionCode: TTRACTION_DEFAULT_SLOWEST,
@@ -129,7 +136,7 @@ func initTankStatsList() {
 		},
 		TANK_T5: {
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 
 			bodyCode:     TBODY_TANK5,
 			tractionCode: TTRACTION_DEFAULT_FAST,
@@ -137,7 +144,7 @@ func initTankStatsList() {
 		},
 		TANK_T6: {
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 
 			bodyCode:     TBODY_TANK6,
 			tractionCode: TTRACTION_DEFAULT_FASTEST,
@@ -145,7 +152,7 @@ func initTankStatsList() {
 		},
 		TANK_T7: {
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 
 			bodyCode:     TBODY_TANK7,
 			tractionCode: TTRACTION_DEFAULT_MEDIUM,
@@ -153,16 +160,16 @@ func initTankStatsList() {
 		},
 		TANK_T8: {
 			effectOnDestroy: EFFECT_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 
 			bodyCode:     TBODY_TANK8,
 			tractionCode: TTRACTION_DEFAULT_SLOWEST,
-			weaponCodes:  []int{WEAPON_ROCKET},
+			weaponCodes:  []int{WEAPON_LIGHTNING},
 		},
 
 		TANK_GENERATED: {
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
-			radius:          halfPhysicalTileSize() - 2,
+			radius:          halfPhysicalTileSize() - 3,
 			bodyCode:        TBODY_PART1,
 			tractionCode:    TTRACTION_PART1,
 			weaponCodes:     []int{WEAPON_PART1},

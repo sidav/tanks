@@ -6,6 +6,7 @@ func (b *battlefield) actForProjectiles() {
 		speed := proj.getStats().speed
 		proj.centerX += proj.faceX*speed
 		proj.centerY += proj.faceY*speed
+		proj.currentFrameNumber++
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
 		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) ||
 			proj.centerX+proj.faceX <= 0 || proj.centerY+proj.faceY <= 0 {

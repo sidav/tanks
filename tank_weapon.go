@@ -3,6 +3,7 @@ package main
 const (
 	WEAPON_BULLET = iota
 	WEAPON_ROCKET
+	WEAPON_LIGHTNING
 	WEAPON_PART1
 )
 
@@ -38,6 +39,11 @@ func initTankWeaponStatsList() {
 			sprites:                nil,
 			shootsProjectileOfCode: PROJ_ROCKET,
 			shootDelay:             75,
+		},
+		WEAPON_LIGHTNING: {
+			sprites: nil,
+			shootsProjectileOfCode: PROJ_LIGHTNING,
+			shootDelay: 110,
 		},
 
 		WEAPON_PART1: {
