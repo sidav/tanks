@@ -39,13 +39,13 @@ func (p *thing) getCenterCoords() (int, int) {
 }
 
 type thingStats struct {
-	moveDelay       int
-	duration        int // how many frames does it live
-	sprites         *spriteAtlas
-	effectOnDestroy int
-	radius, speed   int
-	damage          int
-	canDestroyArmor bool
+	moveDelay                      int
+	duration                       int // how many frames does it live
+	sprites                        *spriteAtlas
+	effectOnDestroy                int
+	radius, speed, acceleratesEach int
+	damage                         int
+	canDestroyArmor                bool
 }
 
 var projStatsList map[int]*thingStats
@@ -58,11 +58,14 @@ func initProjectileStatsList() {
 			speed:           4,
 			effectOnDestroy: EFFECT_EXPLOSION,
 			radius:          TILE_PHYSICAL_SIZE / 8,
+			duration:        200,
 		},
 		PROJ_ROCKET: {
 			sprites:         projectileAtlaces[PROJ_ROCKET],
 			damage:          2,
-			speed:           2,
+			speed:           1,
+			acceleratesEach: 60,
+			duration:        200,
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
 			radius:          TILE_PHYSICAL_SIZE / 8,
 			canDestroyArmor: true,
@@ -71,6 +74,7 @@ func initProjectileStatsList() {
 			sprites:         projectileAtlaces[PROJ_LIGHTNING],
 			damage:          1,
 			speed:           3,
+			duration:        200,
 			effectOnDestroy: EFFECT_EXPLOSION,
 			radius:          TILE_PHYSICAL_SIZE / 8,
 		},

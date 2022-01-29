@@ -3,7 +3,13 @@ package main
 func (b *battlefield) actForProjectiles() {
 	for i := len(b.projectiles) - 1; i >= 0; i-- {
 		proj := b.projectiles[i]
+		if proj.tickToExpire <= gameTick {
+			proj.markedToRemove = true
+		}
 		speed := proj.getStats().speed
+		if proj.getStats().acceleratesEach > 0 {
+			speed = speed + (gameTick - proj.tickToExpire + proj.getStats().duration)/proj.getStats().acceleratesEach
+		}
 		proj.centerX += proj.faceX * speed
 		proj.centerY += proj.faceY * speed
 		proj.currentFrameNumber++
