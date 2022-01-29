@@ -1,6 +1,8 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 func listenPlayerInput() {
 	if gameOver {
@@ -19,19 +21,25 @@ func listenPlayerInput() {
 	}
 }
 
+var lastKeyPressed int32
+
 func handleSinglePlayer() {
 	currTank := gameMap.playerTanks[0]
 	if currTank == nil {
 		return
 	}
+	currKeyPressed := rl.GetKeyPressed()
+	if currKeyPressed != 0 || rl.IsKeyReleased(lastKeyPressed) {
+		lastKeyPressed = currKeyPressed
+	}
 	if currTank.canMoveNow() {
-		if rl.IsKeyDown(rl.KeyRight) || rl.IsKeyDown(rl.KeyD) {
+		if lastKeyPressed == rl.KeyRight || lastKeyPressed == rl.KeyD {
 			gameMap.moveTankByVector(currTank, 1, 0)
-		} else if rl.IsKeyDown(rl.KeyLeft) || rl.IsKeyDown(rl.KeyA) {
+		} else if lastKeyPressed == rl.KeyLeft || lastKeyPressed == rl.KeyA {
 			gameMap.moveTankByVector(currTank, -1, 0)
-		} else if rl.IsKeyDown(rl.KeyUp) || rl.IsKeyDown(rl.KeyW) {
+		} else if lastKeyPressed == rl.KeyUp  || lastKeyPressed == rl.KeyW {
 			gameMap.moveTankByVector(currTank, 0, -1)
-		} else if rl.IsKeyDown(rl.KeyDown) || rl.IsKeyDown(rl.KeyS) {
+		} else if lastKeyPressed == rl.KeyDown || lastKeyPressed == rl.KeyS {
 			gameMap.moveTankByVector(currTank, 0, 1)
 		}
 	}
