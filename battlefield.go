@@ -14,16 +14,16 @@ type battlefield struct {
 	numFactions                       int
 	tanks                             []*tank
 
-	projectiles []*thing
-	effects     []*thing
+	projectiles []*projectile
+	effects     []*event
 }
 
 func (b *battlefield) spawnEffect(code int, cx, cy int, owner *tank) {
-	b.effects = append(b.effects, &thing{
+	b.effects = append(b.effects, &event{
 		centerX:        cx,
 		centerY:        cy,
-		nextTickToMove: gameTick + projStatsList[code].moveDelay,
-		tickToExpire:   gameTick + projStatsList[code].duration,
+		nextTickToMove: gameTick + eventStatsList[code].moveDelay,
+		tickToExpire:   gameTick + eventStatsList[code].duration,
 		owner:          owner,
 		code:           code,
 	})
@@ -33,7 +33,7 @@ func (b *battlefield) actForEffects() {
 	for i := len(b.effects) - 1; i >= 0; i-- {
 		if b.effects[i].canMoveNow() {
 			b.effects[i].currentFrameNumber++
-			b.effects[i].nextTickToMove = gameTick + projStatsList[b.effects[i].code].moveDelay
+			b.effects[i].nextTickToMove = gameTick + eventStatsList[b.effects[i].code].moveDelay
 		}
 		if b.effects[i].tickToExpire <= gameTick {
 			if b.effects[i].code == EFFECT_SPAWN {
@@ -44,7 +44,7 @@ func (b *battlefield) actForEffects() {
 	}
 }
 
-func (b *battlefield) getEffectPresentInRadiusFromTrueCoords(x, y, r int) *thing {
+func (b *battlefield) getEffectPresentInRadiusFromTrueCoords(x, y, r int) *event {
 	for _, t := range b.effects {
 		tx, ty := t.getCenterCoords()
 		if circlesOverlap(x, y, r, tx, ty, t.getRadius()) {

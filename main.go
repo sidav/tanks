@@ -16,6 +16,7 @@ func main() {
 
 	loadImageResources()
 
+	initEventsStatsList()
 	initProjectileStatsList()
 	initTankStatsList()
 	initTankBodyStatsList()

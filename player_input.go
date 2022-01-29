@@ -29,8 +29,12 @@ func handleSinglePlayer() {
 		return
 	}
 	currKeyPressed := rl.GetKeyPressed()
-	if currKeyPressed != 0 || rl.IsKeyReleased(lastKeyPressed) {
-		lastKeyPressed = currKeyPressed
+	movementKeysToConsider := []int32{rl.KeyRight, rl.KeyLeft, rl.KeyUp, rl.KeyDown, rl.KeyW, rl.KeyS, rl.KeyA, rl.KeyD}
+	for _, k := range movementKeysToConsider {
+		if currKeyPressed == k || rl.IsKeyReleased(lastKeyPressed) {
+			lastKeyPressed = currKeyPressed
+			break
+		}
 	}
 	if currTank.canMoveNow() {
 		if lastKeyPressed == rl.KeyRight || lastKeyPressed == rl.KeyD {

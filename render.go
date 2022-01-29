@@ -174,7 +174,7 @@ func (r *renderer) renderEffects(b *battlefield) {
 			cx, cy := r.physicalToOnScreenCoords(p.centerX, p.centerY)
 			x, y := float32(cx-sprites.spriteSize/2), float32(cy-sprites.spriteSize/2)
 			rl.DrawTexture(
-				sprites.getSpriteByDirectionAndFrameNumber(p.faceX, p.faceY, p.currentFrameNumber),
+				sprites.getSpriteByDirectionAndFrameNumber(0, 0, p.currentFrameNumber),
 				int32(x),
 				int32(y),
 				DEFAULT_TINT,
