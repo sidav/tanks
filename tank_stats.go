@@ -37,7 +37,7 @@ func initTankStatsList() {
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
 			radius:          halfPhysicalTileSize() - 2,
 
-			bodyCode:     TBODY_TANK1,
+			bodyCode:     TBODY_PLAYER1,
 			tractionCode: TTRACTION_DEFAULT_MEDIUM,
 			weaponCodes:  []int{WEAPON_BULLET},
 		},
@@ -45,7 +45,7 @@ func initTankStatsList() {
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
 			radius:          halfPhysicalTileSize() - 2,
 
-			bodyCode:     TBODY_TANK1,
+			bodyCode:     TBODY_PLAYER2,
 			tractionCode: TTRACTION_DEFAULT_MEDIUM,
 			weaponCodes:  []int{WEAPON_BULLET},
 		},
