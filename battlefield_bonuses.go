@@ -51,6 +51,7 @@ func (b *battlefield) applyBonusEffect(picker *tank, bonusCode int) {
 			}
 		}
 	case BONUS_SHOVEL:
+		b.placeTilesRandomSymmetric(TILE_WALL, 10)
 	case BONUS_STAR:
 		picker.code++
 		picker.hitpoints = picker.getBodyStats().maxHp
