@@ -39,7 +39,7 @@ func initTankStatsList() {
 
 			bodyCode:     TBODY_TANK1,
 			tractionCode: TTRACTION_DEFAULT_MEDIUM,
-			weaponCodes:  []int{WEAPON_ROCKET},
+			weaponCodes:  []int{WEAPON_BULLET},
 		},
 		TANK_PLAYER2: {
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,

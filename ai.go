@@ -37,7 +37,7 @@ func (b *battlefield) getVectorToRotateBy(t *tank) (int, int) {
 				if areTileCoordsValid(tileX+i, tileY+j) {
 					if !b.tiles[tileX+i][tileY+j].isImpassable() {
 						vectorsPassable = append(vectorsPassable, [2]int{i, j})
-					} else if b.tiles[tileX+i][tileY+j].isDestructible() {
+					} else if b.tiles[tileX+i][tileY+j].isNotArmored() {
 						vectorsDestructible = append(vectorsDestructible, [2]int{i, j})
 					}
 				}
@@ -100,7 +100,7 @@ func (b *battlefield) wantsToShoot(t *tank) bool {
 	tilex, tiley := trueCoordsToTileCoords(t.centerX, t.centerY)
 	for areTileCoordsValid(tilex, tiley) {
 		if b.tiles[tilex][tiley].stopsProjectiles() {
-			if b.tiles[tilex][tiley].isDestructible() {
+			if b.tiles[tilex][tiley].isNotArmored() {
 				return rnd.OneChanceFrom(t.ai.chanceToShootOnDestructibleTile) // destructible tile seen
 			}
 			return false

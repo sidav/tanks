@@ -34,8 +34,8 @@ func (t *tile) isSlowing() bool {
 	return tilesDictionary[t.code].slows
 }
 
-func (t *tile) isDestructible() bool {
-	return tilesDictionary[t.code].destructible
+func (t *tile) isNotArmored() bool {
+	return !tilesDictionary[t.code].armored
 }
 
 func (t *tile) getSpritesAtlas() *spriteAtlas {
@@ -45,7 +45,7 @@ func (t *tile) getSpritesAtlas() *spriteAtlas {
 func (t *tile) getSprite() rl.Texture2D {
 	totalFrames := t.getSpritesAtlas().totalFrames()
 	frameNumber := (gameTick / 50) % totalFrames
-	if t.isDestructible() || t.getMaxDamageTaken() > 0 {
+	if t.getMaxDamageTaken() > 0 {
 		frameNumber = t.damageTaken*totalFrames/t.getMaxDamageTaken()
 	}
 	return t.getSpritesAtlas().atlas[0][frameNumber]
@@ -57,7 +57,7 @@ type tileStats struct {
 	impassable   bool
 	stopsBullets bool
 	slows        bool
-	destructible bool
+	armored      bool
 }
 
 var tilesDictionary map[int]tileStats
@@ -65,53 +65,53 @@ var tilesDictionary map[int]tileStats
 func initTileDictionary() {
 	tilesDictionary = map[int]tileStats{
 		TILE_EMPTY: {
-			sprite:       nil,
-			impassable:   false,
-			destructible: false,
+			sprite:     nil,
+			impassable: false,
+			armored:    false,
 		},
 		TILE_WALL: {
 			maxDamage:    4,
 			sprite:       tileAtlaces["WALL"],
 			impassable:   true,
 			stopsBullets: true,
-			destructible: true,
+			armored:      false,
 		},
 		TILE_ARMORED: {
 			maxDamage:    12,
 			sprite:       tileAtlaces["ARMORED_WALL"],
 			impassable:   true,
 			stopsBullets: true,
-			destructible: false,
+			armored:      true,
 		},
 		TILE_WOOD: {
-			sprite:       tileAtlaces["WOOD"],
-			impassable:   false,
-			destructible: false,
+			sprite:     tileAtlaces["WOOD"],
+			impassable: false,
+			armored:    false,
 		},
 		TILE_ICE: {
 			sprite:       tileAtlaces["ICE"],
 			impassable:   false,
 			stopsBullets: false,
-			destructible: false,
+			armored:      false,
 			slows:        true,
 		},
 		TILE_WATER: {
 			sprite:       tileAtlaces["WATER"],
 			impassable:   true,
 			stopsBullets: false,
-			destructible: false,
+			armored:      false,
 		},
 		TILE_HQ: {
 			maxDamage:    2,
 			sprite:       tileAtlaces["HQ"],
 			impassable:   true,
-			destructible: true,
+			armored:      true,
 			stopsBullets: true,
 		},
 		TILE_FLAG: {
 			sprite:       tileAtlaces["FLAG"],
 			impassable:   false,
-			destructible: false,
+			armored:      false,
 			stopsBullets: false,
 		},
 	}

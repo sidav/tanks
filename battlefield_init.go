@@ -72,7 +72,7 @@ func (b *battlefield) clearImpassableTilesInCrossFrom(x, y int) {
 	for i := -1; i <= 1; i++ {
 		for j := -1; j <= 1; j++ {
 			if i*j == 0 && areTileCoordsValid(x+i, y+j) {
-				if b.tiles[x+i][y+j].isImpassable() && !b.tiles[x+i][y+j].isDestructible() {
+				if b.tiles[x+i][y+j].isImpassable() && !b.tiles[x+i][y+j].isNotArmored() {
 					b.tiles[x+i][y+j].code = TILE_EMPTY
 				}
 				b.tiles[x][y].code = TILE_EMPTY

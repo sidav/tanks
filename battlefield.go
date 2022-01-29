@@ -54,8 +54,8 @@ func (b *battlefield) getEffectPresentInRadiusFromTrueCoords(x, y, r int) *thing
 	return nil
 }
 
-func (b *battlefield) dealDamageToTile(projTx, projTy, damage int) {
-	if b.tiles[projTx][projTy].isDestructible() {
+func (b *battlefield) dealDamageToTile(projTx, projTy, damage int, damageIndestructible bool) {
+	if b.tiles[projTx][projTy].isNotArmored() || damageIndestructible {
 		b.tiles[projTx][projTy].damageTaken += damage
 		if b.tiles[projTx][projTy].damageTaken >= b.tiles[projTx][projTy].getMaxDamageTaken() {
 			b.tiles[projTx][projTy].code = TILE_EMPTY

@@ -30,7 +30,7 @@ func (b *battlefield) actForProjectiles() {
 
 		// check if we hit wall
 		if b.tiles[projTx][projTy].stopsProjectiles() {
-			b.dealDamageToTile(projTx, projTy, proj.getStats().damage)
+			b.dealDamageToTile(projTx, projTy, proj.getStats().damage, proj.getStats().canDestroyArmor)
 			proj.markedToRemove = true
 			continue
 		}
