@@ -22,8 +22,12 @@ func runGame() {
 	debugWrite("EFFECTS ")
 	gameMap.actForEffects()
 
-	debugWrite("AI {")
-	for i := range gameMap.tanks {
+	debugWrite("AI and cleanup {")
+	for i := len(gameMap.tanks)-1; i >= 0; i-- {
+		if gameMap.tanks[i].hitpoints <= 0 {
+			gameMap.removeTank(gameMap.tanks[i])
+			continue
+		}
 		if gameMap.tanks[i].playerControlled {
 			continue
 		}
@@ -35,6 +39,8 @@ func runGame() {
 	if len(gameMap.tanks) < gameMap.maxTanksOnMap && rnd.OneChanceFrom(gameMap.chanceToSpawnEnemyEachTickOneFrom) && gameMap.totalTanksRemainingToSpawn > 0 {
 		gameMap.spawnRandomTankInRect(0, MAP_W-1, 0, MAP_H-MAP_H/5)
 	}
+	gameMap.spawnRandomBonus()
+	gameMap.iterateBonuses()
 
 	gameOver = gameMap.isMissionFailed()
 	if gameOver {

@@ -11,11 +11,13 @@ type battlefield struct {
 	initialEnemiesCount               int
 	totalTanksRemainingToSpawn        int
 	chanceToSpawnEnemyEachTickOneFrom int
+	bonusSpawnPeriod                  int
 	numFactions                       int
 	tanks                             []*tank
 
 	projectiles []*projectile
 	effects     []*event
+	bonuses     []*event
 }
 
 func (b *battlefield) spawnEffect(code int, cx, cy int, owner *tank) {
@@ -65,7 +67,4 @@ func (b *battlefield) dealDamageToTile(projTx, projTy, damage int, damageIndestr
 
 func (b *battlefield) dealDamageToTank(t *tank, damage int) {
 	t.hitpoints -= damage
-	if t.hitpoints <= 0 {
-		b.removeTank(t)
-	}
 }

@@ -99,7 +99,7 @@ func initTileDictionary() {
 			sprite:       tileAtlaces["WATER"],
 			impassable:   true,
 			stopsBullets: false,
-			armored:      false,
+			armored:      true,
 		},
 		TILE_HQ: {
 			maxDamage:    2,

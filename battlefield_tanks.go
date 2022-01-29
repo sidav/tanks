@@ -67,7 +67,7 @@ func (b *battlefield) howFarCanTankMoveByVectorInSingleTick(t *tank, vx, vy int)
 	return 0
 }
 
-func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
+func (b *battlefield) spawnTankInRect(t *tank, fromx, tox, fromy, toy int) {
 	var x, y int
 	placeTries := (tox-fromx)*(toy-fromy) + 1
 	for try := 0; ; try++ {
@@ -86,14 +86,18 @@ func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
 			break
 		}
 	}
+	cx, cy := tileCoordsToPhysicalCoords(x, y)
+	t.centerX, t.centerY = cx, cy
+	b.spawnEffect(EFFECT_SPAWN, cx, cy, t)
+}
 
+func (b *battlefield) spawnRandomTankInRect(fromx, tox, fromy, toy int) {
 	b.totalTanksRemainingToSpawn--
 	tankFaction := rnd.RandInRange(1, b.numFactions-1)
 	tankCode := getRandomCode()
-	cx, cy := tileCoordsToPhysicalCoords(x, y)
-	owner := newTank(tankCode, cx, cy, tankFaction)
+	owner := newTank(tankCode, 0, 0, tankFaction)
 	owner.ai = initSimpleTankAi()
-	b.spawnEffect(EFFECT_SPAWN, cx, cy, owner)
+	b.spawnTankInRect(owner, fromx, tox, fromy, toy)
 }
 
 func (b *battlefield) removeTank(t *tank) {

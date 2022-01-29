@@ -4,6 +4,14 @@ const (
 	EFFECT_EXPLOSION = iota
 	EFFECT_BIG_EXPLOSION
 	EFFECT_SPAWN
+
+	BONUS_HELM
+	BONUS_CLOCK
+	BONUS_SHOVEL
+	BONUS_STAR
+	BONUS_GRENADE
+	BONUS_TANK
+	BONUS_GUN
 )
 
 // Thing is a projectile or special effect
@@ -15,7 +23,6 @@ type event struct {
 	nextTickToMove     int
 	tickToExpire       int // when event.duration ends
 	owner              *tank
-	markedToRemove     bool
 }
 
 func (p *event) getStats() *eventStats {
@@ -64,6 +71,37 @@ func initEventsStatsList() {
 			radius:    halfPhysicalTileSize() - 1,
 			moveDelay: 7,
 			duration:  60,
+		},
+
+		BONUS_HELM: {
+			sprites:   bonusAtlaces[BONUS_HELM],
+			radius:    halfPhysicalTileSize() - 1,
+			moveDelay: 7,
+		},
+		BONUS_CLOCK: {
+			sprites:   bonusAtlaces[BONUS_CLOCK],
+			radius:    halfPhysicalTileSize() - 1,
+			moveDelay: 7,
+		},
+		BONUS_SHOVEL: {
+			sprites:   bonusAtlaces[BONUS_SHOVEL],
+			radius:    halfPhysicalTileSize() - 1,
+			moveDelay: 7,
+		},
+		BONUS_STAR: {
+			sprites:   bonusAtlaces[BONUS_STAR],
+			radius:    halfPhysicalTileSize() - 1,
+			moveDelay: 7,
+		},
+		BONUS_GRENADE: {
+			sprites:   bonusAtlaces[BONUS_GRENADE],
+			radius:    halfPhysicalTileSize() - 1,
+			moveDelay: 7,
+		},
+		BONUS_TANK: {
+			sprites:   bonusAtlaces[BONUS_TANK],
+			radius:    halfPhysicalTileSize() - 1,
+			moveDelay: 7,
 		},
 	}
 }

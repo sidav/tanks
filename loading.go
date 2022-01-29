@@ -14,6 +14,7 @@ var (
 	tileAtlaces       = map[string]*spriteAtlas{}
 	projectileAtlaces = map[int]*spriteAtlas{}
 	effectAtlaces     = map[int]*spriteAtlas{}
+	bonusAtlaces      = map[int]*spriteAtlas{}
 
 	weaponAtlaces = []*spriteAtlas{}
 	trackAtlaces  = []*spriteAtlas{}
@@ -38,6 +39,14 @@ func loadImageResources() {
 	tileAtlaces["ICE"] = CreateAtlasFromFile("assets/sprites.png", 16*2, 16*2, 16, 16, 1, false)
 	tileAtlaces["HQ"] = CreateAtlasFromFile("assets/sprites.png", 16*3, 16*2, 16, 16, 1, false)
 	tileAtlaces["FLAG"] = CreateAtlasFromFile("assets/sprites.png", 16*4, 16*2, 16, 16, 1, false)
+
+	bonusAtlaces[BONUS_HELM] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*5, 16, 16, 1, false)
+	bonusAtlaces[BONUS_CLOCK] = CreateAtlasFromFile("assets/sprites.png", 16*1, 16*5, 16, 16, 1, false)
+	bonusAtlaces[BONUS_SHOVEL] = CreateAtlasFromFile("assets/sprites.png", 16*2, 16*5, 16, 16, 1, false)
+	bonusAtlaces[BONUS_STAR] = CreateAtlasFromFile("assets/sprites.png", 16*3, 16*5, 16, 16, 1, false)
+	bonusAtlaces[BONUS_GRENADE]= CreateAtlasFromFile("assets/sprites.png", 16*4, 16*5, 16, 16, 1, false)
+	bonusAtlaces[BONUS_TANK]= CreateAtlasFromFile("assets/sprites.png", 16*5, 16*5, 16, 16, 1, false)
+	bonusAtlaces[BONUS_GUN]= CreateAtlasFromFile("assets/sprites.png", 16*6, 16*5, 16, 16, 1, false)
 
 	projectileAtlaces[PROJ_BULLET] = CreateAtlasFromFile("assets/projectiles.png", 0, 0, 8, 8, 2, true)
 	projectileAtlaces[PROJ_ROCKET] = CreateAtlasFromFile("assets/projectiles.png", 0, 8, 8, 8, 2, true)
@@ -109,7 +118,7 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize
 }
 
 func generateSpriteSheetFromParts() {
-	const partSize = TILE_SIZE_IN_PIXELS+5
+	const partSize = TILE_SIZE_IN_PIXELS + 5
 
 	finishedPic := image.NewNRGBA(image.Rect(0, 0, len(trackAtlaces)*len(weaponAtlaces)*partSize, len(bodiesAtlaces)*partSize))
 	currLine := 0

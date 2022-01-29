@@ -17,6 +17,7 @@ var (
 		{30, 5, 10000, 10},
 		{120, 5, 1000, 5},
 		{4, 2, len(factionTints), 1},
+		{1000, 500, 10000, 100},
 
 		{25, 11, 1001, 2},
 		{14, 11, 1000, 2},
@@ -36,6 +37,7 @@ var (
 		"TOTAL TANKS PER GAME  <%d>",
 		"HOW RARE ARE SPAWNS   <%d>",
 		"FACTIONS              <%d>",
+		"BONUS SPAWN PERIOD    <%d>",
 
 		"MAP WIDTH             <%d>",
 		"MAP HEIGHT            <%d>",
@@ -73,8 +75,8 @@ func showGameMenu() {
 	cursor := 0
 
 	for {
-		MAP_W = menuValuesData[5][0]
-		MAP_H = menuValuesData[6][0]
+		MAP_W = menuValuesData[6][0]
+		MAP_H = menuValuesData[7][0]
 		rl.BeginDrawing()
 		rl.ClearBackground(color.RGBA{0, 0, 0, 255})
 
@@ -152,8 +154,9 @@ func showGameMenu() {
 		totalTanksRemainingToSpawn:        menuValuesData[2][0],
 		chanceToSpawnEnemyEachTickOneFrom: menuValuesData[3][0],
 		numFactions:                       menuValuesData[4][0],
+		bonusSpawnPeriod:                  menuValuesData[5][0],
 	}
-	gameMap.init(menuValuesData[7][0], menuValuesData[8][0], menuValuesData[9][0], menuValuesData[10][0], menuValuesData[11][0], menuValuesData[12][0], missionId)
+	gameMap.init(menuValuesData[8][0], menuValuesData[9][0], menuValuesData[10][0], menuValuesData[11][0], menuValuesData[12][0], menuValuesData[13][0], missionId)
 }
 
 func missionSelectMenu() int {
