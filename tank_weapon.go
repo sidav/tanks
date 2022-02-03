@@ -53,7 +53,7 @@ func initTankWeaponStatsList() {
 			sprites:                nil,
 			shootsProjectileOfCode: PROJ_BULLET,
 			defaultAmmo:            99,
-			shootDelay:             15,
+			shootDelay:             5,
 		},
 		WEAPON_ROCKET: {
 			name:                   "Rocket",

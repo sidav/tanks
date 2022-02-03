@@ -59,7 +59,7 @@ func initProjectileStatsList() {
 			sprites:         projectileAtlaces[PROJ_ROCKET],
 			damage:          2,
 			speed:           1,
-			acceleratesEach: 60,
+			acceleratesEach: 45,
 			duration:        200,
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
 			radius:          TILE_PHYSICAL_SIZE / 8,
