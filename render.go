@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"image/color"
 )
@@ -27,47 +26,29 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 	rl.ClearBackground(rl.Black)
 
 	for playerNumber := 0; playerNumber < b.numPlayers; playerNumber++ {
-		if playerNumber > 0 && r.doesLevelFitInScreenHorizontally() {
-			break
-		}
 		centerTank := b.playerTanks[playerNumber]
+		if !(playerNumber > 0 && r.doesLevelFitInScreenHorizontally()) {
 
-		rl.BeginScissorMode(int32(playerNumber*r.viewportW), 0, int32(r.viewportW), WINDOW_H)
-		r.horizViewportOffset = r.viewportW * playerNumber
+			rl.BeginScissorMode(int32(playerNumber*r.viewportW), 0, int32(r.viewportW), WINDOW_H)
+			r.horizViewportOffset = r.viewportW * playerNumber
 
-		if centerTank != nil {
-			r.cameraCenterX, r.cameraCenterY = centerTank.getCenterCoords()
-			r.cameraCenterX = int(float64(r.cameraCenterX) * PIXEL_TO_PHYSICAL_RATIO)
-			r.cameraCenterY = int(float64(r.cameraCenterY) * PIXEL_TO_PHYSICAL_RATIO)
+			if centerTank != nil {
+				r.cameraCenterX, r.cameraCenterY = centerTank.getCenterCoords()
+				r.cameraCenterX = int(float64(r.cameraCenterX) * PIXEL_TO_PHYSICAL_RATIO)
+				r.cameraCenterY = int(float64(r.cameraCenterY) * PIXEL_TO_PHYSICAL_RATIO)
+			}
+
+			r.renderTiles(b)
+			for i := range b.tanks {
+				r.renderTank(b.tanks[i], true)
+			}
+			r.renderProjectiles(b)
+			r.renderEvents(b)
+			r.renderWood(b)
+			r.renderLevelOutline()
 		}
-
-		r.renderTiles(b)
-		for i := range b.tanks {
-			r.renderTank(b.tanks[i], true)
-		}
-		r.renderProjectiles(b)
-		r.renderEvents(b)
-		r.renderWood(b)
-		r.renderLevelOutline()
+		r.renderUI(playerNumber, b, centerTank)
 		rl.EndScissorMode()
-	}
-
-	if b.numPlayers > 1 && !r.doesLevelFitInScreenHorizontally() {
-		separatorWidth := int32(TILE_PHYSICAL_SIZE / 2)
-		rl.DrawRectangleGradientV(WINDOW_W/2-separatorWidth/2, 0, separatorWidth, WINDOW_H-(TEXT_MARGIN*2+TEXT_SIZE),
-			color.RGBA{
-				R: 32,
-				G: 32,
-				B: 32,
-				A: 255,
-			},
-			color.RGBA{
-				R: 64,
-				G: 64,
-				B: 64,
-				A: 255,
-			},
-		)
 	}
 
 	if gameOver {
@@ -93,31 +74,6 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 		if gameOverLineH > WINDOW_H {
 			gameOverLineH = -TILE_SIZE_IN_PIXELS
 		}
-	}
-
-	rl.DrawRectangleGradientV(0, WINDOW_H-2*TEXT_MARGIN-TEXT_SIZE, WINDOW_W, TEXT_MARGIN*2+TEXT_SIZE,
-		color.RGBA{
-			R: 64,
-			G: 64,
-			B: 64,
-			A: 255,
-		},
-		color.RGBA{
-			R: 0,
-			G: 0,
-			B: 0,
-			A: 64,
-		},
-	)
-	if !gameOver {
-		rl.DrawText(fmt.Sprintf("Remaining tanks %d", b.totalTanksRemainingToSpawn), 0,
-			WINDOW_H-TEXT_MARGIN-TEXT_SIZE, TEXT_SIZE,
-			color.RGBA{
-				R: 255,
-				G: 255,
-				B: 255,
-				A: 255,
-			})
 	}
 
 	rl.EndDrawing()

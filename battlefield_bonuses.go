@@ -51,7 +51,7 @@ func (b *battlefield) applyBonusEffect(picker *tank, bonusCode int) {
 	case BONUS_CLOCK:
 		for _, t := range b.tanks {
 			if t.faction != picker.faction {
-				t.nextTickToMove += 1000
+				t.nextTickToMove = gameTick + 500
 			}
 		}
 	case BONUS_SHOVEL:
