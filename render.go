@@ -157,12 +157,14 @@ func (r *renderer) renderTile(b *battlefield, x, y int) {
 	spr := t.getSpritesAtlas()
 	if spr != nil {
 		osx, osy := r.physicalToOnScreenCoords(x*TILE_PHYSICAL_SIZE, y*TILE_PHYSICAL_SIZE)
-		rl.DrawTexture(
-			t.getSprite(),
-			int32(osx),
-			int32(osy),
-			DEFAULT_TINT,
-		)
+		if r.AreOnScreenCoordsInViewport(osx, osy) {
+			rl.DrawTexture(
+				t.getSprite(),
+				int32(osx),
+				int32(osy),
+				DEFAULT_TINT,
+			)
+		}
 	}
 }
 
@@ -224,6 +226,10 @@ func (r *renderer) physicalToOnScreenCoords(physX, physY int) (int, int) {
 		}
 	}
 	return pixx + r.horizViewportOffset, pixy
+}
+
+func (r *renderer) AreOnScreenCoordsInViewport(osx, osy int) bool {
+	return osx >= 0 && osx < r.viewportW && osy >= 0 && osy < WINDOW_H
 }
 
 func (r *renderer) physicalToPixelCoords(px, py int) (int, int) {

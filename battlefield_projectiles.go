@@ -1,5 +1,7 @@
 package main
 
+const CHANGE_PROJECTILE_FRAME_EACH = 3
+
 func (b *battlefield) actForProjectiles() {
 	for i := len(b.projectiles) - 1; i >= 0; i-- {
 		proj := b.projectiles[i]
@@ -8,11 +10,13 @@ func (b *battlefield) actForProjectiles() {
 		}
 		speed := proj.getStats().speed
 		if proj.getStats().acceleratesEach > 0 {
-			speed = speed + (gameTick - proj.tickToExpire + proj.getStats().duration)/proj.getStats().acceleratesEach
+			speed = speed + (gameTick-proj.tickToExpire+proj.getStats().duration)/proj.getStats().acceleratesEach
 		}
 		proj.centerX += proj.faceX * speed
 		proj.centerY += proj.faceY * speed
-		proj.currentFrameNumber++
+		if gameTick%CHANGE_PROJECTILE_FRAME_EACH == 0 {
+			proj.currentFrameNumber++
+		}
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
 		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) ||
 			proj.centerX+proj.faceX <= 0 || proj.centerY+proj.faceY <= 0 {
