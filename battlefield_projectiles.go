@@ -6,7 +6,7 @@ func (b *battlefield) actForProjectiles() {
 	for i := len(b.projectiles) - 1; i >= 0; i-- {
 		proj := b.projectiles[i]
 		if proj.tickToExpire <= gameTick {
-			proj.markedToRemove = true
+			proj.hitsRemaining = 0
 		}
 		speed := proj.getStats().speed
 		if proj.getStats().acceleratesEach > 0 {
@@ -18,7 +18,7 @@ func (b *battlefield) actForProjectiles() {
 			proj.currentFrameNumber++
 		}
 		projTx, projTy := trueCoordsToTileCoords(proj.centerX, proj.centerY)
-		if proj.markedToRemove || !areTileCoordsValid(projTx, projTy) ||
+		if proj.hitsRemaining <= 0 || !areTileCoordsValid(projTx, projTy) ||
 			proj.centerX+proj.faceX <= 0 || proj.centerY+proj.faceY <= 0 {
 
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
@@ -32,8 +32,9 @@ func (b *battlefield) actForProjectiles() {
 				continue
 			}
 			if circlesOverlap(proj.centerX, proj.centerY, proj.getRadius(), p.centerX, p.centerY, p.getRadius()) {
-				proj.markedToRemove = true
-				p.markedToRemove = true
+				proj.hitsRemaining--
+				b.spawnEffect(proj.getStats().effectOnDestroy, proj.centerX, proj.centerY, nil)
+				p.hitsRemaining--
 				continue
 			}
 		}
@@ -41,14 +42,16 @@ func (b *battlefield) actForProjectiles() {
 		// check if we hit wall
 		if b.tiles[projTx][projTy].stopsProjectiles() {
 			b.dealDamageToTile(projTx, projTy, proj.getStats().damage, proj.getStats().canDestroyArmor)
-			proj.markedToRemove = true
+			b.spawnEffect(proj.getStats().effectOnDestroy, proj.centerX, proj.centerY, nil)
+			proj.hitsRemaining--
 			continue
 		}
 
 		// check if we hit tank
 		hitTank := b.getAnotherTankPresentAtTrueCoords(proj.owner, proj.centerX, proj.centerY)
 		if hitTank != nil {
-			proj.markedToRemove = true
+			proj.hitsRemaining--
+			b.spawnEffect(proj.getStats().effectOnDestroy, proj.centerX, proj.centerY, nil)
 			if proj.owner == nil || proj.owner.faction != hitTank.faction {
 				b.dealDamageToTank(hitTank, proj.getStats().damage)
 			}

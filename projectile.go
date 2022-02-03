@@ -14,9 +14,9 @@ type projectile struct {
 	faceX, faceY       int
 	currentFrameNumber int
 	nextTickToMove     int
+	hitsRemaining      int
 	tickToExpire       int // when projectile.duration ends
 	owner              *tank
-	markedToRemove     bool
 }
 
 func (p *projectile) getStats() *projectileStats {
@@ -38,6 +38,7 @@ func (p *projectile) getCenterCoords() (int, int) {
 type projectileStats struct {
 	moveDelay                      int
 	duration                       int // how many frames does it live
+	maxHits                        int // how many times cat it hit smth until it is destroyed
 	sprites                        *spriteAtlas
 	effectOnDestroy                int
 	radius, speed, acceleratesEach int
@@ -70,7 +71,7 @@ func initProjectileStatsList() {
 		PROJ_LIGHTNING: {
 			sprites:         projectileAtlaces[PROJ_LIGHTNING],
 			damage:          1,
-			speed:           3,
+			speed:           5,
 			duration:        200,
 			effectOnDestroy: EFFECT_EXPLOSION,
 			radius:          TILE_PHYSICAL_SIZE / 8,
@@ -87,9 +88,11 @@ func initProjectileStatsList() {
 			sprites:         projectileAtlaces[PROJ_ANNIHILATOR],
 			damage:          1,
 			speed:           2,
+			maxHits:         15,
 			duration:        200,
 			effectOnDestroy: EFFECT_EXPLOSION,
 			radius:          TILE_PHYSICAL_SIZE / 8,
+			canDestroyArmor: true,
 		},
 	}
 }
