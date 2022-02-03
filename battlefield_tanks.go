@@ -28,20 +28,22 @@ func (b *battlefield) getTankPresentFromRadius(radius, x, y int) *tank {
 }
 
 func (b *battlefield) moveTankByVector(t *tank, x, y int) {
-	delay := t.getTractionStats().moveDelay
-	t.nextTickToMove = gameTick + delay
-	tx, ty := trueCoordsToTileCoords(t.centerX, t.centerY)
-	if gameMap.tiles[tx][ty].isSlowing() {
-		t.nextTickToMove += delay
-	}
-	speed := b.howFarCanTankMoveByVectorInSingleTick(t, x, y)
-	if speed > 0 {
-		t.centerX += x * speed
-		t.centerY += y * speed
+	if t.canMoveNow() {
+		delay := t.getTractionStats().moveDelay
+		t.nextTickToMove = gameTick + delay
+		tx, ty := trueCoordsToTileCoords(t.centerX, t.centerY)
+		if gameMap.tiles[tx][ty].isSlowing() {
+			t.nextTickToMove += delay
+		}
+		speed := b.howFarCanTankMoveByVectorInSingleTick(t, x, y)
+		if speed > 0 {
+			t.centerX += x * speed
+			t.centerY += y * speed
+		}
+		t.currentFrameNumber++
 	}
 	t.faceX = x
 	t.faceY = y
-	t.currentFrameNumber++
 }
 
 func (b *battlefield) howFarCanTankMoveByVectorInSingleTick(t *tank, vx, vy int) int {
