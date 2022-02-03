@@ -4,6 +4,8 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+const WEAPON_CHANGE_DELAY = 20
+
 func listenPlayerInput() {
 	if gameOver {
 		if rl.IsKeyDown(rl.KeyEscape) {
@@ -47,9 +49,11 @@ func handleSinglePlayer() {
 		gameMap.moveTankByVector(currTank, 0, 1)
 	}
 
-	if rl.IsKeyDown(rl.KeyQ) || rl.IsKeyDown(rl.KeyRightShift) {
-		currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
-		currTank.nextTickToMove = gameTick + 10
+	if currTank.canMoveNow() {
+		if rl.IsKeyDown(rl.KeyQ) || rl.IsKeyDown(rl.KeyRightShift) {
+			currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
+			currTank.nextTickToMove = gameTick + WEAPON_CHANGE_DELAY
+		}
 	}
 	if currTank.canShootNow() {
 		if rl.IsKeyDown(rl.KeySpace) || rl.IsKeyDown(rl.KeyF) {
@@ -74,9 +78,11 @@ func handleAllPlayers() {
 			} else if rl.IsKeyDown(rl.KeyS) {
 				gameMap.moveTankByVector(currTank, 0, 1)
 			}
-			if rl.IsKeyDown(rl.KeyQ) {
-				currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
-				currTank.nextTickToMove = gameTick + 10
+			if currTank.canMoveNow() {
+				if rl.IsKeyDown(rl.KeyQ) {
+					currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
+					currTank.nextTickToMove = gameTick + WEAPON_CHANGE_DELAY
+				}
 			}
 			if currTank.canShootNow() {
 				if rl.IsKeyDown(rl.KeyF) {
@@ -93,9 +99,11 @@ func handleAllPlayers() {
 			} else if rl.IsKeyDown(rl.KeyDown) {
 				gameMap.moveTankByVector(currTank, 0, 1)
 			}
-			if rl.IsKeyDown(rl.KeyRightShift) {
-				currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
-				currTank.nextTickToMove = gameTick + 10
+			if currTank.canMoveNow() {
+				if rl.IsKeyDown(rl.KeyRightShift) {
+					currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
+					currTank.nextTickToMove = gameTick + WEAPON_CHANGE_DELAY
+				}
 			}
 			if currTank.canShootNow() {
 				if rl.IsKeyDown(rl.KeySpace) {

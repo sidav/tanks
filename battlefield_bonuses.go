@@ -57,9 +57,9 @@ func (b *battlefield) applyBonusEffect(picker *tank, bonusCode int) {
 			}
 		}
 	case BONUS_SHOVEL:
-		b.placeTilesRandomSymmetric(TILE_WALL, 10)
+		b.placeTilesRandomSymmetric(TILE_WALL, 2)
 	case BONUS_STAR:
-		for i := 0; i < 3; i++ {
+		for i := 0; i < 2; i++ {
 			t := newTank(TANK_T6, 0, 0, picker.faction)
 			t.ai = initSimpleTankAi()
 			b.spawnTankInRect(t, 0, MAP_W-1, 0, MAP_H-1)

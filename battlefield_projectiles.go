@@ -21,8 +21,10 @@ func (b *battlefield) actForProjectiles() {
 		if proj.hitsRemaining <= 0 || !areTileCoordsValid(projTx, projTy) ||
 			proj.centerX+proj.faceX <= 0 || proj.centerY+proj.faceY <= 0 {
 
+			if proj.hitsRemaining > 0 {
+				b.spawnEffect(proj.getStats().effectOnDestroy, proj.centerX, proj.centerY, nil)
+			}
 			b.projectiles = append(b.projectiles[:i], b.projectiles[i+1:]...)
-			b.spawnEffect(proj.getStats().effectOnDestroy, proj.centerX, proj.centerY, nil)
 			continue
 		}
 
