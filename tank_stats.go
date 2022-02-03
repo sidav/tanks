@@ -2,7 +2,13 @@ package main
 
 const (
 	TANK_PLAYER1 = iota
+	TANK_PLAYER1_WU
+	TANK_PLAYER1_AU
+	TANK_PLAYER1_AWU
 	TANK_PLAYER2
+	TANK_PLAYER2_WU
+	TANK_PLAYER2_AU
+	TANK_PLAYER2_AWU
 	TANK_T1
 	TANK_T2
 	TANK_T3
@@ -25,8 +31,10 @@ type tankStats struct {
 	bodyCode     int
 	weaponCodes  []int
 
-	effectOnDestroy  int
-	radius           int
+	effectOnDestroy int
+	radius          int
+
+	codeWhenWeaponUpgraded, codeWhenArmorUpgraded int // temp
 }
 
 var tankStatsList map[int]*tankStats
@@ -37,9 +45,41 @@ func initTankStatsList() {
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
 			radius:          halfPhysicalTileSize() - 2,
 
-			bodyCode:     TBODY_PLAYER1,
-			tractionCode: TTRACTION_DEFAULT_MEDIUM,
-			weaponCodes:  []int{WEAPON_BULLET},
+			bodyCode:               TBODY_PLAYER1,
+			tractionCode:           TTRACTION_DEFAULT_MEDIUM,
+			weaponCodes:            []int{WEAPON_BULLET},
+			codeWhenWeaponUpgraded: TANK_PLAYER1_WU,
+			codeWhenArmorUpgraded:  TANK_PLAYER1_AU,
+		},
+		TANK_PLAYER1_WU: {
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          halfPhysicalTileSize() - 2,
+
+			bodyCode:               TBODY_PLAYER1_WU,
+			tractionCode:           TTRACTION_DEFAULT_MEDIUM,
+			weaponCodes:            []int{WEAPON_BULLET},
+			codeWhenWeaponUpgraded: TANK_PLAYER1_WU,
+			codeWhenArmorUpgraded:  TANK_PLAYER1_AWU,
+		},
+		TANK_PLAYER1_AU: {
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          halfPhysicalTileSize() - 2,
+
+			bodyCode:               TBODY_PLAYER1_AU,
+			tractionCode:           TTRACTION_DEFAULT_MEDIUM,
+			weaponCodes:            []int{WEAPON_BULLET},
+			codeWhenWeaponUpgraded: TANK_PLAYER1_AWU,
+			codeWhenArmorUpgraded:  TANK_PLAYER1_AU,
+		},
+		TANK_PLAYER1_AWU: {
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          halfPhysicalTileSize() - 2,
+
+			bodyCode:               TBODY_PLAYER1_AWU,
+			tractionCode:           TTRACTION_DEFAULT_MEDIUM,
+			weaponCodes:            []int{WEAPON_ROCKET},
+			codeWhenWeaponUpgraded: TANK_PLAYER1_AWU,
+			codeWhenArmorUpgraded:  TANK_PLAYER1_AWU,
 		},
 		TANK_PLAYER2: {
 			effectOnDestroy: EFFECT_BIG_EXPLOSION,
@@ -48,6 +88,30 @@ func initTankStatsList() {
 			bodyCode:     TBODY_PLAYER2,
 			tractionCode: TTRACTION_DEFAULT_MEDIUM,
 			weaponCodes:  []int{WEAPON_BULLET},
+		},
+		TANK_PLAYER2_WU: {
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          halfPhysicalTileSize() - 2,
+
+			bodyCode:     TBODY_PLAYER2_WU,
+			tractionCode: TTRACTION_DEFAULT_MEDIUM,
+			weaponCodes:  []int{WEAPON_BULLET},
+		},
+		TANK_PLAYER2_AU: {
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          halfPhysicalTileSize() - 2,
+
+			bodyCode:     TBODY_PLAYER2_AU,
+			tractionCode: TTRACTION_DEFAULT_FAST,
+			weaponCodes:  []int{WEAPON_BULLET},
+		},
+		TANK_PLAYER2_AWU: {
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          halfPhysicalTileSize() - 2,
+
+			bodyCode:     TBODY_PLAYER2_AWU,
+			tractionCode: TTRACTION_DEFAULT_MEDIUM,
+			weaponCodes:  []int{WEAPON_ROCKET},
 		},
 		TANK_T1: {
 			effectOnDestroy: EFFECT_EXPLOSION,

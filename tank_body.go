@@ -2,7 +2,13 @@ package main
 
 const (
 	TBODY_PLAYER1 = iota
+	TBODY_PLAYER1_WU
+	TBODY_PLAYER1_AU
+	TBODY_PLAYER1_AWU
 	TBODY_PLAYER2
+	TBODY_PLAYER2_WU
+	TBODY_PLAYER2_AU
+	TBODY_PLAYER2_AWU
 	TBODY_TANK1
 	TBODY_TANK2
 	TBODY_TANK3
@@ -26,11 +32,35 @@ func initTankBodyStatsList() {
 		/////// TANKS
 		TBODY_PLAYER1: {
 			sprites: tankAtlaces[TANK_T1],
+			maxHp:   2,
+		},
+		TBODY_PLAYER1_WU: {
+			sprites: tankAtlaces[TANK_T2],
+			maxHp:   2,
+		},
+		TBODY_PLAYER1_AU: {
+			sprites: tankAtlaces[TANK_T3],
 			maxHp:   3,
+		},
+		TBODY_PLAYER1_AWU: {
+			sprites: tankAtlaces[TANK_T4],
+			maxHp:   4,
 		},
 		TBODY_PLAYER2: {
 			sprites: tankAtlaces[TANK_T5],
-			maxHp:   3,
+			maxHp:   2,
+		},
+		TBODY_PLAYER2_WU: {
+			sprites: tankAtlaces[TANK_T7],
+			maxHp:   2,
+		},
+		TBODY_PLAYER2_AU: {
+			sprites: tankAtlaces[TANK_T6],
+			maxHp:   2,
+		},
+		TBODY_PLAYER2_AWU: {
+			sprites: tankAtlaces[TANK_T8],
+			maxHp:   4,
 		},
 		TBODY_TANK1: {
 			sprites: tankAtlaces[TANK_T1],

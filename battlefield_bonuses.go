@@ -22,7 +22,7 @@ func (b *battlefield) spawnRandomBonus() {
 }
 
 func (b *battlefield) iterateBonuses() {
-	for bindex := len(b.bonuses)-1; bindex >= 0; bindex-- {
+	for bindex := len(b.bonuses) - 1; bindex >= 0; bindex-- {
 		bon := b.bonuses[bindex]
 
 		if bon.tickToExpire <= gameTick {
@@ -42,7 +42,11 @@ func (b *battlefield) iterateBonuses() {
 func (b *battlefield) applyBonusEffect(picker *tank, bonusCode int) {
 	switch bonusCode {
 	case BONUS_HELM:
-		picker.code++
+		newCode := picker.getStats().codeWhenArmorUpgraded
+		if newCode == 0 {
+			newCode = getRandomCode()
+		}
+		picker.code = newCode
 		picker.hitpoints = picker.getBodyStats().maxHp
 	case BONUS_CLOCK:
 		for _, t := range b.tanks {
@@ -53,12 +57,17 @@ func (b *battlefield) applyBonusEffect(picker *tank, bonusCode int) {
 	case BONUS_SHOVEL:
 		b.placeTilesRandomSymmetric(TILE_WALL, 10)
 	case BONUS_STAR:
-		picker.code++
-		picker.hitpoints = picker.getBodyStats().maxHp
+		for i := 0; i < 3; i++ {
+			t := newTank(TANK_T6, 0, 0, picker.faction)
+			t.ai = initSimpleTankAi()
+			b.spawnTankInRect(t, 0, MAP_W-1, 0, MAP_H-1)
+		}
 	case BONUS_GRENADE:
 		for _, t := range b.tanks {
-			if t.faction != picker.faction {
+			if t.faction != picker.faction && !t.playerControlled {
 				b.dealDamageToTank(t, 10)
+				cx, cy := t.getCenterCoords()
+				b.spawnEffect(EFFECT_EXPLOSION, cx, cy, picker)
 			}
 		}
 	case BONUS_TANK:
@@ -66,5 +75,11 @@ func (b *battlefield) applyBonusEffect(picker *tank, bonusCode int) {
 		t.ai = initSimpleTankAi()
 		b.spawnTankInRect(t, 0, MAP_W-1, 0, MAP_H-1)
 	case BONUS_GUN:
+		newCode := picker.getStats().codeWhenWeaponUpgraded
+		if newCode == 0 {
+			newCode = getRandomCode()
+		}
+		picker.code = newCode
+		picker.hitpoints = picker.getBodyStats().maxHp
 	}
 }
