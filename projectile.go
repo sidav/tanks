@@ -4,6 +4,8 @@ const (
 	PROJ_BULLET = iota
 	PROJ_ROCKET
 	PROJ_LIGHTNING
+	PROJ_BIG
+	PROJ_ANNIHILATOR
 )
 
 type projectile struct {
@@ -69,6 +71,22 @@ func initProjectileStatsList() {
 			sprites:         projectileAtlaces[PROJ_LIGHTNING],
 			damage:          1,
 			speed:           3,
+			duration:        200,
+			effectOnDestroy: EFFECT_EXPLOSION,
+			radius:          TILE_PHYSICAL_SIZE / 8,
+		},
+		PROJ_BIG: {
+			sprites:         projectileAtlaces[PROJ_BIG],
+			damage:          3,
+			speed:           1,
+			duration:        500,
+			effectOnDestroy: EFFECT_BIG_EXPLOSION,
+			radius:          TILE_PHYSICAL_SIZE / 2,
+		},
+		PROJ_ANNIHILATOR: {
+			sprites:         projectileAtlaces[PROJ_ANNIHILATOR],
+			damage:          1,
+			speed:           2,
 			duration:        200,
 			effectOnDestroy: EFFECT_EXPLOSION,
 			radius:          TILE_PHYSICAL_SIZE / 8,

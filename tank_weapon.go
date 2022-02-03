@@ -5,8 +5,14 @@ const (
 	WEAPON_BULLET_FASTFIRE
 	WEAPON_ROCKET
 	WEAPON_LIGHTNING
+	WEAPON_BIG
+	WEAPON_ANNIHILATOR
 	WEAPON_PART1
 )
+
+func getRandomWeaponCode() int {
+	return rnd.RandInRange(WEAPON_BULLET_FASTFIRE, WEAPON_ANNIHILATOR)
+}
 
 type tankWeapon struct {
 	code           int
@@ -66,6 +72,20 @@ func initTankWeaponStatsList() {
 			name:                   "Tesla",
 			sprites:                nil,
 			shootsProjectileOfCode: PROJ_LIGHTNING,
+			defaultAmmo:            50,
+			shootDelay:             110,
+		},
+		WEAPON_BIG: {
+			name:                   "Big Bertha",
+			sprites:                nil,
+			shootsProjectileOfCode: PROJ_BIG,
+			defaultAmmo:            50,
+			shootDelay:             110,
+		},
+		WEAPON_ANNIHILATOR: {
+			name:                   "Death Ray",
+			sprites:                nil,
+			shootsProjectileOfCode: PROJ_ANNIHILATOR,
 			defaultAmmo:            50,
 			shootDelay:             110,
 		},

@@ -51,6 +51,8 @@ func loadImageResources() {
 	projectileAtlaces[PROJ_BULLET] = CreateAtlasFromFile("assets/projectiles.png", 0, 0, 8, 8, 2, true)
 	projectileAtlaces[PROJ_ROCKET] = CreateAtlasFromFile("assets/projectiles.png", 0, 8, 8, 8, 2, true)
 	projectileAtlaces[PROJ_LIGHTNING] = CreateAtlasFromFile("assets/projectiles.png", 0, 16, 8, 8, 2, true)
+	projectileAtlaces[PROJ_BIG] = CreateAtlasFromFile("assets/projectiles.png", 0, 24, 8, 8, 2, true)
+	projectileAtlaces[PROJ_ANNIHILATOR] = CreateAtlasFromFile("assets/projectiles.png", 0, 32, 8, 8, 2, true)
 
 	effectAtlaces[EFFECT_EXPLOSION] = CreateAtlasFromFile("assets/sprites.png", 16*0, 16*6, 16, 16, 3, false)
 	effectAtlaces[EFFECT_BIG_EXPLOSION] = CreateAtlasFromFile("assets/sprites.png", 16*3, 16*6, 32, 32, 2, false)

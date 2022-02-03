@@ -47,6 +47,9 @@ func handleSinglePlayer() {
 			gameMap.moveTankByVector(currTank, 0, 1)
 		}
 	}
+	if rl.IsKeyDown(rl.KeyQ) || rl.IsKeyDown(rl.KeyRightShift) {
+		currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
+	}
 	if currTank.canShootNow() {
 		if rl.IsKeyDown(rl.KeySpace) || rl.IsKeyDown(rl.KeyF) {
 			gameMap.shootAsTank(currTank)
@@ -72,6 +75,9 @@ func handleAllPlayers() {
 					gameMap.moveTankByVector(currTank, 0, 1)
 				}
 			}
+			if rl.IsKeyDown(rl.KeyQ) {
+				currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
+			}
 			if currTank.canShootNow() {
 				if rl.IsKeyDown(rl.KeyF) {
 					gameMap.shootAsTank(currTank)
@@ -88,6 +94,9 @@ func handleAllPlayers() {
 				} else if rl.IsKeyDown(rl.KeyDown) {
 					gameMap.moveTankByVector(currTank, 0, 1)
 				}
+			}
+			if rl.IsKeyDown(rl.KeyRightShift) {
+				currTank.currentWeaponNumber = (currTank.currentWeaponNumber + 1) % len(currTank.weapons)
 			}
 			if currTank.canShootNow() {
 				if rl.IsKeyDown(rl.KeySpace) {
