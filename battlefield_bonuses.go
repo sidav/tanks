@@ -44,7 +44,7 @@ func (b *battlefield) iterateBonuses() {
 func (b *battlefield) applyBonusEffect(picker *tank, bonusCode int) {
 	switch bonusCode {
 	case BONUS_HELM:
-		newCode := picker.getStats().codeWhenArmorUpgraded
+		newCode := picker.getStats().codeOfNextArmorUpgrade
 		if newCode == 0 {
 			newCode = getRandomCode()
 		}
@@ -77,11 +77,17 @@ func (b *battlefield) applyBonusEffect(picker *tank, bonusCode int) {
 		t.ai = initSimpleTankAi()
 		b.spawnTankInRect(t, 0, MAP_W-1, 0, MAP_H-1)
 	case BONUS_GUN:
-		newCode := picker.getStats().codeWhenWeaponUpgraded
-		if newCode == 0 {
-			newCode = getRandomCode()
+		weaponCode := getRandomWeaponCode()
+		if picker.playerControlled {
+			for _, w := range picker.weapons {
+				if w.code == weaponCode {
+					w.ammo += w.getStats().defaultAmmo
+					return
+				}
+			}
+			picker.weapons = append(picker.weapons, newWeapon(weaponCode))
+		} else {
+			picker.weapons[0].code = weaponCode
 		}
-		picker.code = newCode
-		picker.hitpoints = picker.getBodyStats().maxHp
 	}
 }
