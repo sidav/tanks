@@ -8,10 +8,13 @@ const (
 
 func (b *battlefield) isMissionCompleted() bool {
 	switch b.missionType {
-	case MISSION_KILL_ALL:
-		return gameMap.totalTanksRemainingToSpawn <= 0 && len(gameMap.tanks) == 1 && len(gameMap.effects) == 0
-	case MISSION_PROTECT_HQ:
-		return gameMap.totalTanksRemainingToSpawn <= 0 && len(gameMap.tanks) == 1 && len(gameMap.effects) == 0
+	case MISSION_KILL_ALL, MISSION_PROTECT_HQ:
+		for _, t := range b.tanks {
+			if t.faction != 0 {
+				return false
+			}
+		}
+		return gameMap.totalTanksRemainingToSpawn <= 0 && len(gameMap.effects) == 0
 	case MISSION_COLLECT_FLAGS:
 		for i := 0; i < MAP_W; i++ {
 			for j := 0; j < MAP_H; j++ {
