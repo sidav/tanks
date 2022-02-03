@@ -54,4 +54,29 @@ func (r *renderer) renderUI(playerNum int, b *battlefield, t *tank) {
 			},
 		)
 	}
+
+	if gameOver {
+		rl.DrawText("GAME OVER.", int32(WINDOW_W)/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		rl.DrawText("Press ESC for menu", int32(WINDOW_W)/4, gameOverLineH+TILE_SIZE_IN_PIXELS+4, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		gameOverLineH++
+		gameOverRgb.A = 255
+		gameOverRgb.R += uint8(rnd.Rand(2))
+		gameOverRgb.G += uint8(rnd.Rand(2))
+		gameOverRgb.B += uint8(rnd.Rand(2))
+		if gameOverLineH > WINDOW_H {
+			gameOverLineH = -TILE_SIZE_IN_PIXELS
+		}
+	}
+
+	if gameWon {
+		rl.DrawText("YOU WON!", int32(WINDOW_W)/3, gameOverLineH, TILE_SIZE_IN_PIXELS+4, gameOverRgb)
+		gameOverLineH++
+		gameOverRgb.A = 255
+		gameOverRgb.R += uint8(rnd.Rand(2))
+		gameOverRgb.G += uint8(rnd.Rand(2))
+		gameOverRgb.B += uint8(rnd.Rand(2))
+		if gameOverLineH > WINDOW_H {
+			gameOverLineH = -TILE_SIZE_IN_PIXELS
+		}
+	}
 }
