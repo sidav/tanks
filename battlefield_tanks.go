@@ -131,4 +131,5 @@ func (b *battlefield) shootAsTank(t *tank) {
 	newProjectile.tickToExpire = gameTick + newProjectile.getStats().duration
 	b.projectiles = append(b.projectiles, newProjectile)
 	t.weapons[t.currentWeaponNumber].spendTime()
+	t.weapons[t.currentWeaponNumber].ammo--
 }

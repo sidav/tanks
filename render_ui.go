@@ -27,7 +27,10 @@ func (r *renderer) renderUI(playerNum int, b *battlefield, t *tank) {
 		if r.viewportW < WINDOW_W {
 			posX *= 2
 		}
-		uiStr := fmt.Sprintf("HP %d/%d Enemies %d", t.hitpoints, t.getBodyStats().maxHp, b.totalTanksRemainingToSpawn)
+		uiStr := fmt.Sprintf("HP %d/%d %s:%d Enemies %d",
+			t.hitpoints, t.getBodyStats().maxHp,
+			t.weapons[t.currentWeaponNumber].getStats().name, t.weapons[t.currentWeaponNumber].ammo,
+			b.totalTanksRemainingToSpawn)
 		rl.DrawText(uiStr, posX, WINDOW_H-TEXT_MARGIN-TEXT_SIZE, TEXT_SIZE,
 			color.RGBA{
 				R: 255,

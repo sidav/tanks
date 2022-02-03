@@ -9,7 +9,7 @@ type tank struct {
 
 	faction int
 
-	code           int
+	code int
 
 	nextTickToMove int
 
@@ -23,7 +23,7 @@ type tank struct {
 func newTank(code, x, y, faction int) *tank {
 	t := &tank{code: code, centerX: x, centerY: y, faction: faction}
 	for i := 0; i < len(t.getStats().weaponCodes); i++ {
-		t.weapons = append(t.weapons, &tankWeapon{code: t.getStats().weaponCodes[i]})
+		t.weapons = append(t.weapons, newWeapon(t.getStats().weaponCodes[i]))
 	}
 	t.hitpoints = t.getBodyStats().maxHp
 	return t

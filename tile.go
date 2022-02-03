@@ -1,6 +1,8 @@
 package main
 
-import "github.com/gen2brain/raylib-go/raylib"
+import (
+	"github.com/gen2brain/raylib-go/raylib"
+)
 
 const (
 	TILE_EMPTY = iota
@@ -46,7 +48,10 @@ func (t *tile) getSprite() rl.Texture2D {
 	totalFrames := t.getSpritesAtlas().totalFrames()
 	frameNumber := (gameTick / 50) % totalFrames
 	if t.getMaxDamageTaken() > 0 {
-		frameNumber = t.damageTaken*totalFrames/t.getMaxDamageTaken()
+		frameNumber = t.damageTaken * totalFrames / t.getMaxDamageTaken()
+		if frameNumber >= totalFrames {
+			frameNumber = 0
+		}
 	}
 	return t.getSpritesAtlas().atlas[0][frameNumber]
 }

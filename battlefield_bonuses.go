@@ -4,17 +4,19 @@ import (
 	"github.com/sidav/golibrl/random"
 )
 
+const TICKS_TO_EXPIRE_BONUS = 600
+
 func (b *battlefield) spawnRandomBonus() {
 	if rnd.OneChanceFrom(b.bonusSpawnPeriod) {
 		x, y := b.getRandomEmptyTileCoords(0, MAP_W-1, 0, MAP_H-1)
 		x, y = tileCoordsToPhysicalCoords(x, y)
-		bonus := random.RandInRange(BONUS_HELM, BONUS_TANK)
+		bonus := random.RandInRange(BONUS_HELM, BONUS_GUN)
 		newBonus := &event{
 			code:               bonus,
 			centerX:            x,
 			centerY:            y,
 			currentFrameNumber: 0,
-			tickToExpire:       gameTick + 600,
+			tickToExpire:       gameTick + TICKS_TO_EXPIRE_BONUS,
 			owner:              nil,
 		}
 		b.bonuses = append(b.bonuses, newBonus)

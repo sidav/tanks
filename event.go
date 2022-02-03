@@ -103,5 +103,10 @@ func initEventsStatsList() {
 			radius:    halfPhysicalTileSize() - 1,
 			moveDelay: 7,
 		},
+		BONUS_GUN: {
+			sprites:   bonusAtlaces[BONUS_GUN],
+			radius:    halfPhysicalTileSize() - 1,
+			moveDelay: 7,
+		},
 	}
 }
